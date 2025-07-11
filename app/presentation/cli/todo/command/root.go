@@ -70,7 +70,6 @@ func NewRootCommand(
 	return cmd
 }
 
-// runRoot runs the root command with default list behavior
 func runRoot(
 	cmd *c.Command,
 	args []string,
