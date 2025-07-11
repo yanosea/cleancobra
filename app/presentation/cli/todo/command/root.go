@@ -1,6 +1,8 @@
 package command
 
 import (
+	c "github.com/spf13/cobra"
+
 	"github.com/yanosea/cleancobra/app/config"
 	"github.com/yanosea/cleancobra/app/presentation/cli/todo/command/todo"
 
@@ -21,6 +23,16 @@ func NewRootCommand(
 	cmd.SetSilenceErrors(true)
 	cmd.SetUse("todo")
 	cmd.SetShort("A clean architecture TODO application")
+
+	listCmd := todo.NewListCommand(
+		cobra,
+		json,
+		os,
+		fileutil,
+		conf,
+		output,
+	)
+
 	cmd.AddCommand(
 		todo.NewAddCommand(
 			cobra,
@@ -46,15 +58,23 @@ func NewRootCommand(
 			conf,
 			output,
 		),
-		todo.NewListCommand(
-			cobra,
-			json,
-			os,
-			fileutil,
-			conf,
-			output,
-		),
+		listCmd,
+	)
+
+	cmd.SetRunE(
+		func(cmd *c.Command, args []string) error {
+			return runRoot(cmd, args, listCmd)
+		},
 	)
 
 	return cmd
+}
+
+// runRoot runs the root command with default list behavior
+func runRoot(
+	cmd *c.Command,
+	args []string,
+	listCmd proxy.Command,
+) error {
+	return listCmd.RunE(cmd, args)
 }
