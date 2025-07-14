@@ -11,66 +11,61 @@ import (
 	"github.com/yanosea/gct/pkg/utility"
 )
 
-type Cli struct {
-	Cobra          proxy.Cobra
-	Envconfig      proxy.Envconfig
-	Json           proxy.Json
-	Os             proxy.Os
-	FileUtil       utility.FileUtil
-	Config         *config.TodoConfig
-	NewRootCommand func(
-		cobra proxy.Cobra,
-		envconfig proxy.Envconfig,
-		json proxy.Json,
-		os proxy.Os,
-		fileutil utility.FileUtil,
-		conf *config.TodoConfig,
-		output *string,
-	) proxy.Command
-}
-
 var (
 	output string
+	NewCli CreateCliFunc = newCli
 )
 
-func NewCli(
-	cobra proxy.Cobra,
+type Cli interface {
+	Init(envconfig proxy.Envconfig, json proxy.Json, os proxy.Os, fileUtil utility.FileUtil) int
+	Run() int
+}
+
+type cli struct {
+	Cobra       proxy.Cobra
+	RootCommand proxy.Command
+}
+
+type CreateCliFunc func(cobra proxy.Cobra) Cli
+
+func newCli(cobra proxy.Cobra) Cli {
+	return &cli{
+		Cobra:       cobra,
+		RootCommand: nil,
+	}
+}
+
+func (c *cli) Init(
 	envconfig proxy.Envconfig,
 	json proxy.Json,
 	os proxy.Os,
-	fileutil utility.FileUtil,
-) *Cli {
-	return &Cli{
-		Cobra:          cobra,
-		Envconfig:      envconfig,
-		Json:           json,
-		Os:             os,
-		FileUtil:       fileutil,
-		Config:         nil,
-		NewRootCommand: NewRootCommand,
-	}
-}
-
-func (c *Cli) Run() int {
-	configurator := config.NewConfigurator(c.Envconfig)
+	fileUtil utility.FileUtil,
+) int {
+	configurator := config.NewConfigurator(envconfig)
 	conf, err := configurator.GetConfig()
 	if err != nil {
+		output = formatter.AppendErrorToOutput(err, output)
+		presenter.Present(o.Stderr, output)
 		return 1
 	}
-	rootCmd := c.NewRootCommand(
+
+	c.RootCommand = NewRootCommand(
 		c.Cobra,
-		c.Envconfig,
-		c.Json,
-		c.Os,
-		c.FileUtil,
+		json,
+		os,
+		fileUtil,
 		conf,
 		&output,
 	)
 
+	return 0
+}
+
+func (c *cli) Run() int {
 	out := o.Stdout
 	exitCode := 0
 
-	if err := rootCmd.Execute(); err != nil {
+	if err := c.RootCommand.Execute(); err != nil {
 		output = formatter.AppendErrorToOutput(err, output)
 		out = o.Stderr
 		exitCode = 1

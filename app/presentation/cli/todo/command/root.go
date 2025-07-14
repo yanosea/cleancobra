@@ -12,7 +12,6 @@ import (
 
 func NewRootCommand(
 	cobra proxy.Cobra,
-	envconfig proxy.Envconfig,
 	json proxy.Json,
 	os proxy.Os,
 	fileutil utility.FileUtil,
