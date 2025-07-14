@@ -15,7 +15,7 @@ func NewTextFormatter() *TextFormatter {
 	return &TextFormatter{}
 }
 
-func (f *TextFormatter) Format(result interface{}) (string, error) {
+func (f *TextFormatter) Format(result any) (string, error) {
 	switch v := result.(type) {
 	case *todoApp.AddTodoUsecaseOutputDto:
 		return fmt.Sprintf("Added todo : %s (ID: %s, CREATED AT: %s)", v.Title, v.ID, v.CreatedAt), nil

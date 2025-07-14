@@ -10,7 +10,7 @@ import (
 type FileUtil interface {
 	GetXDGDataHome() (string, error)
 	MkdirIfNotExist(dirPath string) error
-	InitializeJSONFile(filePath string, emptyData interface{}) error
+	InitializeJSONFile(filePath string, emptyData any) error
 }
 
 type fileUtil struct {
@@ -49,7 +49,7 @@ func (f *fileUtil) MkdirIfNotExist(dirPath string) error {
 	return nil
 }
 
-func (f *fileUtil) InitializeJSONFile(filePath string, emptyData interface{}) error {
+func (f *fileUtil) InitializeJSONFile(filePath string, emptyData any) error {
 	file, err := f.json.MarshalIndent(emptyData, "", "  ")
 	if err != nil {
 		return errors.Wrap(err, "failed to marshal empty data")

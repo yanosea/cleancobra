@@ -14,7 +14,7 @@ func NewJSONFormatter(json proxy.Json) *JSONFormatter {
 	}
 }
 
-func (f *JSONFormatter) Format(result interface{}) (string, error) {
+func (f *JSONFormatter) Format(result any) (string, error) {
 	output, err := f.json.MarshalIndent(result, "", "  ")
 	if err != nil {
 		return "", err

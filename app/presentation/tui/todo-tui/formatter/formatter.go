@@ -8,7 +8,7 @@ import (
 )
 
 type Formatter interface {
-	Format(result interface{}) (string, error)
+	Format(result any) (string, error)
 }
 
 type TuiFormatter struct{}
@@ -17,7 +17,7 @@ func NewTuiFormatter() *TuiFormatter {
 	return &TuiFormatter{}
 }
 
-func (f *TuiFormatter) Format(result interface{}) (string, error) {
+func (f *TuiFormatter) Format(result any) (string, error) {
 	switch v := result.(type) {
 	case []*todoApp.ListTodoUsecaseOutputDto:
 		return f.formatTodoList(v), nil

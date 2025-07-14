@@ -5,8 +5,8 @@ import (
 )
 
 type Json interface {
-	MarshalIndent(v interface{}, prefix, indent string) ([]byte, error)
-	Unmarshal(data []byte, v interface{}) error
+	MarshalIndent(v any, prefix, indent string) ([]byte, error)
+	Unmarshal(data []byte, v any) error
 }
 
 type jsonProxy struct{}
@@ -15,10 +15,10 @@ func NewJson() Json {
 	return &jsonProxy{}
 }
 
-func (jsonProxy) MarshalIndent(v interface{}, prefix, indent string) ([]byte, error) {
+func (jsonProxy) MarshalIndent(v any, prefix, indent string) ([]byte, error) {
 	return json.MarshalIndent(v, prefix, indent)
 }
 
-func (jsonProxy) Unmarshal(data []byte, v interface{}) error {
+func (jsonProxy) Unmarshal(data []byte, v any) error {
 	return json.Unmarshal(data, v)
 }
