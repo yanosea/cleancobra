@@ -114,7 +114,7 @@ var (
 )
 
 func FormatTodoItem(title string, done bool, selected bool) string {
-	checkbox := "[ ]"
+	var checkbox string
 	style := TodoItemStyle
 
 	if done {

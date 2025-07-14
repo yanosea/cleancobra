@@ -7,6 +7,6 @@ import (
 
 func Present(writer io.Writer, output string) {
 	if output != "" {
-		fmt.Fprintf(writer, "%s\n", output)
+		_, _ = fmt.Fprintf(writer, "%s\n", output)
 	}
 }
