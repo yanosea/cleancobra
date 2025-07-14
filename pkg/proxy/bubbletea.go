@@ -64,10 +64,6 @@ func (p *programProxy) Wait() tea.Model {
 	return nil
 }
 
-type TeaMsg interface {
-	tea.Msg
-}
-
 type KeyMsg interface {
 	String() string
 }
