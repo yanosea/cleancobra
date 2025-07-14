@@ -93,4 +93,3 @@ func AppendErrorToOutput(err error, output string) string {
 
 	return result
 }
-

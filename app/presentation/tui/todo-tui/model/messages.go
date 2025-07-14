@@ -18,4 +18,3 @@ type WindowSizeMsg struct {
 	Width  int
 	Height int
 }
-

@@ -98,4 +98,3 @@ func (s *State) ConfirmButtonSelected() bool            { return s.confirmButton
 func (s *State) SetConfirmButtonSelected(selected bool) { s.confirmButtonSelected = selected }
 func (s *State) ToggleDeleteButton()                    { s.confirmButtonSelected = !s.confirmButtonSelected }
 func (s *State) ResetDeleteButton()                     { s.confirmButtonSelected = false }
-
