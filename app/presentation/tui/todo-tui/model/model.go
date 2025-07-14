@@ -174,7 +174,7 @@ func (m *Model) handleDeleteMode(keyMsg proxy.KeyMsg) (*Model, proxy.Cmd) {
 		state.SetMode(ModeList)
 		state.ClearMessages()
 
-	case "left", "right", "tab":
+	case "left", "right", "tab", "h", "l":
 		state.ToggleDeleteButton()
 
 	case "enter":
@@ -335,7 +335,7 @@ func (m *Model) renderDeleteView() string {
 
 	instructions := `This action cannot be undone!
 
-← → or TAB: Switch between buttons
+← → or TAB or h/l: Switch between buttons
 ENTER: Execute selected action
 ESC: Cancel deletion`
 	warningBox := formatter.FormatWarningBox(instructions)
@@ -358,7 +358,7 @@ func (m *Model) renderHelpView() string {
 	case ModeAdd:
 		return formatter.FormatHelp("enter: add todo • esc: cancel • ctrl+c: quit")
 	case ModeDelete:
-		return formatter.FormatHelp("←→/tab: switch buttons • enter: execute • y: quick confirm • n/esc: cancel • ctrl+c: quit")
+		return formatter.FormatHelp("←→/tab/h/l: switch buttons • enter: execute • y: quick confirm • n/esc: cancel • ctrl+c: quit")
 	default:
 		return ""
 	}
