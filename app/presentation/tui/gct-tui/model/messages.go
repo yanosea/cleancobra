@@ -1,6 +1,6 @@
 package model
 
-import todoApp "github.com/yanosea/gct/app/application/todo"
+import todoApp "github.com/yanosea/gct/app/application/gct"
 
 type TodosLoadedMsg struct {
 	Todos []*todoApp.ListTodoUsecaseOutputDto

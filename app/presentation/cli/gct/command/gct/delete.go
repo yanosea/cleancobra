@@ -1,18 +1,18 @@
-package todo
+package gct
 
 import (
 	c "github.com/spf13/cobra"
 
-	todoApp "github.com/yanosea/gct/app/application/todo"
+	todoApp "github.com/yanosea/gct/app/application/gct"
 	"github.com/yanosea/gct/app/config"
 	todoRepo "github.com/yanosea/gct/app/infrastructure/json/repository"
-	"github.com/yanosea/gct/app/presentation/cli/todo/formatter"
+	"github.com/yanosea/gct/app/presentation/cli/gct/formatter"
 
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"
 )
 
-func NewListCommand(
+func NewDeleteCommand(
 	cobra proxy.Cobra,
 	json proxy.Json,
 	os proxy.Os,
@@ -23,8 +23,9 @@ func NewListCommand(
 	var format = conf.OutputFormat
 	cmd := cobra.NewCommand()
 	cmd.SetSilenceErrors(true)
-	cmd.SetUse("list")
-	cmd.SetShort("List all todos")
+	cmd.SetUse("delete [id]")
+	cmd.SetShort("Delete a todo")
+	cmd.SetArgs(cobra.ExactArgs(1))
 	cmd.PersistentFlags().StringVarP(
 		&format,
 		"format",
@@ -33,15 +34,16 @@ func NewListCommand(
 		"Output format (text|json)",
 	)
 	cmd.SetRunE(
-		func(_ *c.Command, _ []string) error {
-			return runList(format, json, os, fileutil, conf, output)
+		func(cmd *c.Command, args []string) error {
+			return runDelete(args, format, json, os, fileutil, conf, output)
 		},
 	)
 
 	return cmd
 }
 
-func runList(
+func runDelete(
+	args []string,
 	format string,
 	json proxy.Json,
 	os proxy.Os,
@@ -59,8 +61,8 @@ func runList(
 		return err
 	}
 
-	uc := todoApp.NewListTodoUseCase(todoRepo)
-	dto, err := uc.Run()
+	uc := todoApp.NewDeleteTodoUseCase(todoRepo)
+	dto, err := uc.Run(args[0])
 	if err != nil {
 		return err
 	}

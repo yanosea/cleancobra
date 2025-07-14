@@ -4,8 +4,8 @@ import (
 	o "os"
 
 	"github.com/yanosea/gct/app/config"
-	"github.com/yanosea/gct/app/presentation/cli/todo/formatter"
-	"github.com/yanosea/gct/app/presentation/cli/todo/presenter"
+	"github.com/yanosea/gct/app/presentation/cli/gct/formatter"
+	"github.com/yanosea/gct/app/presentation/cli/gct/presenter"
 
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"

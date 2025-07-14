@@ -1,18 +1,18 @@
-package todo
+package gct
 
 import (
 	c "github.com/spf13/cobra"
 
-	todoApp "github.com/yanosea/gct/app/application/todo"
+	todoApp "github.com/yanosea/gct/app/application/gct"
 	"github.com/yanosea/gct/app/config"
 	todoRepo "github.com/yanosea/gct/app/infrastructure/json/repository"
-	"github.com/yanosea/gct/app/presentation/cli/todo/formatter"
+	"github.com/yanosea/gct/app/presentation/cli/gct/formatter"
 
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"
 )
 
-func NewToggleCommand(
+func NewListCommand(
 	cobra proxy.Cobra,
 	json proxy.Json,
 	os proxy.Os,
@@ -23,9 +23,8 @@ func NewToggleCommand(
 	var format = conf.OutputFormat
 	cmd := cobra.NewCommand()
 	cmd.SetSilenceErrors(true)
-	cmd.SetUse("toggle [id]")
-	cmd.SetShort("Toggle todo status")
-	cmd.SetArgs(cobra.ExactArgs(1))
+	cmd.SetUse("list")
+	cmd.SetShort("List all todos")
 	cmd.PersistentFlags().StringVarP(
 		&format,
 		"format",
@@ -34,16 +33,15 @@ func NewToggleCommand(
 		"Output format (text|json)",
 	)
 	cmd.SetRunE(
-		func(cmd *c.Command, args []string) error {
-			return runToggle(args, format, json, os, fileutil, conf, output)
+		func(_ *c.Command, _ []string) error {
+			return runList(format, json, os, fileutil, conf, output)
 		},
 	)
 
 	return cmd
 }
 
-func runToggle(
-	args []string,
+func runList(
 	format string,
 	json proxy.Json,
 	os proxy.Os,
@@ -61,8 +59,8 @@ func runToggle(
 		return err
 	}
 
-	uc := todoApp.NewToggleTodoUseCase(todoRepo)
-	dto, err := uc.Run(args[0])
+	uc := todoApp.NewListTodoUseCase(todoRepo)
+	dto, err := uc.Run()
 	if err != nil {
 		return err
 	}

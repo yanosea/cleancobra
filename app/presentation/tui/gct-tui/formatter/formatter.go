@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	todoApp "github.com/yanosea/gct/app/application/todo"
+	todoApp "github.com/yanosea/gct/app/application/gct"
 )
 
 type Formatter interface {

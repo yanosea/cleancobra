@@ -1,4 +1,4 @@
-package todo
+package gct
 
 import (
 	todoDomain "github.com/yanosea/gct/app/domain/todo"

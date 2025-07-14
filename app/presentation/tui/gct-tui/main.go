@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/yanosea/gct/app/presentation/tui/todo-tui/command"
+	"github.com/yanosea/gct/app/presentation/tui/gct-tui/command"
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"
 )

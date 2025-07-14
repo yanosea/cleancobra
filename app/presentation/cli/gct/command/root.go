@@ -4,7 +4,7 @@ import (
 	c "github.com/spf13/cobra"
 
 	"github.com/yanosea/gct/app/config"
-	"github.com/yanosea/gct/app/presentation/cli/todo/command/todo"
+	"github.com/yanosea/gct/app/presentation/cli/gct/command/gct"
 
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"
@@ -23,7 +23,7 @@ func NewRootCommand(
 	cmd.SetUse("todo")
 	cmd.SetShort("A clean architecture TODO application")
 
-	listCmd := todo.NewListCommand(
+	listCmd := gct.NewListCommand(
 		cobra,
 		json,
 		os,
@@ -33,7 +33,7 @@ func NewRootCommand(
 	)
 
 	cmd.AddCommand(
-		todo.NewAddCommand(
+		gct.NewAddCommand(
 			cobra,
 			json,
 			os,
@@ -41,7 +41,7 @@ func NewRootCommand(
 			conf,
 			output,
 		),
-		todo.NewDeleteCommand(
+		gct.NewDeleteCommand(
 			cobra,
 			json,
 			os,
@@ -49,7 +49,7 @@ func NewRootCommand(
 			conf,
 			output,
 		),
-		todo.NewToggleCommand(
+		gct.NewToggleCommand(
 			cobra,
 			json,
 			os,

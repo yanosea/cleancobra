@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	todoApp "github.com/yanosea/gct/app/application/todo"
+	todoApp "github.com/yanosea/gct/app/application/gct"
 	"github.com/yanosea/gct/app/config"
 	"github.com/yanosea/gct/app/infrastructure/json/repository"
-	"github.com/yanosea/gct/app/presentation/tui/todo-tui/model"
+	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"
 )

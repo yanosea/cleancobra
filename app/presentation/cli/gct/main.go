@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yanosea/gct/app/presentation/cli/todo/command"
+	"github.com/yanosea/gct/app/presentation/cli/gct/command"
 
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"

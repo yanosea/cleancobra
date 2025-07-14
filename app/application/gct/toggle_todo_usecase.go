@@ -1,37 +1,38 @@
-package todo
+package gct
 
 import (
 	todoDomain "github.com/yanosea/gct/app/domain/todo"
 )
 
-type DeleteTodoUseCase struct {
+type ToggleTodoUseCase struct {
 	todoRepo todoDomain.TodoRepository
 }
 
-func NewDeleteTodoUseCase(
+func NewToggleTodoUseCase(
 	todoRepo todoDomain.TodoRepository,
-) *DeleteTodoUseCase {
-	return &DeleteTodoUseCase{
+) *ToggleTodoUseCase {
+	return &ToggleTodoUseCase{
 		todoRepo: todoRepo,
 	}
 }
 
-type DeleteTodoUsecaseOutputDto struct {
+type ToggleTodoUsecaseOutputDto struct {
 	ID        string
 	Title     string
 	Done      bool
 	CreatedAt string
 }
 
-func (uc *DeleteTodoUseCase) Run(id string) (*DeleteTodoUsecaseOutputDto, error) {
+func (uc *ToggleTodoUseCase) Run(id string) (*ToggleTodoUsecaseOutputDto, error) {
 	todo, err := uc.todoRepo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
-	if err := uc.todoRepo.Delete(id); err != nil {
+	todo.Done = !todo.Done
+	if err := uc.todoRepo.Update(todo); err != nil {
 		return nil, err
 	}
-	return &DeleteTodoUsecaseOutputDto{
+	return &ToggleTodoUsecaseOutputDto{
 		ID:        todo.ID,
 		Title:     todo.Title,
 		Done:      todo.Done,

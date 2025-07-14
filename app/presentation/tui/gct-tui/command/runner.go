@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/yanosea/gct/app/presentation/tui/todo-tui/model"
+	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 	"github.com/yanosea/gct/pkg/proxy"
 )
 

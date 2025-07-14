@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	todoApp "github.com/yanosea/gct/app/application/todo"
-	"github.com/yanosea/gct/app/presentation/tui/todo-tui/formatter"
+	todoApp "github.com/yanosea/gct/app/application/gct"
+	"github.com/yanosea/gct/app/presentation/tui/gct-tui/formatter"
 	"github.com/yanosea/gct/pkg/proxy"
 )
 

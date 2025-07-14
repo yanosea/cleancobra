@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	todoApp "github.com/yanosea/gct/app/application/todo"
+	todoApp "github.com/yanosea/gct/app/application/gct"
 )
 
 type TextFormatter struct{}
