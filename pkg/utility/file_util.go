@@ -3,7 +3,6 @@ package utility
 import (
 	"path/filepath"
 
-	"github.com/yanosea/gct/pkg/errors"
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
@@ -33,7 +32,7 @@ func (f *fileUtil) GetXDGDataHome() (string, error) {
 	if xdgDataHome == "" {
 		homeDir, err := f.os.UserHomeDir()
 		if err != nil {
-			return "", errors.Wrap(err, "failed to get home directory")
+			return "", err
 		}
 		xdgDataHome = filepath.Join(homeDir, ".local", "share")
 	}
@@ -43,7 +42,7 @@ func (f *fileUtil) GetXDGDataHome() (string, error) {
 func (f *fileUtil) MkdirIfNotExist(dirPath string) error {
 	if _, err := f.os.Stat(dirPath); f.os.IsNotExist(err) {
 		if err := f.os.MkdirAll(dirPath, 0755); err != nil {
-			return errors.Wrap(err, "failed to create directory")
+			return err
 		}
 	}
 	return nil
@@ -52,11 +51,11 @@ func (f *fileUtil) MkdirIfNotExist(dirPath string) error {
 func (f *fileUtil) InitializeJSONFile(filePath string, emptyData any) error {
 	file, err := f.json.MarshalIndent(emptyData, "", "  ")
 	if err != nil {
-		return errors.Wrap(err, "failed to marshal empty data")
+		return err
 	}
 
 	if err := f.os.WriteFile(filePath, file, 0644); err != nil {
-		return errors.Wrap(err, "failed to create initial file")
+		return err
 	}
 	return nil
 }

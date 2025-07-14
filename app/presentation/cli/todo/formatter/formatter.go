@@ -1,9 +1,9 @@
 package formatter
 
 import (
+	"errors"
 	"fmt"
 
-	"github.com/yanosea/gct/pkg/errors"
 	"github.com/yanosea/gct/pkg/proxy"
 )
 

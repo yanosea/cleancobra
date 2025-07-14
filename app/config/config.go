@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/yanosea/gct/pkg/errors"
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
@@ -30,7 +29,7 @@ func (c *configurator) GetConfig() (*TodoConfig, error) {
 	var config TodoConfig
 	var err error
 	if err = c.envconfig.Process("", &config); err != nil {
-		return nil, errors.Wrap(err, "failed to process environment")
+		return nil, err
 	}
 	return &config, err
 }

@@ -1,12 +1,11 @@
 package formatter
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
 	todoApp "github.com/yanosea/gct/app/application/todo"
-
-	"github.com/yanosea/gct/pkg/errors"
 )
 
 type TextFormatter struct{}

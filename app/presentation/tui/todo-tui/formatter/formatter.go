@@ -1,10 +1,10 @@
 package formatter
 
 import (
+	"errors"
 	"fmt"
 
 	todoApp "github.com/yanosea/gct/app/application/todo"
-	"github.com/yanosea/gct/pkg/errors"
 )
 
 type Formatter interface {

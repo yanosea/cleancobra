@@ -1,13 +1,13 @@
 package repository
 
 import (
+	"errors"
 	"path/filepath"
 	"strings"
 
 	"github.com/yanosea/gct/app/config"
 	todoDomain "github.com/yanosea/gct/app/domain/todo"
 
-	"github.com/yanosea/gct/pkg/errors"
 	"github.com/yanosea/gct/pkg/proxy"
 	"github.com/yanosea/gct/pkg/utility"
 )
@@ -61,12 +61,12 @@ func (r *TodoRepository) Save(todo *todoDomain.Todo) error {
 func (r *TodoRepository) FindAll() ([]*todoDomain.Todo, error) {
 	file, err := r.os.ReadFile(r.dbFilePath)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to read file")
+		return nil, err
 	}
 
 	var todos []*todoDomain.Todo
 	if err := r.json.Unmarshal(file, &todos); err != nil {
-		return nil, errors.Wrap(err, "failed to unmarshal todos")
+		return nil, err
 	}
 
 	return todos, nil
@@ -121,16 +121,16 @@ func (r *TodoRepository) Delete(id string) error {
 
 func (r *TodoRepository) writeTodos(todos []*todoDomain.Todo) error {
 	if err := r.os.MkdirAll(filepath.Dir(r.dbFilePath), 0755); err != nil {
-		return errors.Wrap(err, "failed to create directory")
+		return err
 	}
 
 	file, err := r.json.MarshalIndent(todos, "", "  ")
 	if err != nil {
-		return errors.Wrap(err, "failed to marshal todos")
+		return err
 	}
 
 	if err := r.os.WriteFile(r.dbFilePath, file, 0644); err != nil {
-		return errors.Wrap(err, "failed to write file")
+		return err
 	}
 
 	return nil

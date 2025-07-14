@@ -1,10 +1,9 @@
 package todo
 
 import (
+	"errors"
 	"fmt"
 	"time"
-
-	"github.com/yanosea/gct/pkg/errors"
 )
 
 type Todo struct {
