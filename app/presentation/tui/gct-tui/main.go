@@ -12,7 +12,7 @@ import (
 const helpText = `A clean architecture TODO application
 
 Usage:
-  todo-tui [options]
+  gct-tui [options]
 
 Available Operations:
   ↑/k         Move cursor up

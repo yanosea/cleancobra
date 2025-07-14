@@ -20,7 +20,7 @@ func NewRootCommand(
 ) proxy.Command {
 	cmd := cobra.NewCommand()
 	cmd.SetSilenceErrors(true)
-	cmd.SetUse("todo")
+	cmd.SetUse("gct")
 	cmd.SetShort("A clean architecture TODO application")
 
 	listCmd := gct.NewListCommand(
