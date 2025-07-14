@@ -6,7 +6,7 @@
 
 <div align="center">
 
-# 📝 gct
+# ✅ gct
 
 ![Language:Go](https://img.shields.io/static/v1?label=Language&message=Go&color=blue&style=flat-square)
 
@@ -24,11 +24,7 @@ You can manage your todos via the command line interface with simple commands.
 ### 💻 Usage
 
 ```
-Usage:
-  todo [flags]
-  todo [command]
-
-Available Commands:
+Available Subcommands:
   add         Add a new todo
   completion  Generate the autocompletion script for the specified shell
   delete      Delete a todo
@@ -37,29 +33,53 @@ Available Commands:
   toggle      Toggle todo status
 
 Flags:
-  -h, --help   help for todo
+  -h, --help  help for todo
 ```
 
-### 📝 Examples
+### 💻 Examples
 
 ```sh
 # add a new todo
 gct add "Buy groceries"
-
 # list all todos (default command)
 gct
 # or
 gct list
-
 # toggle todo completion status
 gct toggle 1
-
 # delete a todo
 gct delete 1
-
 # output in JSON format
 gct add "Meeting at 3pm" --format json
 gct list --format json
+```
+
+### 🔧 Installation
+
+#### 🐭 Using go
+
+```sh
+go install github.com/yanosea/gct/app/presentation/cli/gct@latest
+```
+
+### ✨ Update
+
+#### 🐭 Using go
+
+Reinstall `gct`!
+
+```sh
+go install github.com/yanosea/gct/app/presentation/cli/gct@latest
+```
+
+### 🧹 Uninstallation
+
+#### 🐭 Using go
+
+```sh
+rm $GOPATH/bin/gct
+# maybe you have to execute with sudo
+rm -fr $GOPATH/pkg/mod/github.com/yanosea/gct
 ```
 
 ## 🖥️ TUI
@@ -80,6 +100,34 @@ gct-tui
 - Keyboard navigation
 - Clean, minimal interface built with Bubbletea
 
+### 🔧 Installation
+
+#### 🐭 Using go
+
+```sh
+go install github.com/yanosea/gct/app/presentation/tui/gct-tui@latest
+```
+
+### ✨ Update
+
+#### 🐭 Using go
+
+Reinstall `gct-tui`!
+
+```sh
+go install github.com/yanosea/gct/app/presentation/tui/gct-tui@latest
+```
+
+### 🧹 Uninstallation
+
+#### 🐭 Using go
+
+```sh
+rm $GOPATH/bin/gct-tui
+# maybe you have to execute with sudo
+rm -fr $GOPATH/pkg/mod/github.com/yanosea/gct-tui
+```
+
 ## 🌍 Environment Variables
 
 ### 📁 Todo data storage location
@@ -90,22 +138,14 @@ Default: `$XDG_DATA_HOME/gct/todos.json` or `$HOME/.local/share/gct/todos.json`
 export GCT_DATA_FILE=/path/to/your/todos.json
 ```
 
-### 📝 Default output format
-
-Default: `text`
-
-```sh
-export GCT_OUTPUT_FORMAT=json
-```
-
 ### 🗑️ Remove data files
 
 If you've set custom environment variables, please replace the default paths accordingly.
 
 ```sh
-# Remove todo data file (default location)
+# remove todo data file (default location)
 rm $HOME/.local/share/gct/todos.json
-# Remove the entire gct data directory
+# remove the entire gct data directory
 rm -rf $HOME/.local/share/gct
 ```
 
@@ -125,4 +165,3 @@ This project follows Clean Architecture principles:
 ## 🤝 Contributing
 
 Feel free to point me in the right direction🙏
-
