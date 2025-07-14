@@ -35,37 +35,49 @@ func NewToggleCommand(
 	)
 	cmd.SetRunE(
 		func(cmd *c.Command, args []string) error {
-			todoRepo, err := todoRepo.NewTodoRepository(
-				conf,
-				fileutil,
-				json,
-				os,
-			)
-			if err != nil {
-				return err
-			}
-
-			uc := todoApp.NewToggleTodoUseCase(todoRepo)
-			dto, err := uc.Run(args[0])
-			if err != nil {
-				return err
-			}
-
-			f, err := formatter.NewFormatter(format, json)
-			if err != nil {
-				return err
-			}
-
-			o, err := f.Format(dto)
-			if err != nil {
-				return err
-			}
-
-			*output = o
-
-			return nil
+			return runToggle(args, format, json, os, fileutil, conf, output)
 		},
 	)
 
 	return cmd
+}
+
+func runToggle(
+	args []string,
+	format string,
+	json proxy.Json,
+	os proxy.Os,
+	fileutil utility.FileUtil,
+	conf *config.TodoConfig,
+	output *string,
+) error {
+	todoRepo, err := todoRepo.NewTodoRepository(
+		conf,
+		fileutil,
+		json,
+		os,
+	)
+	if err != nil {
+		return err
+	}
+
+	uc := todoApp.NewToggleTodoUseCase(todoRepo)
+	dto, err := uc.Run(args[0])
+	if err != nil {
+		return err
+	}
+
+	f, err := formatter.NewFormatter(format, json)
+	if err != nil {
+		return err
+	}
+
+	o, err := f.Format(dto)
+	if err != nil {
+		return err
+	}
+
+	*output = o
+
+	return nil
 }
