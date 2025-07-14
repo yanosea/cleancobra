@@ -29,7 +29,7 @@ type TodoConfig struct {
 func (c *configurator) GetConfig() (*TodoConfig, error) {
 	var config TodoConfig
 	var err error
-	if err := c.envconfig.Process("", &config); err != nil {
+	if err = c.envconfig.Process("", &config); err != nil {
 		return nil, errors.Wrap(err, "failed to process environment")
 	}
 	return &config, err
