@@ -1,44 +1,36 @@
 package main
 
 import (
-	"github.com/yanosea/gct/app/presentation/cli/gct/command"
+	"os"
 
-	"github.com/yanosea/gct/pkg/proxy"
-	"github.com/yanosea/gct/pkg/utility"
+	"github.com/yanosea/gct/app/composition"
+	"github.com/yanosea/gct/app/presentation/cli/gct/command"
 )
 
-type TodoCliParams struct {
-	Cobra     proxy.Cobra
-	Envconfig proxy.Envconfig
-	Json      proxy.Json
-	Os        proxy.Os
-	FileUtil  utility.FileUtil
-}
-
 var (
-	exit          = os.Exit
-	os            = proxy.NewOs()
-	todoCliParams = TodoCliParams{
-		Cobra:     proxy.NewCobra(),
-		Envconfig: proxy.NewEnvconfig(),
-		Json:      proxy.NewJson(),
-		Os:        os,
-		FileUtil:  utility.NewFileUtil(os, proxy.NewJson()),
-	}
+	exit = os.Exit
 )
 
 func main() {
+	// Initialize dependency injection container (composition root)
+	diContainer := composition.NewContainer()
+	if err := diContainer.Initialize(); err != nil {
+		exit(1)
+	}
+
+	// Create CLI with dependencies from container
 	cli := command.NewCli(
-		todoCliParams.Cobra,
+		diContainer.GetCobra(),
 	)
+
 	if exitCode := cli.Init(
-		todoCliParams.Envconfig,
-		todoCliParams.Json,
-		todoCliParams.Os,
-		todoCliParams.FileUtil,
+		diContainer.GetEnvconfig(),
+		diContainer.GetJson(),
+		diContainer.GetOs(),
+		diContainer.GetFileUtil(),
 	); exitCode != 0 {
 		exit(exitCode)
 	}
 
-	os.Exit(cli.Run())
+	exit(cli.Run())
 }

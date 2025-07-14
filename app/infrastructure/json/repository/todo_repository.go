@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"errors"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/yanosea/gct/app/config"
@@ -84,7 +84,7 @@ func (r *TodoRepository) FindByID(id string) (*todoDomain.Todo, error) {
 		}
 	}
 
-	return nil, errors.New("todo not found")
+	return nil, todoDomain.TodoNotFoundError{ID: id}
 }
 
 func (r *TodoRepository) Update(todo *todoDomain.Todo) error {
@@ -100,7 +100,7 @@ func (r *TodoRepository) Update(todo *todoDomain.Todo) error {
 		}
 	}
 
-	return errors.New("todo not found")
+	return todoDomain.TodoNotFoundError{ID: todo.ID}
 }
 
 func (r *TodoRepository) Delete(id string) error {
@@ -116,7 +116,88 @@ func (r *TodoRepository) Delete(id string) error {
 		}
 	}
 
-	return errors.New("todo not found")
+	return todoDomain.TodoNotFoundError{ID: id}
+}
+
+func (r *TodoRepository) FindByQuery(query todoDomain.TodoQuery) ([]*todoDomain.Todo, error) {
+	todos, err := r.FindAll()
+	if err != nil {
+		return nil, err
+	}
+
+	// Filter by completion status
+	if query.Done != nil {
+		filtered := make([]*todoDomain.Todo, 0)
+		for _, todo := range todos {
+			if todo.Done == *query.Done {
+				filtered = append(filtered, todo)
+			}
+		}
+		todos = filtered
+	}
+
+	// Sort todos
+	r.sortTodos(todos, query.SortBy, query.Order)
+
+	// Apply pagination
+	if query.Offset > 0 && query.Offset < len(todos) {
+		todos = todos[query.Offset:]
+	}
+	if query.Limit > 0 && query.Limit < len(todos) {
+		todos = todos[:query.Limit]
+	}
+
+	return todos, nil
+}
+
+func (r *TodoRepository) Count() (int, error) {
+	todos, err := r.FindAll()
+	if err != nil {
+		return 0, err
+	}
+	return len(todos), nil
+}
+
+func (r *TodoRepository) CountByQuery(query todoDomain.TodoQuery) (int, error) {
+	todos, err := r.FindAll()
+	if err != nil {
+		return 0, err
+	}
+
+	count := 0
+	for _, todo := range todos {
+		if query.Done == nil || todo.Done == *query.Done {
+			count++
+		}
+	}
+
+	return count, nil
+}
+
+func (r *TodoRepository) sortTodos(todos []*todoDomain.Todo, sortBy, order string) {
+	if sortBy == "" {
+		sortBy = "created_at"
+	}
+	if order == "" {
+		order = "desc"
+	}
+
+	sort.Slice(todos, func(i, j int) bool {
+		var less bool
+		switch sortBy {
+		case "title":
+			less = strings.ToLower(todos[i].Title) < strings.ToLower(todos[j].Title)
+		case "created_at":
+			less = todos[i].CreatedAt.Before(todos[j].CreatedAt)
+		default:
+			less = todos[i].CreatedAt.Before(todos[j].CreatedAt)
+		}
+
+		if order == "desc" {
+			return !less
+		}
+		return less
+	})
 }
 
 func (r *TodoRepository) writeTodos(todos []*todoDomain.Todo) error {

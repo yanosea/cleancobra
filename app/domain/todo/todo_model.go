@@ -1,7 +1,6 @@
 package todo
 
 import (
-	"errors"
 	"fmt"
 	"time"
 )
@@ -15,7 +14,10 @@ type Todo struct {
 
 func NewTodo(title string) (*Todo, error) {
 	if title == "" {
-		return nil, errors.New("title is empty")
+		return nil, InvalidTodoError{
+			Field:   "title",
+			Message: "title cannot be empty",
+		}
 	}
 	now := time.Now()
 	return &Todo{
