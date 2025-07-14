@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	todoApp "github.com/yanosea/cleancobra/app/application/todo"
-	"github.com/yanosea/cleancobra/app/config"
-	"github.com/yanosea/cleancobra/app/infrastructure/json/repository"
-	"github.com/yanosea/cleancobra/app/presentation/tui/todo-tui/model"
-	"github.com/yanosea/cleancobra/pkg/proxy"
-	"github.com/yanosea/cleancobra/pkg/utility"
+	todoApp "github.com/yanosea/gct/app/application/todo"
+	"github.com/yanosea/gct/app/config"
+	"github.com/yanosea/gct/app/infrastructure/json/repository"
+	"github.com/yanosea/gct/app/presentation/tui/todo-tui/model"
+	"github.com/yanosea/gct/pkg/proxy"
+	"github.com/yanosea/gct/pkg/utility"
 )
 
 type Tui struct {

@@ -1,4 +1,4 @@
-module github.com/yanosea/cleancobra
+module github.com/yanosea/gct
 
 go 1.23.0
 

@@ -3,8 +3,8 @@ package formatter
 import (
 	"fmt"
 
-	todoApp "github.com/yanosea/cleancobra/app/application/todo"
-	"github.com/yanosea/cleancobra/pkg/errors"
+	todoApp "github.com/yanosea/gct/app/application/todo"
+	"github.com/yanosea/gct/pkg/errors"
 )
 
 type Formatter interface {

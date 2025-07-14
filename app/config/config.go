@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/yanosea/cleancobra/pkg/errors"
-	"github.com/yanosea/cleancobra/pkg/proxy"
+	"github.com/yanosea/gct/pkg/errors"
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 type Configurator interface {
@@ -22,8 +22,8 @@ func NewConfigurator(
 }
 
 type TodoConfig struct {
-	DBDirPath    string `envconfig:"CLEANCOBRA_TODO_DB_DIR_PATH" default:"XDG_DATA_HOME/cleancobra/todos"`
-	OutputFormat string `envconfig:"CLEANCOBRA_TODO_OUTPUT_FORMAT" default:"text"`
+	DBDirPath    string `envconfig:"GCT_TODO_DB_DIR_PATH" default:"XDG_DATA_HOME/gct/todos"`
+	OutputFormat string `envconfig:"GCT_TODO_OUTPUT_FORMAT" default:"text"`
 }
 
 func (c *configurator) GetConfig() (*TodoConfig, error) {

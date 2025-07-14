@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/yanosea/cleancobra/pkg/errors"
+	"github.com/yanosea/gct/pkg/errors"
 )
 
 type Todo struct {

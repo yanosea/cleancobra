@@ -3,8 +3,8 @@ package utility
 import (
 	"path/filepath"
 
-	"github.com/yanosea/cleancobra/pkg/errors"
-	"github.com/yanosea/cleancobra/pkg/proxy"
+	"github.com/yanosea/gct/pkg/errors"
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 type FileUtil interface {

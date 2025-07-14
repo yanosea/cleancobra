@@ -4,12 +4,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/yanosea/cleancobra/app/config"
-	todoDomain "github.com/yanosea/cleancobra/app/domain/todo"
+	"github.com/yanosea/gct/app/config"
+	todoDomain "github.com/yanosea/gct/app/domain/todo"
 
-	"github.com/yanosea/cleancobra/pkg/errors"
-	"github.com/yanosea/cleancobra/pkg/proxy"
-	"github.com/yanosea/cleancobra/pkg/utility"
+	"github.com/yanosea/gct/pkg/errors"
+	"github.com/yanosea/gct/pkg/proxy"
+	"github.com/yanosea/gct/pkg/utility"
 )
 
 const (

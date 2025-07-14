@@ -3,12 +3,12 @@ package command
 import (
 	o "os"
 
-	"github.com/yanosea/cleancobra/app/config"
-	"github.com/yanosea/cleancobra/app/presentation/cli/todo/formatter"
-	"github.com/yanosea/cleancobra/app/presentation/cli/todo/presenter"
+	"github.com/yanosea/gct/app/config"
+	"github.com/yanosea/gct/app/presentation/cli/todo/formatter"
+	"github.com/yanosea/gct/app/presentation/cli/todo/presenter"
 
-	"github.com/yanosea/cleancobra/pkg/proxy"
-	"github.com/yanosea/cleancobra/pkg/utility"
+	"github.com/yanosea/gct/pkg/proxy"
+	"github.com/yanosea/gct/pkg/utility"
 )
 
 type Cli struct {

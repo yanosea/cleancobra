@@ -1,7 +1,7 @@
 package todo
 
 import (
-	todoDomain "github.com/yanosea/cleancobra/app/domain/todo"
+	todoDomain "github.com/yanosea/gct/app/domain/todo"
 )
 
 type AddTodoUseCase struct {

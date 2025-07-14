@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/yanosea/cleancobra/app/presentation/tui/todo-tui/command"
-	"github.com/yanosea/cleancobra/pkg/proxy"
-	"github.com/yanosea/cleancobra/pkg/utility"
+	"github.com/yanosea/gct/app/presentation/tui/todo-tui/command"
+	"github.com/yanosea/gct/pkg/proxy"
+	"github.com/yanosea/gct/pkg/utility"
 )
 
 const helpText = `A clean architecture TODO application

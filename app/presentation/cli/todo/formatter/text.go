@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	todoApp "github.com/yanosea/cleancobra/app/application/todo"
+	todoApp "github.com/yanosea/gct/app/application/todo"
 
-	"github.com/yanosea/cleancobra/pkg/errors"
+	"github.com/yanosea/gct/pkg/errors"
 )
 
 type TextFormatter struct{}

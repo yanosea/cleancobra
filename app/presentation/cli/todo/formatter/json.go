@@ -1,7 +1,7 @@
 package formatter
 
 import (
-	"github.com/yanosea/cleancobra/pkg/proxy"
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 type JSONFormatter struct {

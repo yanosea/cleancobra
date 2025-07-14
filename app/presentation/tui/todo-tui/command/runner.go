@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/yanosea/cleancobra/app/presentation/tui/todo-tui/model"
-	"github.com/yanosea/cleancobra/pkg/proxy"
+	"github.com/yanosea/gct/app/presentation/tui/todo-tui/model"
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 type Runner struct {

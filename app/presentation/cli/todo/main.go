@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/yanosea/cleancobra/app/presentation/cli/todo/command"
+	"github.com/yanosea/gct/app/presentation/cli/todo/command"
 
-	"github.com/yanosea/cleancobra/pkg/proxy"
-	"github.com/yanosea/cleancobra/pkg/utility"
+	"github.com/yanosea/gct/pkg/proxy"
+	"github.com/yanosea/gct/pkg/utility"
 )
 
 var (

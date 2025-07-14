@@ -3,13 +3,13 @@ package todo
 import (
 	c "github.com/spf13/cobra"
 
-	todoApp "github.com/yanosea/cleancobra/app/application/todo"
-	"github.com/yanosea/cleancobra/app/config"
-	todoRepo "github.com/yanosea/cleancobra/app/infrastructure/json/repository"
-	"github.com/yanosea/cleancobra/app/presentation/cli/todo/formatter"
+	todoApp "github.com/yanosea/gct/app/application/todo"
+	"github.com/yanosea/gct/app/config"
+	todoRepo "github.com/yanosea/gct/app/infrastructure/json/repository"
+	"github.com/yanosea/gct/app/presentation/cli/todo/formatter"
 
-	"github.com/yanosea/cleancobra/pkg/proxy"
-	"github.com/yanosea/cleancobra/pkg/utility"
+	"github.com/yanosea/gct/pkg/proxy"
+	"github.com/yanosea/gct/pkg/utility"
 )
 
 func NewAddCommand(

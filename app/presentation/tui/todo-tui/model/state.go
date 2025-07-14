@@ -1,6 +1,6 @@
 package model
 
-import todoApp "github.com/yanosea/cleancobra/app/application/todo"
+import todoApp "github.com/yanosea/gct/app/application/todo"
 
 type Mode int
 

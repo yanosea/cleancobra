@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	todoApp "github.com/yanosea/cleancobra/app/application/todo"
-	"github.com/yanosea/cleancobra/app/presentation/tui/todo-tui/formatter"
-	"github.com/yanosea/cleancobra/pkg/proxy"
+	todoApp "github.com/yanosea/gct/app/application/todo"
+	"github.com/yanosea/gct/app/presentation/tui/todo-tui/formatter"
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 type Model struct {
