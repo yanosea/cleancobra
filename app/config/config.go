@@ -22,8 +22,8 @@ func NewConfigurator(
 }
 
 type TodoConfig struct {
-	DBDirPath    string `envconfig:"GCT_TODO_DB_DIR_PATH" default:"XDG_DATA_HOME/gct/todos"`
-	OutputFormat string `envconfig:"GCT_TODO_OUTPUT_FORMAT" default:"text"`
+	DBDirPath    string `envconfig:"GCT_DB_DIR_PATH" default:"XDG_DATA_HOME/gct"`
+	OutputFormat string `envconfig:"GCT_OUTPUT_FORMAT" default:"text"`
 }
 
 func (c *configurator) GetConfig() (*TodoConfig, error) {
