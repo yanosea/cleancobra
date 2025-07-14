@@ -14,7 +14,7 @@ const helpText = `A clean architecture TODO application
 Usage:
   todo-tui [options]
 
-Available Operations (Interactive):
+Available Operations:
   ↑/k         Move cursor up
   ↓/j         Move cursor down
   enter/space Toggle todo status
@@ -23,7 +23,7 @@ Available Operations (Interactive):
   r           Refresh todo list
   q           Quit application
 
-Options:
+Flags:
   -h, --help  Show this help message`
 
 var (
