@@ -437,8 +437,8 @@ const (
 
 - **テスト形式**: 全てのテストはテーブル駆動テスト（Table-Driven Tests）で実装
 - **テスト名命名規則**:
-    - **正常系**: `positive testing` で始まる
-    - **異常系**: `negative testing (...) failed` の形式
+    - **正常系**: `positive testing (...)` の形式
+    - **異常系**: `negative testing (... failed)` の形式
 - **テスト構造例**:
 
 ```go
@@ -658,4 +658,3 @@ func (m Model) View() string {
 - ユーザー入力の検証とサニタイゼーション
 - JSONデータの検証
 - 環境変数の検証
-

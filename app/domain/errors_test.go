@@ -13,32 +13,32 @@ func TestErrorType_String(t *testing.T) {
 		want     string
 	}{
 		{
-			name:     "positive testing - ErrorTypeNotFound",
+			name:     "positive testing (ErrorTypeNotFound)",
 			errorType: ErrorTypeNotFound,
 			want:     "NotFound",
 		},
 		{
-			name:     "positive testing - ErrorTypeInvalidInput",
+			name:     "positive testing (ErrorTypeInvalidInput)",
 			errorType: ErrorTypeInvalidInput,
 			want:     "InvalidInput",
 		},
 		{
-			name:     "positive testing - ErrorTypeFileSystem",
+			name:     "positive testing (ErrorTypeFileSystem)",
 			errorType: ErrorTypeFileSystem,
 			want:     "FileSystem",
 		},
 		{
-			name:     "positive testing - ErrorTypeJSON",
+			name:     "positive testing (ErrorTypeJSON)",
 			errorType: ErrorTypeJSON,
 			want:     "JSON",
 		},
 		{
-			name:     "positive testing - ErrorTypeConfiguration",
+			name:     "positive testing (ErrorTypeConfiguration)",
 			errorType: ErrorTypeConfiguration,
 			want:     "Configuration",
 		},
 		{
-			name:     "positive testing - unknown error type",
+			name:     "positive testing (unknown error type)",
 			errorType: ErrorType(999),
 			want:     "Unknown",
 		},
@@ -65,7 +65,7 @@ func TestNewDomainError(t *testing.T) {
 		want      *DomainError
 	}{
 		{
-			name:      "positive testing - with cause error",
+			name:      "positive testing (with cause error)",
 			errorType: ErrorTypeNotFound,
 			message:   "test message",
 			cause:     causeErr,
@@ -76,7 +76,7 @@ func TestNewDomainError(t *testing.T) {
 			},
 		},
 		{
-			name:      "positive testing - without cause error",
+			name:      "positive testing (without cause error)",
 			errorType: ErrorTypeInvalidInput,
 			message:   "validation failed",
 			cause:     nil,
@@ -113,7 +113,7 @@ func TestDomainError_Error(t *testing.T) {
 		want        string
 	}{
 		{
-			name: "positive testing - with cause error",
+			name: "positive testing (with cause error)",
 			domainError: &DomainError{
 				Type:    ErrorTypeNotFound,
 				Message: "todo not found",
@@ -122,7 +122,7 @@ func TestDomainError_Error(t *testing.T) {
 			want: "NotFound: todo not found (caused by: underlying error)",
 		},
 		{
-			name: "positive testing - without cause error",
+			name: "positive testing (without cause error)",
 			domainError: &DomainError{
 				Type:    ErrorTypeInvalidInput,
 				Message: "invalid input",
@@ -151,7 +151,7 @@ func TestDomainError_Unwrap(t *testing.T) {
 		want        error
 	}{
 		{
-			name: "positive testing - with cause error",
+			name: "positive testing (with cause error)",
 			domainError: &DomainError{
 				Type:    ErrorTypeNotFound,
 				Message: "test message",
@@ -160,7 +160,7 @@ func TestDomainError_Unwrap(t *testing.T) {
 			want: causeErr,
 		},
 		{
-			name: "positive testing - without cause error",
+			name: "positive testing (without cause error)",
 			domainError: &DomainError{
 				Type:    ErrorTypeInvalidInput,
 				Message: "test message",
@@ -206,19 +206,19 @@ func TestDomainError_Is(t *testing.T) {
 		want        bool
 	}{
 		{
-			name:        "positive testing - same type and message",
+			name:        "positive testing (same type and message)",
 			domainError: domainErr1,
 			target:      domainErr2,
 			want:        true,
 		},
 		{
-			name:        "positive testing - different type",
+			name:        "positive testing (different type)",
 			domainError: domainErr1,
 			target:      domainErr3,
 			want:        false,
 		},
 		{
-			name:        "positive testing - different message",
+			name:        "positive testing (different message)",
 			domainError: domainErr1,
 			target: &DomainError{
 				Type:    ErrorTypeNotFound,
@@ -228,7 +228,7 @@ func TestDomainError_Is(t *testing.T) {
 			want: false,
 		},
 		{
-			name:        "positive testing - non-domain error",
+			name:        "positive testing (non-domain error)",
 			domainError: domainErr1,
 			target:      regularErr,
 			want:        false,
@@ -254,21 +254,21 @@ func TestPredefinedErrors(t *testing.T) {
 		wantCause error
 	}{
 		{
-			name:      "positive testing - ErrTodoNotFound",
+			name:      "positive testing (ErrTodoNotFound)",
 			err:       ErrTodoNotFound,
 			wantType:  ErrorTypeNotFound,
 			wantMsg:   "todo not found",
 			wantCause: nil,
 		},
 		{
-			name:      "positive testing - ErrEmptyDescription",
+			name:      "positive testing (ErrEmptyDescription)",
 			err:       ErrEmptyDescription,
 			wantType:  ErrorTypeInvalidInput,
 			wantMsg:   "description cannot be empty",
 			wantCause: nil,
 		},
 		{
-			name:      "positive testing - ErrInvalidID",
+			name:      "positive testing (ErrInvalidID)",
 			err:       ErrInvalidID,
 			wantType:  ErrorTypeInvalidInput,
 			wantMsg:   "invalid todo ID",
@@ -301,22 +301,22 @@ func TestIsDomainError(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "positive testing - domain error",
+			name: "positive testing (domain error)",
 			err:  domainErr,
 			want: true,
 		},
 		{
-			name: "positive testing - regular error",
+			name: "positive testing (regular error)",
 			err:  regularErr,
 			want: false,
 		},
 		{
-			name: "positive testing - nil error",
+			name: "positive testing (nil error)",
 			err:  nil,
 			want: false,
 		},
 		{
-			name: "positive testing - wrapped domain error",
+			name: "positive testing (wrapped domain error)",
 			err:  fmt.Errorf("wrapped: %w", domainErr),
 			want: true,
 		},
@@ -342,17 +342,17 @@ func TestGetErrorType(t *testing.T) {
 		want ErrorType
 	}{
 		{
-			name: "positive testing - domain error",
+			name: "positive testing (domain error)",
 			err:  domainErr,
 			want: ErrorTypeNotFound,
 		},
 		{
-			name: "positive testing - regular error",
+			name: "positive testing (regular error)",
 			err:  regularErr,
 			want: ErrorTypeConfiguration,
 		},
 		{
-			name: "positive testing - wrapped domain error",
+			name: "positive testing (wrapped domain error)",
 			err:  fmt.Errorf("wrapped: %w", domainErr),
 			want: ErrorTypeNotFound,
 		},
@@ -379,17 +379,17 @@ func TestIsNotFoundError(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "positive testing - not found error",
+			name: "positive testing (not found error)",
 			err:  notFoundErr,
 			want: true,
 		},
 		{
-			name: "positive testing - invalid input error",
+			name: "positive testing (invalid input error)",
 			err:  invalidInputErr,
 			want: false,
 		},
 		{
-			name: "positive testing - regular error",
+			name: "positive testing (regular error)",
 			err:  regularErr,
 			want: false,
 		},
@@ -416,17 +416,17 @@ func TestIsInvalidInputError(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "positive testing - invalid input error",
+			name: "positive testing (invalid input error)",
 			err:  invalidInputErr,
 			want: true,
 		},
 		{
-			name: "positive testing - not found error",
+			name: "positive testing (not found error)",
 			err:  notFoundErr,
 			want: false,
 		},
 		{
-			name: "positive testing - regular error",
+			name: "positive testing (regular error)",
 			err:  regularErr,
 			want: false,
 		},
@@ -453,17 +453,17 @@ func TestIsFileSystemError(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "positive testing - file system error",
+			name: "positive testing (file system error)",
 			err:  fileSystemErr,
 			want: true,
 		},
 		{
-			name: "positive testing - not found error",
+			name: "positive testing (not found error)",
 			err:  notFoundErr,
 			want: false,
 		},
 		{
-			name: "positive testing - regular error",
+			name: "positive testing (regular error)",
 			err:  regularErr,
 			want: false,
 		},
@@ -490,17 +490,17 @@ func TestIsJSONError(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "positive testing - JSON error",
+			name: "positive testing (JSON error)",
 			err:  jsonErr,
 			want: true,
 		},
 		{
-			name: "positive testing - not found error",
+			name: "positive testing (not found error)",
 			err:  notFoundErr,
 			want: false,
 		},
 		{
-			name: "positive testing - regular error",
+			name: "positive testing (regular error)",
 			err:  regularErr,
 			want: false,
 		},
@@ -527,17 +527,17 @@ func TestIsConfigurationError(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "positive testing - configuration error",
+			name: "positive testing (configuration error)",
 			err:  configErr,
 			want: true,
 		},
 		{
-			name: "positive testing - not found error",
+			name: "positive testing (not found error)",
 			err:  notFoundErr,
 			want: false,
 		},
 		{
-			name: "positive testing - regular error (defaults to configuration)",
+			name: "positive testing (regular error defaults to configuration)",
 			err:  regularErr,
 			want: true,
 		},
