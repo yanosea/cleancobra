@@ -19,7 +19,7 @@
 │                    Presentation Layer                       │
 │  ┌─────────────────────┐    ┌─────────────────────────────┐ │
 │  │        CLI          │    │            TUI              │ │
-│  │   (Cobra-based)     │    │    (Bubbletea + ELM)       │ │
+│  │   (Cobra-based)     │    │    (Bubbletea + ELM)        │ │
 │  └─────────────────────┘    └─────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -80,6 +80,7 @@ app/
 ### Domain Layer
 
 #### Todo Entity
+
 ```go
 type Todo struct {
     ID          int       `json:"id"`
@@ -91,6 +92,7 @@ type Todo struct {
 ```
 
 #### TodoRepository Interface
+
 ```go
 type TodoRepository interface {
     FindAll() ([]Todo, error)
@@ -102,12 +104,14 @@ type TodoRepository interface {
 ### Application Layer
 
 #### Use Cases
+
 - **AddTodoUseCase**: 新しいTODOを追加
 - **DeleteTodoUseCase**: 指定されたIDのTODOを削除
 - **ListTodoUseCase**: 全てのTODOを取得
 - **ToggleTodoUseCase**: 指定されたIDのTODOの完了状態を切り替え
 
 各UseCaseは以下のパターンに従います：
+
 ```go
 type AddTodoUseCase struct {
     repo TodoRepository
@@ -119,6 +123,7 @@ func (uc *AddTodoUseCase) Run(description string) (*Todo, error)
 ### Infrastructure Layer
 
 #### JSONRepository
+
 - ファイルベースのJSON永続化を実装
 - 環境変数による設定ファイルパスの管理
 - ファイルロックによる並行アクセス制御
@@ -127,6 +132,7 @@ func (uc *AddTodoUseCase) Run(description string) (*Todo, error)
 ### Configuration Layer (app/config)
 
 #### Configuration Management
+
 設定は横断的関心事として独立したパッケージで管理：
 
 ```go
@@ -142,6 +148,7 @@ func (c *Config) Validate() error
 ### Container Layer (app/container)
 
 #### Dependency Injection Container
+
 全ての依存関係の組み立てを担当：
 
 ```go
@@ -175,6 +182,7 @@ func (c *Container) GetRepository() domain.TodoRepository
 ### Presentation Layer
 
 #### CLI (Cobra-based)
+
 ```
 gct/
 ├── main.go                 # エントリーポイント（シンプルな実行部分のみ）
@@ -203,6 +211,7 @@ gct/
 ```
 
 ##### CLI Command Usage Examples
+
 ```bash
 # ルートコマンド（デフォルトでlist実行）
 go run ./app/presentation/cli/gct/main.go
@@ -237,6 +246,7 @@ go run ./app/presentation/cli/gct/main.go completion zsh
 ```
 
 ##### Command Structure
+
 - **Root Command**: 引数なしで実行した場合は `list` コマンドを実行
 - **Add Command**: `gct add <description>` - 新しいTODOを追加
 - **List Command**: `gct list [--format json]` - TODOリストを表示
@@ -244,7 +254,9 @@ go run ./app/presentation/cli/gct/main.go completion zsh
 - **Delete Command**: `gct delete <id>` - 指定IDのTODOを削除
 
 ##### Cobra Proxy Command Implementation Pattern
+
 各コマンドはcobraプロキシを使用して以下のパターンで実装:
+
 ```go
 func NewAddCommand(
     cobra proxy.Cobra,
@@ -275,6 +287,7 @@ func runAdd(useCase *application.AddTodoUseCase, presenter *presenter.TodoPresen
 ```
 
 #### TUI (Bubbletea + ELM Architecture)
+
 ```
 gct-tui/
 ├── main.go               # エントリーポイント（シンプルな実行部分のみ）
@@ -301,7 +314,9 @@ gct-tui/
 ```
 
 ### Proxy Layer
+
 テスタビリティのために標準パッケージとサードパーティパッケージをラップ：
+
 ```
 pkg/proxy/
 ├── os.go                # os パッケージのプロキシ
@@ -323,22 +338,24 @@ pkg/proxy/
 ## Data Models
 
 ### Todo JSON Structure
+
 ```json
 {
-  "todos": [
-    {
-      "id": 1,
-      "description": "Buy groceries",
-      "done": false,
-      "created_at": "2025-01-15T10:00:00Z",
-      "updated_at": "2025-01-15T10:00:00Z"
-    }
-  ],
-  "next_id": 2
+    "todos": [
+        {
+            "id": 1,
+            "description": "Buy groceries",
+            "done": false,
+            "created_at": "2025-01-15T10:00:00Z",
+            "updated_at": "2025-01-15T10:00:00Z"
+        }
+    ],
+    "next_id": 2
 }
 ```
 
 ### Configuration Model
+
 ```go
 type Config struct {
     DataFile string `envconfig:"GCT_DATA_FILE"`
@@ -353,6 +370,7 @@ type Config struct {
 ## Error Handling
 
 ### Error Types
+
 ```go
 type TodoError struct {
     Type    ErrorType
@@ -372,6 +390,7 @@ const (
 ```
 
 ### Error Handling Strategy
+
 - **Domain Layer**: ビジネスロジックエラーを定義
 - **Application Layer**: UseCaseレベルでのエラーハンドリング
 - **Infrastructure Layer**: ファイルシステムとJSONエラーの処理
@@ -380,40 +399,48 @@ const (
 ## Testing Strategy
 
 ### Unit Testing
+
 - **Domain Layer**: エンティティとビジネスロジックのテスト
 - **Application Layer**: UseCaseの単体テスト（モックリポジトリ使用）
 - **Infrastructure Layer**: JSONRepository の統合テスト
 - **Presentation Layer**: コマンドハンドラーとビューのテスト
 
 ### Test Coverage Goals
+
 - app/ ディレクトリ配下で100%のテストカバレッジを達成
 - proxy/ ディレクトリ配下のテストは不要
 - テーブル駆動テストパターンの採用
 - モックとスタブを使用した依存関係の分離
 
 ### Testing Tools
+
 - 標準の `testing` パッケージ
 - `testify` ライブラリ（アサーション）
 - `gomock` と `mockgen` （モック生成）
 - カスタムテストヘルパー関数
 
 ### Mock Generation Strategy
+
 - **gomock/mockgen** を使用してインターフェースのモックを自動生成
 - モックは同じパッケージ内に `*_mock.go` の命名で配置
 - モック生成コマンド例:
+
 ```bash
 //go:generate mockgen -source=repository.go -destination=repository_mock.go -package=domain
 //go:generate mockgen -source=os.go -destination=os_mock.go -package=proxy
 ```
+
 - 各パッケージ内でのモック管理により、テストの可読性と保守性を向上
 - CI/CDでのモック生成の自動化
 
 ### Testing Conventions
+
 - **テスト形式**: 全てのテストはテーブル駆動テスト（Table-Driven Tests）で実装
 - **テスト名命名規則**:
-  - **正常系**: `positive testing` で始まる
-  - **異常系**: `negative testing (...) failed` の形式
+    - **正常系**: `positive testing` で始まる
+    - **異常系**: `negative testing (...) failed` の形式
 - **テスト構造例**:
+
 ```go
 func TestAddTodoUseCase_Run(t *testing.T) {
     tests := []struct {
@@ -438,7 +465,7 @@ func TestAddTodoUseCase_Run(t *testing.T) {
             wantErr:     true,
         },
     }
-    
+
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
             // test implementation
@@ -448,7 +475,9 @@ func TestAddTodoUseCase_Run(t *testing.T) {
 ```
 
 ### Test Structure
+
 テストファイルは対象ファイルと同じディレクトリに配置:
+
 ```
 app/
 ├── config/
@@ -559,6 +588,7 @@ app/
 ## TUI ELM Architecture Integration
 
 ### Model
+
 ```go
 type Model struct {
     todos       []domain.Todo
@@ -571,6 +601,7 @@ type Model struct {
 ```
 
 ### Update
+
 ```go
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     switch msg := msg.(type) {
@@ -584,6 +615,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 ```
 
 ### View
+
 ```go
 func (m Model) View() string {
     return lipgloss.JoinVertical(
@@ -598,26 +630,32 @@ func (m Model) View() string {
 ## Performance Considerations
 
 ### File I/O Optimization
+
 - JSONファイルの読み込みは起動時とデータ変更時のみ
 - バッチ操作での複数変更の最適化
 - ファイルサイズが大きくなった場合の対策
 
 ### Memory Management
+
 - 大量のTODOアイテムに対するメモリ効率的な処理
 - TUIでの仮想スクロール（必要に応じて）
 
 ### Concurrency
+
 - ファイルアクセスの排他制御
 - TUIでの非同期操作の適切な処理
 
 ## Security Considerations
 
 ### File System Security
+
 - ファイルパスのサニタイゼーション
 - 適切なファイル権限の設定
 - ディレクトリトラバーサル攻撃の防止
 
 ### Input Validation
+
 - ユーザー入力の検証とサニタイゼーション
 - JSONデータの検証
 - 環境変数の検証
+
