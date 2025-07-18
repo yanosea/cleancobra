@@ -1,34 +1,34 @@
 package model
 
 import (
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/yanosea/gct/app/application"
 	"github.com/yanosea/gct/pkg/proxy"
-	tea "github.com/charmbracelet/bubbletea"
 )
 
 // StateModel represents the main application state model for the TUI
 type StateModel struct {
 	// Todo management
 	todos []*ItemModel
-	
+
 	// UI state components
 	mode       Mode
 	navigation *NavigationState
 	input      *InputState
-	
+
 	// Use cases for business logic
 	addUseCase    *application.AddTodoUseCase
 	listUseCase   *application.ListTodoUseCase
 	toggleUseCase *application.ToggleTodoUseCase
 	deleteUseCase *application.DeleteTodoUseCase
-	
+
 	// Confirmation state
 	confirmationMessage string
 	confirmationAction  func() tea.Cmd
-	
+
 	// Error state
 	errorMessage string
-	
+
 	// Dimensions
 	width  int
 	height int
@@ -75,12 +75,12 @@ func (m *StateModel) LoadTodos() tea.Cmd {
 		if err != nil {
 			return ErrorMsg{Error: err}
 		}
-		
+
 		itemModels := make([]*ItemModel, len(todos))
 		for i, todo := range todos {
 			itemModels[i] = NewItemModel(&todo)
 		}
-		
+
 		return TodosLoadedMsg{Todos: itemModels}
 	}
 }
@@ -93,7 +93,7 @@ func (m *StateModel) Cursor() int {
 // SetCursor sets the cursor position
 func (m *StateModel) SetCursor(cursor int) {
 	m.navigation.SetCursor(cursor, len(m.todos))
-	
+
 	// Update selection state
 	m.clearSelection()
 	if cursor >= 0 && cursor < len(m.todos) {
@@ -152,7 +152,7 @@ func (m *StateModel) Mode() Mode {
 // SetMode sets the current mode
 func (m *StateModel) SetMode(mode Mode) {
 	m.mode = mode
-	
+
 	switch mode {
 	case ModeInput:
 		m.input.Clear()
@@ -190,7 +190,7 @@ func (m *StateModel) ToggleTodo() tea.Cmd {
 	if cursor < 0 || cursor >= len(m.todos) || m.todos[cursor].Todo() == nil {
 		return nil
 	}
-	
+
 	todoID := m.todos[cursor].Todo().ID
 	return func() tea.Msg {
 		todo, err := m.toggleUseCase.Run(todoID)
@@ -207,7 +207,7 @@ func (m *StateModel) DeleteTodo() tea.Cmd {
 	if cursor < 0 || cursor >= len(m.todos) || m.todos[cursor].Todo() == nil {
 		return nil
 	}
-	
+
 	todoID := m.todos[cursor].Todo().ID
 	return func() tea.Msg {
 		err := m.deleteUseCase.Run(todoID)
@@ -224,14 +224,14 @@ func (m *StateModel) UpdateTodo(description string) tea.Cmd {
 	if cursor < 0 || cursor >= len(m.todos) || m.todos[cursor].Todo() == nil {
 		return nil
 	}
-	
+
 	todo := m.todos[cursor].Todo()
 	if err := todo.UpdateDescription(description); err != nil {
 		return func() tea.Msg {
 			return ErrorMsg{Error: err}
 		}
 	}
-	
+
 	// Save the updated todo
 	return func() tea.Msg {
 		// Note: We need to save through repository, but for now we'll simulate
@@ -294,7 +294,7 @@ func (m *StateModel) ClearError() {
 func (m *StateModel) SetSize(width, height int) {
 	m.width = width
 	m.height = height
-	
+
 	// Adjust input width based on available space
 	if width > 10 {
 		m.input.SetWidth(width - 10)
@@ -322,21 +322,21 @@ func (m *StateModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.SetSize(msg.Width, msg.Height)
 		return m, nil
-		
+
 	case tea.KeyMsg:
 		return m.handleKeyMsg(msg)
-		
+
 	case TodosLoadedMsg:
 		m.SetTodos(msg.Todos)
 		if len(m.todos) > 0 {
 			m.SetCursor(0)
 		}
 		return m, nil
-		
+
 	case TodoAddedMsg:
 		// Reload todos to get the updated list
 		return m, m.LoadTodos()
-		
+
 	case TodoToggledMsg:
 		// Update the specific todo in our list
 		for _, itemModel := range m.todos {
@@ -346,11 +346,11 @@ func (m *StateModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 		return m, nil
-		
+
 	case TodoDeletedMsg:
 		// Reload todos to get the updated list
 		return m, m.LoadTodos()
-		
+
 	case TodoUpdatedMsg:
 		// Update the specific todo in our list
 		for _, itemModel := range m.todos {
@@ -361,13 +361,13 @@ func (m *StateModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.SetMode(ModeNormal)
 		return m, nil
-		
+
 	case ErrorMsg:
 		m.SetError(msg.Error)
 		m.SetMode(ModeNormal)
 		return m, nil
 	}
-	
+
 	// Handle input updates when in input modes
 	if m.mode == ModeInput || m.mode == ModeEdit {
 		var cmd tea.Cmd
@@ -375,7 +375,7 @@ func (m *StateModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		textInput, cmd = textInput.Update(msg)
 		return m, cmd
 	}
-	
+
 	return m, nil
 }
 
@@ -513,4 +513,3 @@ func (m *StateModel) handleConfirmationModeKeys(msg tea.KeyMsg) (tea.Model, tea.
 	}
 	return m, nil
 }
-

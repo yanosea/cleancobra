@@ -139,4 +139,3 @@ func (t *Todo) UnmarshalJSON(data []byte) error {
 
 	return t.Validate()
 }
-

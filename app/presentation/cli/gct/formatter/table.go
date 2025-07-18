@@ -28,14 +28,14 @@ func (f *TableFormatter) Format(todos []domain.Todo) (string, error) {
 	}
 
 	var result []string
-	
+
 	// Add header
-	header := f.fmtProxy.Sprintf("%-4s %-6s %s", 
-		f.colorProxy.Cyan("ID"), 
-		f.colorProxy.Cyan("Status"), 
+	header := f.fmtProxy.Sprintf("%-4s %-6s %s",
+		f.colorProxy.Cyan("ID"),
+		f.colorProxy.Cyan("Status"),
 		f.colorProxy.Cyan("Description"))
 	result = append(result, header)
-	
+
 	// Add separator line
 	separator := f.fmtProxy.Sprintf("%-4s %-6s %s", "----", "------", "-----------")
 	result = append(result, separator)
@@ -52,14 +52,14 @@ func (f *TableFormatter) Format(todos []domain.Todo) (string, error) {
 // FormatSingle formats a single todo as a human-readable table string
 func (f *TableFormatter) FormatSingle(todo domain.Todo) (string, error) {
 	var result []string
-	
+
 	// Add header
-	header := f.fmtProxy.Sprintf("%-4s %-6s %s", 
-		f.colorProxy.Cyan("ID"), 
-		f.colorProxy.Cyan("Status"), 
+	header := f.fmtProxy.Sprintf("%-4s %-6s %s",
+		f.colorProxy.Cyan("ID"),
+		f.colorProxy.Cyan("Status"),
 		f.colorProxy.Cyan("Description"))
 	result = append(result, header)
-	
+
 	// Add separator line
 	separator := f.fmtProxy.Sprintf("%-4s %-6s %s", "----", "------", "-----------")
 	result = append(result, separator)
@@ -75,7 +75,7 @@ func (f *TableFormatter) FormatSingle(todo domain.Todo) (string, error) {
 func (f *TableFormatter) formatTodoLine(todo domain.Todo) string {
 	var status string
 	var description string
-	
+
 	if todo.Done {
 		status = f.colorProxy.Green("✓ Done")
 		description = f.colorProxy.Green(todo.Description)

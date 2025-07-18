@@ -16,7 +16,7 @@ func NewInputState(bubbles proxy.Bubbles) *InputState {
 	input.SetPlaceholder("Enter todo description...")
 	input.SetCharLimit(500)
 	input.SetWidth(50)
-	
+
 	return &InputState{
 		textInput: input,
 		focused:   false,

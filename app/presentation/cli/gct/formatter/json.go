@@ -27,7 +27,7 @@ func (f *JSONFormatter) Format(todos []domain.Todo) (string, error) {
 			err,
 		)
 	}
-	
+
 	return string(data), nil
 }
 
@@ -41,6 +41,6 @@ func (f *JSONFormatter) FormatSingle(todo domain.Todo) (string, error) {
 			err,
 		)
 	}
-	
+
 	return string(data), nil
 }

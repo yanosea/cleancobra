@@ -80,10 +80,10 @@ func (e *DomainError) Is(target error) bool {
 var (
 	// ErrTodoNotFound indicates a todo was not found
 	ErrTodoNotFound = NewDomainError(ErrorTypeNotFound, "todo not found", nil)
-	
+
 	// ErrEmptyDescription indicates an empty description was provided
 	ErrEmptyDescription = NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
-	
+
 	// ErrInvalidID indicates an invalid ID was provided
 	ErrInvalidID = NewDomainError(ErrorTypeInvalidInput, "invalid todo ID", nil)
 )

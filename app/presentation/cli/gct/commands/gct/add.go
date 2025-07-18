@@ -26,12 +26,12 @@ Examples:
 	cmd.SetArgs(cobraProxy.ExactArgs(1))
 	cmd.SetSilenceErrors(true)
 	cmd.SetSilenceUsage(true)
-	
+
 	// Set the run function
 	cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error {
 		return RunAdd(addUseCase, presenter, args[0])
 	})
-	
+
 	return cmd
 }
 
@@ -42,7 +42,7 @@ func RunAdd(addUseCase *application.AddTodoUseCase, presenter *presenter.TodoPre
 		presenter.ShowError(err)
 		return err
 	}
-	
+
 	presenter.ShowAddSuccess(todo)
 	return nil
 }

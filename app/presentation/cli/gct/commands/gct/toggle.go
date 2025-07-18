@@ -27,12 +27,12 @@ Examples:
 	cmd.SetArgs(cobraProxy.ExactArgs(1))
 	cmd.SetSilenceErrors(true)
 	cmd.SetSilenceUsage(true)
-	
+
 	// Set the run function
 	cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error {
 		return RunToggle(strconvProxy, toggleUseCase, presenter, args[0])
 	})
-	
+
 	return cmd
 }
 
@@ -44,20 +44,20 @@ func RunToggle(strconvProxy proxy.Strconv, toggleUseCase *application.ToggleTodo
 		presenter.ShowValidationError("invalid todo ID: must be a number")
 		return err
 	}
-	
+
 	// Validate that ID is positive
 	if id <= 0 {
 		presenter.ShowValidationError("invalid todo ID: must be positive")
 		return nil
 	}
-	
+
 	// Execute the toggle use case
 	todo, err := toggleUseCase.Run(id)
 	if err != nil {
 		presenter.ShowError(err)
 		return err
 	}
-	
+
 	presenter.ShowToggleSuccess(todo)
 	return nil
 }

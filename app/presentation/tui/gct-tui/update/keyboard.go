@@ -1,8 +1,8 @@
 package update
 
 import (
-	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 )
 
 // KeyboardHandler handles keyboard input routing based on current mode
@@ -17,7 +17,7 @@ func KeyboardHandler(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUpdate
 	case model.ModeConfirmation:
 		return handleConfirmationModeKeys(stateModel, msg)
 	}
-	
+
 	return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 }
 
@@ -26,36 +26,36 @@ func handleNormalModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerU
 	switch msg.String() {
 	case "ctrl+c", "q":
 		return HandlerUpdateResult{Model: stateModel, Cmd: tea.Quit}
-		
+
 	case "up", "k":
 		stateModel.MoveCursorUp()
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "down", "j":
 		stateModel.MoveCursorDown()
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "g":
 		stateModel.MoveCursorToTop()
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "G":
 		stateModel.MoveCursorToBottom()
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case " ":
 		return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.ToggleTodo()}
-		
+
 	case "a":
 		stateModel.SetMode(model.ModeInput)
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "e":
 		if len(stateModel.Todos()) > 0 && stateModel.Cursor() >= 0 && stateModel.Cursor() < len(stateModel.Todos()) {
 			stateModel.SetMode(model.ModeEdit)
 		}
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "d":
 		if len(stateModel.Todos()) > 0 && stateModel.Cursor() >= 0 && stateModel.Cursor() < len(stateModel.Todos()) {
 			todo := stateModel.Todos()[stateModel.Cursor()].Todo()
@@ -67,15 +67,15 @@ func handleNormalModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerU
 			}
 		}
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "r":
 		return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.LoadTodos()}
-		
+
 	case "esc":
 		stateModel.ClearError()
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 	}
-	
+
 	return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 }
 
@@ -89,12 +89,12 @@ func handleInputModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUp
 			return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.AddTodo(description)}
 		}
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "esc":
 		stateModel.SetMode(model.ModeNormal)
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 	}
-	
+
 	return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 }
 
@@ -107,12 +107,12 @@ func handleEditModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUpd
 			return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.UpdateTodo(description)}
 		}
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
-		
+
 	case "esc":
 		stateModel.SetMode(model.ModeNormal)
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 	}
-	
+
 	return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 }
 
@@ -121,12 +121,11 @@ func handleConfirmationModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) Ha
 	switch msg.String() {
 	case "y", "Y":
 		return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.ExecuteConfirmation()}
-		
+
 	case "n", "N", "esc":
 		stateModel.CancelConfirmation()
 		return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 	}
-	
+
 	return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 }
-

@@ -17,7 +17,7 @@ type Config struct {
 // Load loads the configuration from environment variables and applies defaults
 func Load() (*Config, error) {
 	var cfg Config
-	
+
 	// Load configuration from environment variables
 	if err := envconfig.Process("", &cfg); err != nil {
 		return nil, domain.NewDomainError(
@@ -26,7 +26,7 @@ func Load() (*Config, error) {
 			err,
 		)
 	}
-	
+
 	// Apply default data file path if not set
 	if cfg.DataFile == "" {
 		defaultPath, err := getDefaultDataFilePath()
@@ -39,12 +39,12 @@ func Load() (*Config, error) {
 		}
 		cfg.DataFile = defaultPath
 	}
-	
+
 	// Validate configuration
 	if err := cfg.Validate(); err != nil {
 		return nil, err
 	}
-	
+
 	return &cfg, nil
 }
 
@@ -57,7 +57,7 @@ func (c *Config) Validate() error {
 			nil,
 		)
 	}
-	
+
 	// Check if the directory exists or can be created
 	dir := filepath.Dir(c.DataFile)
 	if err := ensureDirectoryExists(dir); err != nil {
@@ -67,7 +67,7 @@ func (c *Config) Validate() error {
 			err,
 		)
 	}
-	
+
 	return nil
 }
 
@@ -78,13 +78,13 @@ func getDefaultDataFilePath() (string, error) {
 	if xdgDataHome := os.Getenv("XDG_DATA_HOME"); xdgDataHome != "" {
 		return filepath.Join(xdgDataHome, "gct", "todos.json"), nil
 	}
-	
+
 	// Fallback to ~/.local/share/gct/todos.json
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return "", err
 	}
-	
+
 	return filepath.Join(homeDir, ".local", "share", "gct", "todos.json"), nil
 }
 
@@ -97,6 +97,6 @@ func ensureDirectoryExists(dir string) error {
 	} else if err != nil {
 		return err
 	}
-	
+
 	return nil
 }

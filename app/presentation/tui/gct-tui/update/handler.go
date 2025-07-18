@@ -1,8 +1,8 @@
 package update
 
 import (
-	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 )
 
 // HandlerUpdateResult represents the result of a handler update operation
@@ -15,7 +15,7 @@ type HandlerUpdateResult struct {
 func UpdateHandler(stateModel *model.StateModel, msg tea.Msg) HandlerUpdateResult {
 	// Create operations handler
 	opsHandler := NewOperationsHandler()
-	
+
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		return handleWindowSize(stateModel, msg)
@@ -44,12 +44,12 @@ func UpdateHandler(stateModel *model.StateModel, msg tea.Msg) HandlerUpdateResul
 	case ItemUpdatedAsyncMsg:
 		return opsHandler.HandleItemUpdatedAsync(stateModel, msg)
 	}
-	
+
 	// Handle input updates when in input modes
 	if stateModel.Mode() == model.ModeInput || stateModel.Mode() == model.ModeEdit {
 		return handleInputUpdate(stateModel, msg)
 	}
-	
+
 	return HandlerUpdateResult{Model: stateModel, Cmd: nil}
 }
 
@@ -64,6 +64,6 @@ func handleInputUpdate(stateModel *model.StateModel, msg tea.Msg) HandlerUpdateR
 	var cmd tea.Cmd
 	textInput := stateModel.Input().TextInput()
 	textInput, cmd = textInput.Update(msg)
-	
+
 	return HandlerUpdateResult{Model: stateModel, Cmd: cmd}
 }

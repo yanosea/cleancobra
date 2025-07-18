@@ -1,9 +1,9 @@
 package update
 
 import (
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/yanosea/gct/app/domain"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
-	tea "github.com/charmbracelet/bubbletea"
 )
 
 // ItemUpdateResult represents the result of an item update operation
@@ -26,7 +26,7 @@ func UpdateItem(itemModel *model.ItemModel, msg tea.Msg) ItemUpdateResult {
 	case model.ItemUpdateMsg:
 		return handleItemUpdate(itemModel, msg)
 	}
-	
+
 	return ItemUpdateResult{Model: itemModel, Cmd: nil}
 }
 
@@ -35,7 +35,7 @@ func handleItemKeyMsg(itemModel *model.ItemModel, msg tea.KeyMsg) ItemUpdateResu
 	if !itemModel.IsSelected() {
 		return ItemUpdateResult{Model: itemModel, Cmd: nil}
 	}
-	
+
 	switch msg.String() {
 	case " ":
 		// Generate toggle command
@@ -62,7 +62,7 @@ func handleItemKeyMsg(itemModel *model.ItemModel, msg tea.KeyMsg) ItemUpdateResu
 			},
 		}
 	}
-	
+
 	return ItemUpdateResult{Model: itemModel, Cmd: nil}
 }
 
@@ -70,19 +70,19 @@ func handleItemKeyMsg(itemModel *model.ItemModel, msg tea.KeyMsg) ItemUpdateResu
 func handleItemToggle(itemModel *model.ItemModel, msg model.ItemToggleMsg) ItemUpdateResult {
 	if msg.ID == itemModel.Todo().ID {
 		itemModel.Toggle()
-		
+
 		// Generate async command to persist the toggle
 		return ItemUpdateResult{
 			Model: itemModel,
 			Cmd: func() tea.Msg {
 				return ItemToggleAsyncMsg{
-					ID:     msg.ID,
+					ID:      msg.ID,
 					NewDone: itemModel.Todo().Done,
 				}
 			},
 		}
 	}
-	
+
 	return ItemUpdateResult{Model: itemModel, Cmd: nil}
 }
 
@@ -90,7 +90,7 @@ func handleItemToggle(itemModel *model.ItemModel, msg model.ItemToggleMsg) ItemU
 func handleItemEdit(itemModel *model.ItemModel, msg model.ItemEditMsg) ItemUpdateResult {
 	if msg.ID == itemModel.Todo().ID {
 		itemModel.SetEditing(msg.Editing)
-		
+
 		// Generate command to notify state model about edit mode change
 		return ItemUpdateResult{
 			Model: itemModel,
@@ -102,7 +102,7 @@ func handleItemEdit(itemModel *model.ItemModel, msg model.ItemEditMsg) ItemUpdat
 			},
 		}
 	}
-	
+
 	return ItemUpdateResult{Model: itemModel, Cmd: nil}
 }
 
@@ -111,7 +111,7 @@ func handleItemSelect(itemModel *model.ItemModel, msg model.ItemSelectMsg) ItemU
 	if msg.ID == itemModel.Todo().ID {
 		itemModel.SetSelected(msg.Selected)
 	}
-	
+
 	return ItemUpdateResult{Model: itemModel, Cmd: nil}
 }
 
@@ -119,7 +119,7 @@ func handleItemSelect(itemModel *model.ItemModel, msg model.ItemSelectMsg) ItemU
 func handleItemUpdate(itemModel *model.ItemModel, msg model.ItemUpdateMsg) ItemUpdateResult {
 	if msg.Todo != nil && itemModel.Todo() != nil && msg.Todo.ID == itemModel.Todo().ID {
 		itemModel.SetTodo(msg.Todo)
-		
+
 		// Generate command to notify about successful update
 		return ItemUpdateResult{
 			Model: itemModel,
@@ -128,7 +128,7 @@ func handleItemUpdate(itemModel *model.ItemModel, msg model.ItemUpdateMsg) ItemU
 			},
 		}
 	}
-	
+
 	return ItemUpdateResult{Model: itemModel, Cmd: nil}
 }
 
@@ -136,7 +136,7 @@ func handleItemUpdate(itemModel *model.ItemModel, msg model.ItemUpdateMsg) ItemU
 func BatchUpdateItems(items []*model.ItemModel, msg tea.Msg) ([]tea.Cmd, bool) {
 	var commands []tea.Cmd
 	updated := false
-	
+
 	for _, item := range items {
 		result := UpdateItem(item, msg)
 		if result.Cmd != nil {
@@ -144,7 +144,7 @@ func BatchUpdateItems(items []*model.ItemModel, msg tea.Msg) ([]tea.Cmd, bool) {
 			updated = true
 		}
 	}
-	
+
 	return commands, updated
 }
 

@@ -18,19 +18,19 @@ type Container struct {
 
 // Proxies organizes all proxy dependencies
 type Proxies struct {
-	OS       proxy.OS
-	Filepath proxy.Filepath
-	JSON     proxy.JSON
-	Time     proxy.Time
-	IO       proxy.IO
-	Fmt      proxy.Fmt
-	Strings  proxy.Strings
-	Strconv  proxy.Strconv
-	Cobra    proxy.Cobra
+	OS        proxy.OS
+	Filepath  proxy.Filepath
+	JSON      proxy.JSON
+	Time      proxy.Time
+	IO        proxy.IO
+	Fmt       proxy.Fmt
+	Strings   proxy.Strings
+	Strconv   proxy.Strconv
+	Cobra     proxy.Cobra
 	Bubbletea proxy.Bubbletea
-	Bubbles  proxy.Bubbles
-	Lipgloss proxy.Lipgloss
-	Color    proxy.Color
+	Bubbles   proxy.Bubbles
+	Lipgloss  proxy.Lipgloss
+	Color     proxy.Color
 	Envconfig proxy.Envconfig
 }
 

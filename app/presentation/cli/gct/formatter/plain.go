@@ -23,13 +23,13 @@ func (f *PlainFormatter) Format(todos []domain.Todo) (string, error) {
 	}
 
 	var result strings.Builder
-	
+
 	for _, todo := range todos {
 		line := f.formatTodoLine(todo)
 		result.WriteString(line)
 		result.WriteString("\n")
 	}
-	
+
 	return strings.TrimSpace(result.String()), nil
 }
 
@@ -45,11 +45,11 @@ func (f *PlainFormatter) formatTodoLine(todo domain.Todo) string {
 	if todo.Done {
 		status = "[x]"
 	}
-	
+
 	// Format: [x] 1: Buy groceries
-	return fmt.Sprintf("%s %s: %s", 
-		status, 
-		strconv.Itoa(todo.ID), 
+	return fmt.Sprintf("%s %s: %s",
+		status,
+		strconv.Itoa(todo.ID),
 		todo.Description,
 	)
 }

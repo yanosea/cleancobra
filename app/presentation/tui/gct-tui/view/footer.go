@@ -1,9 +1,9 @@
 package view
 
 import (
+	"github.com/charmbracelet/lipgloss"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 	"github.com/yanosea/gct/pkg/proxy"
-	"github.com/charmbracelet/lipgloss"
 )
 
 // FooterView handles the application footer rendering
@@ -37,14 +37,14 @@ func (v *FooterView) RenderCompact(stateModel *model.StateModel, width int) stri
 // RenderWithScrollIndicator renders footer with scroll indicator
 func (v *FooterView) RenderWithScrollIndicator(stateModel *model.StateModel, width int, scrollIndicator string) string {
 	helpText := v.getHelpText(stateModel.Mode())
-	
+
 	// Combine help text with scroll indicator
 	content := v.lipgloss.JoinVertical(
 		v.lipgloss.Left(),
 		scrollIndicator,
 		helpText,
 	)
-	
+
 	return v.footerStyle.Width(width).Render(content)
 }
 
@@ -79,7 +79,7 @@ func (v *FooterView) getCompactHelpText(mode model.Mode) string {
 // RenderModeSpecificHelp renders help text specific to the current context
 func (v *FooterView) RenderModeSpecificHelp(stateModel *model.StateModel, width int) string {
 	var helpLines []string
-	
+
 	switch stateModel.Mode() {
 	case model.ModeNormal:
 		helpLines = []string{
@@ -103,7 +103,7 @@ func (v *FooterView) RenderModeSpecificHelp(stateModel *model.StateModel, width 
 			"Press 'n', 'N', or Esc to cancel",
 		}
 	}
-	
+
 	content := ""
 	for i, line := range helpLines {
 		if i > 0 {
@@ -111,7 +111,7 @@ func (v *FooterView) RenderModeSpecificHelp(stateModel *model.StateModel, width 
 		}
 		content += v.helpStyle.Render(line)
 	}
-	
+
 	return v.footerStyle.Width(width).Render(content)
 }
 

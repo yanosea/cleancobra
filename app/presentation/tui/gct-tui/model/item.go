@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/yanosea/gct/app/domain"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/yanosea/gct/app/domain"
 )
 
 // ItemModel represents the model for individual todo items in the TUI
@@ -100,18 +100,18 @@ func (m *ItemModel) View() string {
 	if m.todo == nil {
 		return ""
 	}
-	
+
 	// Basic rendering - will be enhanced in view layer
 	status := "[ ]"
 	if m.todo.Done {
 		status = "[x]"
 	}
-	
+
 	prefix := "  "
 	if m.selected {
 		prefix = "> "
 	}
-	
+
 	return prefix + status + " " + m.todo.Description
 }
 
@@ -120,7 +120,7 @@ func (m *ItemModel) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	if !m.selected {
 		return m, nil
 	}
-	
+
 	switch msg.String() {
 	case " ":
 		// Toggle completion status
@@ -133,7 +133,6 @@ func (m *ItemModel) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			return ItemEditMsg{ID: m.todo.ID, Editing: true}
 		}
 	}
-	
+
 	return m, nil
 }
-

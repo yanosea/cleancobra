@@ -24,10 +24,10 @@ Supports multiple output formats:
 - plain: Simple plain text format`)
 	cmd.SetSilenceErrors(true)
 	cmd.SetSilenceUsage(true)
-	
+
 	// Add format flag
 	formatFlag := cmd.Flags().StringP("format", "f", "table", "Output format (json, table, plain)")
-	
+
 	// Set the run function
 	cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error {
 		// Get format from flag
@@ -37,7 +37,7 @@ Supports multiple output formats:
 		}
 		return RunList(listUseCase, presenter, format)
 	})
-	
+
 	return cmd
 }
 
@@ -48,6 +48,6 @@ func RunList(listUseCase *application.ListTodoUseCase, presenter *presenter.Todo
 		presenter.ShowError(err)
 		return err
 	}
-	
+
 	return presenter.ShowListResults(todos, format)
 }

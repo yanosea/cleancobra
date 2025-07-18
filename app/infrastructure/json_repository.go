@@ -11,8 +11,8 @@ import (
 
 // JSONRepository implements TodoRepository interface using JSON file storage
 type JSONRepository struct {
-	filePath string
-	osProxy  proxy.OS
+	filePath  string
+	osProxy   proxy.OS
 	jsonProxy proxy.JSON
 }
 

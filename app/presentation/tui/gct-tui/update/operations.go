@@ -1,8 +1,8 @@
 package update
 
 import (
-	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 )
 
 // OperationsHandler handles todo operations (add, delete, toggle, update)

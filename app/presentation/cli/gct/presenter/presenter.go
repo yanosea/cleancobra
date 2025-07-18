@@ -48,7 +48,7 @@ func (p *TodoPresenter) ShowAddSuccess(todo *domain.Todo) {
 // ShowListResults displays the list of todos with the specified format
 func (p *TodoPresenter) ShowListResults(todos []domain.Todo, format string) error {
 	var formatter Formatter
-	
+
 	switch format {
 	case "json":
 		formatter = p.jsonFormatter
@@ -59,12 +59,12 @@ func (p *TodoPresenter) ShowListResults(todos []domain.Todo, format string) erro
 	default:
 		formatter = p.tableFormatter // default to table format
 	}
-	
+
 	output, err := formatter.Format(todos)
 	if err != nil {
 		return err
 	}
-	
+
 	p.fmtProxy.Println(output)
 	return nil
 }
@@ -88,7 +88,7 @@ func (p *TodoPresenter) ShowError(err error) {
 	if err == nil {
 		return
 	}
-	
+
 	var domainErr *domain.DomainError
 	if errors.As(err, &domainErr) {
 		switch domainErr.Type {

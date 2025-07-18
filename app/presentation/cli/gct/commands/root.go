@@ -23,10 +23,10 @@ It provides both CLI and TUI interfaces for managing your todos.
 When run without any subcommands, it will list all todos.`)
 	cmd.SetSilenceErrors(true)
 	cmd.SetSilenceUsage(true)
-	
+
 	// Add global flags
 	formatFlag := cmd.PersistentFlags().StringP("format", "f", "table", "Output format (json, table, plain)")
-	
+
 	// Set the default run function to execute list command
 	cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error {
 		// Get format from flag
@@ -36,7 +36,7 @@ When run without any subcommands, it will list all todos.`)
 		}
 		return runRoot(listUseCase, presenter, format)
 	})
-	
+
 	return cmd
 }
 

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 	"github.com/yanosea/gct/pkg/proxy"
-	"github.com/charmbracelet/lipgloss"
 )
 
 // HeaderView handles the application header rendering
@@ -28,9 +28,9 @@ func (v *HeaderView) Render(stateModel *model.StateModel, width int) string {
 	title := "GCT - Go Clean-Architecture Todo"
 	todoCount := len(stateModel.Todos())
 	completedCount := v.GetCompletedCount(stateModel.Todos())
-	
+
 	status := fmt.Sprintf("(%d/%d todos)", completedCount, todoCount)
-	
+
 	// Create header with title and status
 	paddingLength := width - len(title) - len(status) - 4
 	if paddingLength < 0 {
@@ -42,7 +42,7 @@ func (v *HeaderView) Render(stateModel *model.StateModel, width int) string {
 		strings.Repeat(" ", paddingLength), // Padding
 		status,
 	)
-	
+
 	return v.headerStyle.Width(width).Render(headerContent)
 }
 
@@ -50,10 +50,10 @@ func (v *HeaderView) Render(stateModel *model.StateModel, width int) string {
 func (v *HeaderView) RenderCompact(stateModel *model.StateModel, width int) string {
 	todoCount := len(stateModel.Todos())
 	completedCount := v.GetCompletedCount(stateModel.Todos())
-	
+
 	title := "GCT"
 	status := fmt.Sprintf("(%d/%d)", completedCount, todoCount)
-	
+
 	// Create compact header
 	paddingLength := width - len(title) - len(status) - 4
 	if paddingLength < 0 {
@@ -65,7 +65,7 @@ func (v *HeaderView) RenderCompact(stateModel *model.StateModel, width int) stri
 		strings.Repeat(" ", paddingLength),
 		status,
 	)
-	
+
 	return v.headerStyle.Width(width).Render(headerContent)
 }
 
@@ -74,11 +74,11 @@ func (v *HeaderView) RenderWithMode(stateModel *model.StateModel, width int) str
 	title := "GCT"
 	todoCount := len(stateModel.Todos())
 	completedCount := v.GetCompletedCount(stateModel.Todos())
-	
+
 	// Add mode indicator
 	modeIndicator := v.getModeIndicator(stateModel.Mode())
 	status := fmt.Sprintf("%s (%d/%d)", modeIndicator, completedCount, todoCount)
-	
+
 	// Create header with mode and status
 	paddingLength := width - len(title) - len(status) - 4
 	if paddingLength < 0 {
@@ -90,7 +90,7 @@ func (v *HeaderView) RenderWithMode(stateModel *model.StateModel, width int) str
 		strings.Repeat(" ", paddingLength),
 		status,
 	)
-	
+
 	return v.headerStyle.Width(width).Render(headerContent)
 }
 
