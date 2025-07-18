@@ -6,10 +6,10 @@ import (
 	"time"
 )
 
-// Time type alias for time.Time
-type Time = time.Time
+// TimeAlias type alias for time.Time
+type TimeAlias = time.Time
 
-// Duration type alias for time.Duration  
+// Duration type alias for time.Duration
 type Duration = time.Duration
 
 // Common time constants
@@ -17,18 +17,18 @@ const (
 	RFC3339 = time.RFC3339
 )
 
-// TimeProxy provides a proxy interface for time package functions
-type TimeProxy interface {
-	Now() Time
-	Parse(layout, value string) (Time, error)
-	Since(t Time) Duration
+// Time provides a proxy interface for time package functions
+type Time interface {
+	Now() TimeAlias
+	Parse(layout, value string) (TimeAlias, error)
+	Since(t TimeAlias) Duration
 }
 
 // TimeImpl implements the TimeProxy interface using the standard time package
 type TimeImpl struct{}
 
 // NewTime creates a new TimeProxy implementation
-func NewTime() TimeProxy {
+func NewTime() Time {
 	return &TimeImpl{}
 }
 

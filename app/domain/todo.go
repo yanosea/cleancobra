@@ -16,7 +16,7 @@ type Todo struct {
 }
 
 // NewTodoWithDeps creates a new Todo with the given description using injected dependencies
-func NewTodoWithDeps(id int, description string, timeProxy proxy.TimeProxy, stringsProxy proxy.Strings) (*Todo, error) {
+func NewTodoWithDeps(id int, description string, timeProxy proxy.Time, stringsProxy proxy.Strings) (*Todo, error) {
 	if err := validateDescriptionWithDeps(description, stringsProxy); err != nil {
 		return nil, err
 	}
