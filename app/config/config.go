@@ -11,19 +11,8 @@ type Config struct {
 	DataFile string `envconfig:"GCT_DATA_FILE"`
 }
 
-// Load loads the configuration from environment variables and applies defaults
-func Load() (*Config, error) {
-	// Create real proxy implementations
-	osProxy := proxy.NewOS()
-	filepathProxy := proxy.NewFilepath()
-	envconfigProxy := proxy.NewEnvconfig()
-
-	// Call LoadWithDependencies with real proxy instances
-	return LoadWithDependencies(osProxy, filepathProxy, envconfigProxy)
-}
-
-// LoadWithDependencies loads the configuration with injected dependencies for testing
-func LoadWithDependencies(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.Envconfig) (*Config, error) {
+// Load loads the configuration with injected dependencies for testing
+func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.Envconfig) (*Config, error) {
 	var cfg Config
 
 	// Load configuration from environment variables
@@ -57,13 +46,13 @@ func LoadWithDependencies(osProxy proxy.OS, filepathProxy proxy.Filepath, envcon
 }
 
 // Validate validates the configuration values
+// This method is deprecated. Use ValidateWithDeps instead.
 func (c *Config) Validate() error {
-	// Create real proxy implementations for backward compatibility
-	osProxy := proxy.NewOS()
-	filepathProxy := proxy.NewFilepath()
-
-	// Use ValidateWithDeps with real proxy instances
-	return c.ValidateWithDeps(osProxy, filepathProxy)
+	return domain.NewDomainError(
+		domain.ErrorTypeConfiguration,
+		"Validate() is deprecated, use ValidateWithDeps() with injected proxy dependencies",
+		nil,
+	)
 }
 
 // ValidateWithDeps validates the configuration values with injected dependencies

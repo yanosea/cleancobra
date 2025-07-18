@@ -63,7 +63,11 @@ func NewContainer() (*Container, error) {
 	}
 
 	// Load configuration
-	cfg, err := config.Load()
+	cfg, err := config.Load(
+		proxies.OS,
+		proxies.Filepath,
+		proxies.Envconfig,
+	)
 	if err != nil {
 		return nil, err
 	}
