@@ -43,7 +43,7 @@ func (t *Todo) UpdateDescription(description string) error {
 	if err := validateDescription(description); err != nil {
 		return err
 	}
-	
+
 	t.Description = strings.TrimSpace(description)
 	t.UpdatedAt = time.Now()
 	return nil
@@ -54,23 +54,23 @@ func (t *Todo) Validate() error {
 	if t.ID <= 0 {
 		return NewDomainError(ErrorTypeInvalidInput, "todo ID must be positive", nil)
 	}
-	
+
 	if err := validateDescription(t.Description); err != nil {
 		return err
 	}
-	
+
 	if t.CreatedAt.IsZero() {
 		return NewDomainError(ErrorTypeInvalidInput, "created_at cannot be zero", nil)
 	}
-	
+
 	if t.UpdatedAt.IsZero() {
 		return NewDomainError(ErrorTypeInvalidInput, "updated_at cannot be zero", nil)
 	}
-	
+
 	if t.UpdatedAt.Before(t.CreatedAt) {
 		return NewDomainError(ErrorTypeInvalidInput, "updated_at cannot be before created_at", nil)
 	}
-	
+
 	return nil
 }
 
@@ -80,11 +80,11 @@ func validateDescription(description string) error {
 	if trimmed == "" {
 		return NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
 	}
-	
+
 	if len(trimmed) > 500 {
 		return NewDomainError(ErrorTypeInvalidInput, "description cannot exceed 500 characters", nil)
 	}
-	
+
 	return nil
 }
 
@@ -111,7 +111,7 @@ func (t *Todo) MarshalJSON() ([]byte, error) {
 	})
 }
 
-// UnmarshalJSON implements custom JSON unmarshaling
+// UnmarshalJSON implements custom JSON unmarshalling
 func (t *Todo) UnmarshalJSON(data []byte) error {
 	type Alias Todo
 	aux := &struct {
@@ -121,21 +121,22 @@ func (t *Todo) UnmarshalJSON(data []byte) error {
 	}{
 		Alias: (*Alias)(t),
 	}
-	
+
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return NewDomainError(ErrorTypeJSON, "failed to unmarshal todo", err)
 	}
-	
+
 	var err error
 	t.CreatedAt, err = time.Parse(time.RFC3339, aux.CreatedAt)
 	if err != nil {
 		return NewDomainError(ErrorTypeJSON, "invalid created_at format", err)
 	}
-	
+
 	t.UpdatedAt, err = time.Parse(time.RFC3339, aux.UpdatedAt)
 	if err != nil {
 		return NewDomainError(ErrorTypeJSON, "invalid updated_at format", err)
 	}
-	
+
 	return t.Validate()
 }
+
