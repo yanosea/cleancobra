@@ -1,10 +1,9 @@
 package domain
 
 import (
-	"encoding/json"
-	"fmt"
-	"strings"
 	"time"
+
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // Todo represents a todo item in the domain
@@ -16,26 +15,37 @@ type Todo struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
-// NewTodo creates a new Todo with the given description
-func NewTodo(id int, description string) (*Todo, error) {
-	if err := validateDescription(description); err != nil {
+// NewTodoWithDeps creates a new Todo with the given description using injected dependencies
+func NewTodoWithDeps(id int, description string, timeProxy proxy.TimeProxy, stringsProxy proxy.Strings) (*Todo, error) {
+	if err := validateDescriptionWithDeps(description, stringsProxy); err != nil {
 		return nil, err
 	}
 
-	now := time.Now()
+	now := timeProxy.Now()
 	return &Todo{
 		ID:          id,
-		Description: strings.TrimSpace(description),
+		Description: stringsProxy.TrimSpace(description),
 		Done:        false,
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}, nil
 }
 
+// NewTodo creates a new Todo with the given description
+func NewTodo(id int, description string) (*Todo, error) {
+	// Create real proxy implementations for backward compatibility
+	timeProxy := proxy.NewTime()
+	stringsProxy := proxy.NewStrings()
+
+	// Call NewTodoWithDeps with real proxy instances
+	return NewTodoWithDeps(id, description, timeProxy, stringsProxy)
+}
+
 // Toggle toggles the completion status of the todo
 func (t *Todo) Toggle() {
 	t.Done = !t.Done
-	t.UpdatedAt = time.Now()
+	timeProxy := proxy.NewTime()
+	t.UpdatedAt = timeProxy.Now()
 }
 
 // UpdateDescription updates the description of the todo
@@ -44,8 +54,10 @@ func (t *Todo) UpdateDescription(description string) error {
 		return err
 	}
 
-	t.Description = strings.TrimSpace(description)
-	t.UpdatedAt = time.Now()
+	stringsProxy := proxy.NewStrings()
+	t.Description = stringsProxy.TrimSpace(description)
+	timeProxy := proxy.NewTime()
+	t.UpdatedAt = timeProxy.Now()
 	return nil
 }
 
@@ -74,9 +86,9 @@ func (t *Todo) Validate() error {
 	return nil
 }
 
-// validateDescription validates the todo description
-func validateDescription(description string) error {
-	trimmed := strings.TrimSpace(description)
+// validateDescriptionWithDeps validates the todo description using injected dependencies
+func validateDescriptionWithDeps(description string, stringsProxy proxy.Strings) error {
+	trimmed := stringsProxy.TrimSpace(description)
 	if trimmed == "" {
 		return NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
 	}
@@ -88,26 +100,34 @@ func validateDescription(description string) error {
 	return nil
 }
 
+// validateDescription validates the todo description
+func validateDescription(description string) error {
+	stringsProxy := proxy.NewStrings()
+	return validateDescriptionWithDeps(description, stringsProxy)
+}
+
 // String returns a string representation of the todo
 func (t *Todo) String() string {
 	status := "[ ]"
 	if t.Done {
 		status = "[x]"
 	}
-	return fmt.Sprintf("%s %d: %s", status, t.ID, t.Description)
+	fmtProxy := proxy.NewFmt()
+	return fmtProxy.Sprintf("%s %d: %s", status, t.ID, t.Description)
 }
 
 // MarshalJSON implements custom JSON marshaling
 func (t *Todo) MarshalJSON() ([]byte, error) {
 	type Alias Todo
-	return json.Marshal(&struct {
+	jsonProxy := proxy.NewJSON()
+	return jsonProxy.Marshal(&struct {
 		*Alias
 		CreatedAt string `json:"created_at"`
 		UpdatedAt string `json:"updated_at"`
 	}{
 		Alias:     (*Alias)(t),
-		CreatedAt: t.CreatedAt.Format(time.RFC3339),
-		UpdatedAt: t.UpdatedAt.Format(time.RFC3339),
+		CreatedAt: t.CreatedAt.Format(proxy.RFC3339),
+		UpdatedAt: t.UpdatedAt.Format(proxy.RFC3339),
 	})
 }
 
@@ -122,17 +142,19 @@ func (t *Todo) UnmarshalJSON(data []byte) error {
 		Alias: (*Alias)(t),
 	}
 
-	if err := json.Unmarshal(data, &aux); err != nil {
+	jsonProxy := proxy.NewJSON()
+	if err := jsonProxy.Unmarshal(data, &aux); err != nil {
 		return NewDomainError(ErrorTypeJSON, "failed to unmarshal todo", err)
 	}
 
 	var err error
-	t.CreatedAt, err = time.Parse(time.RFC3339, aux.CreatedAt)
+	timeProxy := proxy.NewTime()
+	t.CreatedAt, err = timeProxy.Parse(proxy.RFC3339, aux.CreatedAt)
 	if err != nil {
 		return NewDomainError(ErrorTypeJSON, "invalid created_at format", err)
 	}
 
-	t.UpdatedAt, err = time.Parse(time.RFC3339, aux.UpdatedAt)
+	t.UpdatedAt, err = timeProxy.Parse(proxy.RFC3339, aux.UpdatedAt)
 	if err != nil {
 		return NewDomainError(ErrorTypeJSON, "invalid updated_at format", err)
 	}

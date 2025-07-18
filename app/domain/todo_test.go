@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 func TestNewTodo(t *testing.T) {
@@ -93,6 +95,101 @@ func TestNewTodo(t *testing.T) {
 
 			if !todo.CreatedAt.Equal(todo.UpdatedAt) {
 				t.Errorf("NewTodo() CreatedAt and UpdatedAt should be equal for new todo")
+			}
+		})
+	}
+}
+
+func TestNewTodoWithDeps(t *testing.T) {
+	// Import proxy package for testing
+	timeProxy := proxy.NewTime()
+	stringsProxy := proxy.NewStrings()
+	
+	tests := []struct {
+		name        string
+		id          int
+		description string
+		wantErr     bool
+		errType     ErrorType
+	}{
+		{
+			name:        "positive testing",
+			id:          1,
+			description: "Buy groceries",
+			wantErr:     false,
+		},
+		{
+			name:        "positive testing (whitespace trimming)",
+			id:          2,
+			description: "  Clean house  ",
+			wantErr:     false,
+		},
+		{
+			name:        "negative testing (empty description failed)",
+			id:          3,
+			description: "",
+			wantErr:     true,
+			errType:     ErrorTypeInvalidInput,
+		},
+		{
+			name:        "negative testing (whitespace only description failed)",
+			id:          4,
+			description: "   ",
+			wantErr:     true,
+			errType:     ErrorTypeInvalidInput,
+		},
+		{
+			name:        "negative testing (description too long failed)",
+			id:          5,
+			description: strings.Repeat("a", 501),
+			wantErr:     true,
+			errType:     ErrorTypeInvalidInput,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			todo, err := NewTodoWithDeps(tt.id, tt.description, timeProxy, stringsProxy)
+
+			if tt.wantErr {
+				if err == nil {
+					t.Errorf("NewTodoWithDeps() expected error but got none")
+					return
+				}
+				if GetErrorType(err) != tt.errType {
+					t.Errorf("NewTodoWithDeps() error type = %v, want %v", GetErrorType(err), tt.errType)
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("NewTodoWithDeps() unexpected error = %v", err)
+				return
+			}
+
+			if todo.ID != tt.id {
+				t.Errorf("NewTodoWithDeps() ID = %v, want %v", todo.ID, tt.id)
+			}
+
+			expectedDesc := strings.TrimSpace(tt.description)
+			if todo.Description != expectedDesc {
+				t.Errorf("NewTodoWithDeps() Description = %v, want %v", todo.Description, expectedDesc)
+			}
+
+			if todo.Done != false {
+				t.Errorf("NewTodoWithDeps() Done = %v, want %v", todo.Done, false)
+			}
+
+			if todo.CreatedAt.IsZero() {
+				t.Errorf("NewTodoWithDeps() CreatedAt should not be zero")
+			}
+
+			if todo.UpdatedAt.IsZero() {
+				t.Errorf("NewTodoWithDeps() UpdatedAt should not be zero")
+			}
+
+			if !todo.CreatedAt.Equal(todo.UpdatedAt) {
+				t.Errorf("NewTodoWithDeps() CreatedAt and UpdatedAt should be equal for new todo")
 			}
 		})
 	}
