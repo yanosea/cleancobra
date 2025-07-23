@@ -1,51 +1,58 @@
 package domain
 
 import (
-	"time"
-
 	"github.com/yanosea/gct/pkg/proxy"
+)
+
+// Domain proxies for dependency injection
+var (
+	// dtp is a proxy for the time package for dependency injection
+	dtp proxy.Time
+	// dsp is a proxy for the strings package for dependency injection
+	dsp proxy.Strings
+	// dfp is a proxy for the fmt package for dependency injection
+	dfp proxy.Fmt
+	// djp is a proxy for the json package for dependency injection
+	djp proxy.JSON
 )
 
 // Todo represents a todo item in the domain
 type Todo struct {
-	ID          int       `json:"id"`
-	Description string    `json:"description"`
-	Done        bool      `json:"done"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          int             `json:"id"`
+	Description string          `json:"description"`
+	Done        bool            `json:"done"`
+	CreatedAt   proxy.TimeAlias `json:"created_at"`
+	UpdatedAt   proxy.TimeAlias `json:"updated_at"`
 }
 
-// NewTodoWithDeps creates a new Todo with the given description using injected dependencies
-func NewTodoWithDeps(id int, description string, timeProxy proxy.Time, stringsProxy proxy.Strings) (*Todo, error) {
-	if err := validateDescriptionWithDeps(description, stringsProxy); err != nil {
-		return nil, err
-	}
-
-	now := timeProxy.Now()
-	return &Todo{
-		ID:          id,
-		Description: stringsProxy.TrimSpace(description),
-		Done:        false,
-		CreatedAt:   now,
-		UpdatedAt:   now,
-	}, nil
+// InitializeDomain sets the proxy for the domain
+func InitializeDomain(timeProxy proxy.Time, stringsProxy proxy.Strings, fmtProxy proxy.Fmt, jsonProxy proxy.JSON) {
+	dtp = timeProxy
+	dsp = stringsProxy
+	dfp = fmtProxy
+	djp = jsonProxy
 }
 
 // NewTodo creates a new Todo with the given description
 func NewTodo(id int, description string) (*Todo, error) {
-	// Create real proxy implementations for backward compatibility
-	timeProxy := proxy.NewTime()
-	stringsProxy := proxy.NewStrings()
+	if err := validateDescription(description); err != nil {
+		return nil, err
+	}
 
-	// Call NewTodoWithDeps with real proxy instances
-	return NewTodoWithDeps(id, description, timeProxy, stringsProxy)
+	trimmedDesc := dsp.TrimSpace(description)
+	return &Todo{
+		ID:          id,
+		Description: trimmedDesc,
+		Done:        false,
+		CreatedAt:   dtp.Now(),
+		UpdatedAt:   dtp.Now(),
+	}, nil
 }
 
 // Toggle toggles the completion status of the todo
 func (t *Todo) Toggle() {
 	t.Done = !t.Done
-	timeProxy := proxy.NewTime()
-	t.UpdatedAt = timeProxy.Now()
+	t.UpdatedAt = dtp.Now()
 }
 
 // UpdateDescription updates the description of the todo
@@ -54,10 +61,8 @@ func (t *Todo) UpdateDescription(description string) error {
 		return err
 	}
 
-	stringsProxy := proxy.NewStrings()
-	t.Description = stringsProxy.TrimSpace(description)
-	timeProxy := proxy.NewTime()
-	t.UpdatedAt = timeProxy.Now()
+	t.Description = dsp.TrimSpace(description)
+	t.UpdatedAt = dtp.Now()
 	return nil
 }
 
@@ -86,9 +91,9 @@ func (t *Todo) Validate() error {
 	return nil
 }
 
-// validateDescriptionWithDeps validates the todo description using injected dependencies
-func validateDescriptionWithDeps(description string, stringsProxy proxy.Strings) error {
-	trimmed := stringsProxy.TrimSpace(description)
+// validateDescription validates the todo description
+func validateDescription(description string) error {
+	trimmed := dsp.TrimSpace(description)
 	if trimmed == "" {
 		return NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
 	}
@@ -100,27 +105,19 @@ func validateDescriptionWithDeps(description string, stringsProxy proxy.Strings)
 	return nil
 }
 
-// validateDescription validates the todo description
-func validateDescription(description string) error {
-	stringsProxy := proxy.NewStrings()
-	return validateDescriptionWithDeps(description, stringsProxy)
-}
-
 // String returns a string representation of the todo
 func (t *Todo) String() string {
 	status := "[ ]"
 	if t.Done {
 		status = "[x]"
 	}
-	fmtProxy := proxy.NewFmt()
-	return fmtProxy.Sprintf("%s %d: %s", status, t.ID, t.Description)
+	return dfp.Sprintf("%s %d: %s", status, t.ID, t.Description)
 }
 
 // MarshalJSON implements custom JSON marshaling
 func (t *Todo) MarshalJSON() ([]byte, error) {
 	type Alias Todo
-	jsonProxy := proxy.NewJSON()
-	return jsonProxy.Marshal(&struct {
+	return djp.Marshal(&struct {
 		*Alias
 		CreatedAt string `json:"created_at"`
 		UpdatedAt string `json:"updated_at"`
@@ -142,19 +139,17 @@ func (t *Todo) UnmarshalJSON(data []byte) error {
 		Alias: (*Alias)(t),
 	}
 
-	jsonProxy := proxy.NewJSON()
-	if err := jsonProxy.Unmarshal(data, &aux); err != nil {
+	if err := djp.Unmarshal(data, &aux); err != nil {
 		return NewDomainError(ErrorTypeJSON, "failed to unmarshal todo", err)
 	}
 
 	var err error
-	timeProxy := proxy.NewTime()
-	t.CreatedAt, err = timeProxy.Parse(proxy.RFC3339, aux.CreatedAt)
+	t.CreatedAt, err = dtp.Parse(proxy.RFC3339, aux.CreatedAt)
 	if err != nil {
 		return NewDomainError(ErrorTypeJSON, "invalid created_at format", err)
 	}
 
-	t.UpdatedAt, err = timeProxy.Parse(proxy.RFC3339, aux.UpdatedAt)
+	t.UpdatedAt, err = dtp.Parse(proxy.RFC3339, aux.UpdatedAt)
 	if err != nil {
 		return NewDomainError(ErrorTypeJSON, "invalid updated_at format", err)
 	}

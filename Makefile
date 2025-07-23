@@ -20,6 +20,7 @@ update.mocks:
 	mockgen -source=./pkg/proxy/cobra.go -destination=./pkg/proxy/cobra_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/color.go -destination=./pkg/proxy/color_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/envconfig.go -destination=./pkg/proxy/envconfig_mock.go -package=proxy
+	mockgen -source=./pkg/proxy/errors.go -destination=./pkg/proxy/errors_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/filepath.go -destination=./pkg/proxy/filepath_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/fmt.go -destination=./pkg/proxy/fmt_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/io.go -destination=./pkg/proxy/io_mock.go -package=proxy

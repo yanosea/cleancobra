@@ -1,12 +1,18 @@
 package domain
 
 import (
-	"errors"
-	"fmt"
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // ErrorType represents the type of domain error
 type ErrorType int
+
+// DomainError represents a domain-specific error
+type DomainError struct {
+	Type    ErrorType
+	Message string
+	Cause   error
+}
 
 const (
 	// ErrorTypeNotFound indicates a resource was not found
@@ -20,6 +26,30 @@ const (
 	// ErrorTypeConfiguration indicates a configuration error
 	ErrorTypeConfiguration
 )
+
+// Domain error proxies for dependency injection
+var (
+	// deep is a proxy for the errors package for dependency injection
+	deep proxy.Errors
+	// defp is a proxy for the fmt package for dependency injection
+	defp proxy.Fmt
+)
+
+// Predefined domain errors
+var (
+	// ErrTodoNotFound indicates a todo was not found
+	ErrTodoNotFound = NewDomainError(ErrorTypeNotFound, "todo not found", nil)
+	// ErrEmptyDescription indicates an empty description was provided
+	ErrEmptyDescription = NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
+	// ErrInvalidID indicates an invalid ID was provided
+	ErrInvalidID = NewDomainError(ErrorTypeInvalidInput, "invalid todo ID", nil)
+)
+
+// InitializeDomainErrors sets the proxy for the domain errors
+func InitializeDomainErrors(errorsProxy proxy.Errors, fmtProxy proxy.Fmt) {
+	deep = errorsProxy
+	defp = fmtProxy
+}
 
 // String returns the string representation of the error type
 func (et ErrorType) String() string {
@@ -39,13 +69,6 @@ func (et ErrorType) String() string {
 	}
 }
 
-// DomainError represents a domain-specific error
-type DomainError struct {
-	Type    ErrorType
-	Message string
-	Cause   error
-}
-
 // NewDomainError creates a new domain error
 func NewDomainError(errorType ErrorType, message string, cause error) *DomainError {
 	return &DomainError{
@@ -58,9 +81,9 @@ func NewDomainError(errorType ErrorType, message string, cause error) *DomainErr
 // Error implements the error interface
 func (e *DomainError) Error() string {
 	if e.Cause != nil {
-		return fmt.Sprintf("%s: %s (caused by: %v)", e.Type.String(), e.Message, e.Cause)
+		return defp.Sprintf("%s: %s (caused by: %v)", e.Type.String(), e.Message, e.Cause)
 	}
-	return fmt.Sprintf("%s: %s", e.Type.String(), e.Message)
+	return defp.Sprintf("%s: %s", e.Type.String(), e.Message)
 }
 
 // Unwrap returns the underlying cause error
@@ -76,28 +99,16 @@ func (e *DomainError) Is(target error) bool {
 	return false
 }
 
-// Predefined domain errors
-var (
-	// ErrTodoNotFound indicates a todo was not found
-	ErrTodoNotFound = NewDomainError(ErrorTypeNotFound, "todo not found", nil)
-
-	// ErrEmptyDescription indicates an empty description was provided
-	ErrEmptyDescription = NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
-
-	// ErrInvalidID indicates an invalid ID was provided
-	ErrInvalidID = NewDomainError(ErrorTypeInvalidInput, "invalid todo ID", nil)
-)
-
 // IsDomainError checks if an error is a domain error
 func IsDomainError(err error) bool {
 	var domainErr *DomainError
-	return errors.As(err, &domainErr)
+	return deep.As(err, &domainErr)
 }
 
 // GetErrorType returns the error type of a domain error, or ErrorTypeConfiguration for non-domain errors
 func GetErrorType(err error) ErrorType {
 	var domainErr *DomainError
-	if errors.As(err, &domainErr) {
+	if deep.As(err, &domainErr) {
 		return domainErr.Type
 	}
 	return ErrorTypeConfiguration

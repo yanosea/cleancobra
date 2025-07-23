@@ -17,6 +17,8 @@ func InitializeCommand() (proxy.Command, error) {
 		return nil, err
 	}
 
+	// No need to setup proxy provider anymore
+
 	// Initialize formatters
 	jsonFormatter := formatter.NewJSONFormatter(c.GetProxies().JSON)
 	tableFormatter := formatter.NewTableFormatter(c.GetProxies().Color, c.GetProxies().Strings, c.GetProxies().Fmt)

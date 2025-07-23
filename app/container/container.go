@@ -32,6 +32,7 @@ type Proxies struct {
 	Lipgloss  proxy.Lipgloss
 	Color     proxy.Color
 	Envconfig proxy.Envconfig
+	Errors    proxy.Errors
 }
 
 // UseCases organizes all use case dependencies
@@ -41,6 +42,8 @@ type UseCases struct {
 	ListTodo   *application.ListTodoUseCase
 	ToggleTodo *application.ToggleTodoUseCase
 }
+
+// No need for proxy provider anymore
 
 // NewContainer creates a new Container with all dependencies properly initialized
 func NewContainer() (*Container, error) {
@@ -60,7 +63,22 @@ func NewContainer() (*Container, error) {
 		Lipgloss:  proxy.NewLipgloss(),
 		Color:     proxy.NewColor(),
 		Envconfig: proxy.NewEnvconfig(),
+		Errors:    proxy.NewErrors(),
 	}
+
+	// Initialize domain
+	domain.InitializeDomain(
+		proxies.Time,
+		proxies.Strings,
+		proxies.Fmt,
+		proxies.JSON,
+	)
+
+	// Initialize domain error
+	domain.InitializeDomainErrors(
+		proxies.Errors,
+		proxies.Fmt,
+	)
 
 	// Load configuration
 	cfg, err := config.Load(
@@ -87,12 +105,14 @@ func NewContainer() (*Container, error) {
 		ToggleTodo: application.NewToggleTodoUseCase(repository),
 	}
 
-	return &Container{
+	container := &Container{
 		config:     cfg,
 		proxies:    proxies,
 		repository: repository,
 		useCases:   useCases,
-	}, nil
+	}
+
+	return container, nil
 }
 
 // GetUseCases returns the use cases struct

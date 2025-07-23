@@ -2,14 +2,27 @@ package domain
 
 import (
 	"encoding/json"
+	"errors"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/yanosea/gct/pkg/proxy"
+	"go.uber.org/mock/gomock"
 )
 
 func TestNewTodo(t *testing.T) {
+	// Create mock for time to ensure CreatedAt and UpdatedAt are the same
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockTime := proxy.NewMockTime(ctrl)
+	fixedTime := time.Date(2023, 1, 1, 12, 0, 0, 0, time.UTC)
+	mockTime.EXPECT().Now().Return(fixedTime).AnyTimes()
+
+	// Initialize with real proxies for testing except for time
+	InitializeDomain(mockTime, proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
 	tests := []struct {
 		name        string
 		id          int
@@ -18,34 +31,34 @@ func TestNewTodo(t *testing.T) {
 		errType     ErrorType
 	}{
 		{
-			name:        "positive testing",
+			name:        "Valid todo",
 			id:          1,
-			description: "Buy groceries",
+			description: "Buy milk",
 			wantErr:     false,
 		},
 		{
-			name:        "positive testing (whitespace trimming)",
+			name:        "Valid todo with spaces",
 			id:          2,
-			description: "  Clean house  ",
+			description: "  Buy bread  ",
 			wantErr:     false,
 		},
 		{
-			name:        "negative testing (empty description failed)",
-			id:          3,
+			name:        "Empty description",
+			id:          1,
 			description: "",
 			wantErr:     true,
 			errType:     ErrorTypeInvalidInput,
 		},
 		{
-			name:        "negative testing (whitespace only description failed)",
-			id:          4,
+			name:        "Whitespace only description",
+			id:          1,
 			description: "   ",
 			wantErr:     true,
 			errType:     ErrorTypeInvalidInput,
 		},
 		{
-			name:        "negative testing (description too long failed)",
-			id:          5,
+			name:        "Description too long",
+			id:          1,
 			description: strings.Repeat("a", 501),
 			wantErr:     true,
 			errType:     ErrorTypeInvalidInput,
@@ -58,7 +71,11 @@ func TestNewTodo(t *testing.T) {
 
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("NewTodo() expected error but got none")
+					t.Errorf("NewTodo() error = nil, wantErr %v", tt.wantErr)
+					return
+				}
+				if !IsDomainError(err) {
+					t.Errorf("NewTodo() error is not a domain error: %v", err)
 					return
 				}
 				if GetErrorType(err) != tt.errType {
@@ -68,29 +85,29 @@ func TestNewTodo(t *testing.T) {
 			}
 
 			if err != nil {
-				t.Errorf("NewTodo() unexpected error = %v", err)
+				t.Errorf("NewTodo() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
 			if todo.ID != tt.id {
-				t.Errorf("NewTodo() ID = %v, want %v", todo.ID, tt.id)
+				t.Errorf("NewTodo().ID = %v, want %v", todo.ID, tt.id)
 			}
 
 			expectedDesc := strings.TrimSpace(tt.description)
 			if todo.Description != expectedDesc {
-				t.Errorf("NewTodo() Description = %v, want %v", todo.Description, expectedDesc)
+				t.Errorf("NewTodo().Description = %v, want %v", todo.Description, expectedDesc)
 			}
 
 			if todo.Done != false {
-				t.Errorf("NewTodo() Done = %v, want %v", todo.Done, false)
+				t.Errorf("NewTodo().Done = %v, want false", todo.Done)
 			}
 
 			if todo.CreatedAt.IsZero() {
-				t.Errorf("NewTodo() CreatedAt should not be zero")
+				t.Errorf("NewTodo().CreatedAt is zero")
 			}
 
 			if todo.UpdatedAt.IsZero() {
-				t.Errorf("NewTodo() UpdatedAt should not be zero")
+				t.Errorf("NewTodo().UpdatedAt is zero")
 			}
 
 			if !todo.CreatedAt.Equal(todo.UpdatedAt) {
@@ -100,173 +117,91 @@ func TestNewTodo(t *testing.T) {
 	}
 }
 
-func TestNewTodoWithDeps(t *testing.T) {
-	// Import proxy package for testing
-	timeProxy := proxy.NewTime()
-	stringsProxy := proxy.NewStrings()
-	
-	tests := []struct {
-		name        string
-		id          int
-		description string
-		wantErr     bool
-		errType     ErrorType
-	}{
-		{
-			name:        "positive testing",
-			id:          1,
-			description: "Buy groceries",
-			wantErr:     false,
-		},
-		{
-			name:        "positive testing (whitespace trimming)",
-			id:          2,
-			description: "  Clean house  ",
-			wantErr:     false,
-		},
-		{
-			name:        "negative testing (empty description failed)",
-			id:          3,
-			description: "",
-			wantErr:     true,
-			errType:     ErrorTypeInvalidInput,
-		},
-		{
-			name:        "negative testing (whitespace only description failed)",
-			id:          4,
-			description: "   ",
-			wantErr:     true,
-			errType:     ErrorTypeInvalidInput,
-		},
-		{
-			name:        "negative testing (description too long failed)",
-			id:          5,
-			description: strings.Repeat("a", 501),
-			wantErr:     true,
-			errType:     ErrorTypeInvalidInput,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			todo, err := NewTodoWithDeps(tt.id, tt.description, timeProxy, stringsProxy)
-
-			if tt.wantErr {
-				if err == nil {
-					t.Errorf("NewTodoWithDeps() expected error but got none")
-					return
-				}
-				if GetErrorType(err) != tt.errType {
-					t.Errorf("NewTodoWithDeps() error type = %v, want %v", GetErrorType(err), tt.errType)
-				}
-				return
-			}
-
-			if err != nil {
-				t.Errorf("NewTodoWithDeps() unexpected error = %v", err)
-				return
-			}
-
-			if todo.ID != tt.id {
-				t.Errorf("NewTodoWithDeps() ID = %v, want %v", todo.ID, tt.id)
-			}
-
-			expectedDesc := strings.TrimSpace(tt.description)
-			if todo.Description != expectedDesc {
-				t.Errorf("NewTodoWithDeps() Description = %v, want %v", todo.Description, expectedDesc)
-			}
-
-			if todo.Done != false {
-				t.Errorf("NewTodoWithDeps() Done = %v, want %v", todo.Done, false)
-			}
-
-			if todo.CreatedAt.IsZero() {
-				t.Errorf("NewTodoWithDeps() CreatedAt should not be zero")
-			}
-
-			if todo.UpdatedAt.IsZero() {
-				t.Errorf("NewTodoWithDeps() UpdatedAt should not be zero")
-			}
-
-			if !todo.CreatedAt.Equal(todo.UpdatedAt) {
-				t.Errorf("NewTodoWithDeps() CreatedAt and UpdatedAt should be equal for new todo")
-			}
-		})
-	}
-}
-
 func TestTodo_Toggle(t *testing.T) {
+	// Initialize with real proxies for testing
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
 	todo, err := NewTodo(1, "Test todo")
 	if err != nil {
 		t.Fatalf("Failed to create todo: %v", err)
 	}
 
 	originalUpdatedAt := todo.UpdatedAt
-	
-	// Sleep briefly to ensure time difference
-	time.Sleep(time.Millisecond)
+
+	// Sleep a small amount to ensure time difference
+	time.Sleep(1 * time.Millisecond)
 
 	// Test toggling from false to true
 	todo.Toggle()
-	if !todo.Done {
-		t.Errorf("Toggle() Done = %v, want %v", todo.Done, true)
-	}
-	if !todo.UpdatedAt.After(originalUpdatedAt) {
-		t.Errorf("Toggle() should update UpdatedAt timestamp")
+
+	if todo.Done != true {
+		t.Errorf("After first toggle, Done = %v, want true", todo.Done)
 	}
 
-	updatedAt1 := todo.UpdatedAt
-	time.Sleep(time.Millisecond)
+	if !todo.UpdatedAt.After(originalUpdatedAt) {
+		t.Errorf("UpdatedAt should be updated after toggle")
+	}
+
+	secondUpdatedAt := todo.UpdatedAt
+	time.Sleep(1 * time.Millisecond)
 
 	// Test toggling from true to false
 	todo.Toggle()
-	if todo.Done {
-		t.Errorf("Toggle() Done = %v, want %v", todo.Done, false)
+
+	if todo.Done != false {
+		t.Errorf("After second toggle, Done = %v, want false", todo.Done)
 	}
-	if !todo.UpdatedAt.After(updatedAt1) {
-		t.Errorf("Toggle() should update UpdatedAt timestamp on second toggle")
+
+	if !todo.UpdatedAt.After(secondUpdatedAt) {
+		t.Errorf("UpdatedAt should be updated after second toggle")
 	}
 }
 
 func TestTodo_UpdateDescription(t *testing.T) {
+	// Initialize with real proxies for testing
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
 	todo, err := NewTodo(1, "Original description")
 	if err != nil {
 		t.Fatalf("Failed to create todo: %v", err)
 	}
 
 	originalUpdatedAt := todo.UpdatedAt
-	time.Sleep(time.Millisecond)
+	time.Sleep(1 * time.Millisecond)
 
 	tests := []struct {
 		name        string
 		description string
 		wantErr     bool
 		errType     ErrorType
+		expected    string
 	}{
 		{
-			name:        "positive testing",
-			description: "Updated description",
+			name:        "Valid update",
+			description: "New description",
 			wantErr:     false,
+			expected:    "New description",
 		},
 		{
-			name:        "positive testing (whitespace trimming)",
+			name:        "Update with spaces",
 			description: "  Trimmed description  ",
 			wantErr:     false,
+			expected:    "Trimmed description",
 		},
 		{
-			name:        "negative testing (empty description failed)",
+			name:        "Empty description",
 			description: "",
 			wantErr:     true,
 			errType:     ErrorTypeInvalidInput,
 		},
 		{
-			name:        "negative testing (whitespace only description failed)",
+			name:        "Whitespace only",
 			description: "   ",
 			wantErr:     true,
 			errType:     ErrorTypeInvalidInput,
 		},
 		{
-			name:        "negative testing (description too long failed)",
+			name:        "Description too long",
 			description: strings.Repeat("a", 501),
 			wantErr:     true,
 			errType:     ErrorTypeInvalidInput,
@@ -279,7 +214,11 @@ func TestTodo_UpdateDescription(t *testing.T) {
 
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("UpdateDescription() expected error but got none")
+					t.Errorf("UpdateDescription() error = nil, wantErr %v", tt.wantErr)
+					return
+				}
+				if !IsDomainError(err) {
+					t.Errorf("UpdateDescription() error is not a domain error: %v", err)
 					return
 				}
 				if GetErrorType(err) != tt.errType {
@@ -289,34 +228,41 @@ func TestTodo_UpdateDescription(t *testing.T) {
 			}
 
 			if err != nil {
-				t.Errorf("UpdateDescription() unexpected error = %v", err)
+				t.Errorf("UpdateDescription() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
-			expectedDesc := strings.TrimSpace(tt.description)
-			if todo.Description != expectedDesc {
-				t.Errorf("UpdateDescription() Description = %v, want %v", todo.Description, expectedDesc)
+			if todo.Description != tt.expected {
+				t.Errorf("After UpdateDescription(), Description = %v, want %v", todo.Description, tt.expected)
 			}
 
 			if !todo.UpdatedAt.After(originalUpdatedAt) {
-				t.Errorf("UpdateDescription() should update UpdatedAt timestamp")
+				t.Errorf("UpdatedAt should be updated after description change")
 			}
+
+			originalUpdatedAt = todo.UpdatedAt
+			time.Sleep(1 * time.Millisecond)
 		})
 	}
 }
 
 func TestTodo_Validate(t *testing.T) {
+	// Initialize with real proxies for testing
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
 	now := time.Now()
+	past := now.Add(-1 * time.Hour)
+	future := now.Add(1 * time.Hour)
 
 	tests := []struct {
 		name    string
-		todo    *Todo
+		todo    Todo
 		wantErr bool
 		errType ErrorType
 	}{
 		{
-			name: "positive testing",
-			todo: &Todo{
+			name: "Valid todo",
+			todo: Todo{
 				ID:          1,
 				Description: "Valid description",
 				Done:        false,
@@ -326,8 +272,8 @@ func TestTodo_Validate(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "negative testing (invalid ID zero failed)",
-			todo: &Todo{
+			name: "Invalid ID - zero",
+			todo: Todo{
 				ID:          0,
 				Description: "Valid description",
 				Done:        false,
@@ -338,8 +284,8 @@ func TestTodo_Validate(t *testing.T) {
 			errType: ErrorTypeInvalidInput,
 		},
 		{
-			name: "negative testing (invalid ID negative failed)",
-			todo: &Todo{
+			name: "Invalid ID - negative",
+			todo: Todo{
 				ID:          -1,
 				Description: "Valid description",
 				Done:        false,
@@ -350,8 +296,8 @@ func TestTodo_Validate(t *testing.T) {
 			errType: ErrorTypeInvalidInput,
 		},
 		{
-			name: "negative testing (empty description failed)",
-			todo: &Todo{
+			name: "Empty description",
+			todo: Todo{
 				ID:          1,
 				Description: "",
 				Done:        false,
@@ -362,8 +308,8 @@ func TestTodo_Validate(t *testing.T) {
 			errType: ErrorTypeInvalidInput,
 		},
 		{
-			name: "negative testing (description too long failed)",
-			todo: &Todo{
+			name: "Description too long",
+			todo: Todo{
 				ID:          1,
 				Description: strings.Repeat("a", 501),
 				Done:        false,
@@ -374,8 +320,8 @@ func TestTodo_Validate(t *testing.T) {
 			errType: ErrorTypeInvalidInput,
 		},
 		{
-			name: "negative testing (zero created_at failed)",
-			todo: &Todo{
+			name: "Zero CreatedAt",
+			todo: Todo{
 				ID:          1,
 				Description: "Valid description",
 				Done:        false,
@@ -386,8 +332,8 @@ func TestTodo_Validate(t *testing.T) {
 			errType: ErrorTypeInvalidInput,
 		},
 		{
-			name: "negative testing (zero updated_at failed)",
-			todo: &Todo{
+			name: "Zero UpdatedAt",
+			todo: Todo{
 				ID:          1,
 				Description: "Valid description",
 				Done:        false,
@@ -398,13 +344,13 @@ func TestTodo_Validate(t *testing.T) {
 			errType: ErrorTypeInvalidInput,
 		},
 		{
-			name: "negative testing (updated_at before created_at failed)",
-			todo: &Todo{
+			name: "UpdatedAt before CreatedAt",
+			todo: Todo{
 				ID:          1,
 				Description: "Valid description",
 				Done:        false,
-				CreatedAt:   now,
-				UpdatedAt:   now.Add(-time.Hour),
+				CreatedAt:   future,
+				UpdatedAt:   past,
 			},
 			wantErr: true,
 			errType: ErrorTypeInvalidInput,
@@ -417,7 +363,11 @@ func TestTodo_Validate(t *testing.T) {
 
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("Validate() expected error but got none")
+					t.Errorf("Validate() error = nil, wantErr %v", tt.wantErr)
+					return
+				}
+				if !IsDomainError(err) {
+					t.Errorf("Validate() error is not a domain error: %v", err)
 					return
 				}
 				if GetErrorType(err) != tt.errType {
@@ -427,35 +377,38 @@ func TestTodo_Validate(t *testing.T) {
 			}
 
 			if err != nil {
-				t.Errorf("Validate() unexpected error = %v", err)
+				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
 }
 
 func TestTodo_String(t *testing.T) {
+	// Initialize with real proxies for testing
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
 	tests := []struct {
 		name     string
-		todo     *Todo
+		todo     Todo
 		expected string
 	}{
 		{
-			name: "positive testing (incomplete todo)",
-			todo: &Todo{
+			name: "Incomplete todo",
+			todo: Todo{
 				ID:          1,
-				Description: "Buy groceries",
+				Description: "Buy milk",
 				Done:        false,
 			},
-			expected: "[ ] 1: Buy groceries",
+			expected: "[ ] 1: Buy milk",
 		},
 		{
-			name: "positive testing (completed todo)",
-			todo: &Todo{
+			name: "Complete todo",
+			todo: Todo{
 				ID:          2,
-				Description: "Clean house",
+				Description: "Buy bread",
 				Done:        true,
 			},
-			expected: "[x] 2: Clean house",
+			expected: "[x] 2: Buy bread",
 		},
 	}
 
@@ -470,145 +423,156 @@ func TestTodo_String(t *testing.T) {
 }
 
 func TestTodo_MarshalJSON(t *testing.T) {
-	now := time.Date(2023, 12, 25, 10, 30, 0, 0, time.UTC)
-	todo := &Todo{
+	// Initialize with real proxies for testing
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
+	createdAt := time.Date(2023, 1, 1, 12, 0, 0, 0, time.UTC)
+	updatedAt := time.Date(2023, 1, 1, 13, 0, 0, 0, time.UTC)
+
+	todo := Todo{
 		ID:          1,
 		Description: "Test todo",
 		Done:        true,
-		CreatedAt:   now,
-		UpdatedAt:   now.Add(time.Hour),
+		CreatedAt:   createdAt,
+		UpdatedAt:   updatedAt,
 	}
 
-	data, err := json.Marshal(todo)
+	data, err := todo.MarshalJSON()
 	if err != nil {
-		t.Fatalf("MarshalJSON() unexpected error = %v", err)
+		t.Fatalf("MarshalJSON() error = %v", err)
 	}
 
+	// Parse the JSON to verify structure
 	var result map[string]interface{}
 	if err := json.Unmarshal(data, &result); err != nil {
 		t.Fatalf("Failed to unmarshal result: %v", err)
 	}
 
-	// Verify all fields are present and correct
-	if result["id"] != float64(1) {
-		t.Errorf("MarshalJSON() id = %v, want %v", result["id"], 1)
+	// Verify fields
+	if int(result["id"].(float64)) != 1 {
+		t.Errorf("MarshalJSON() id = %v, want 1", result["id"])
 	}
 
 	if result["description"] != "Test todo" {
-		t.Errorf("MarshalJSON() description = %v, want %v", result["description"], "Test todo")
+		t.Errorf("MarshalJSON() description = %v, want 'Test todo'", result["description"])
 	}
 
 	if result["done"] != true {
-		t.Errorf("MarshalJSON() done = %v, want %v", result["done"], true)
+		t.Errorf("MarshalJSON() done = %v, want true", result["done"])
 	}
 
-	expectedCreatedAt := now.Format(time.RFC3339)
-	if result["created_at"] != expectedCreatedAt {
-		t.Errorf("MarshalJSON() created_at = %v, want %v", result["created_at"], expectedCreatedAt)
+	if result["created_at"] != "2023-01-01T12:00:00Z" {
+		t.Errorf("MarshalJSON() created_at = %v, want '2023-01-01T12:00:00Z'", result["created_at"])
 	}
 
-	expectedUpdatedAt := now.Add(time.Hour).Format(time.RFC3339)
-	if result["updated_at"] != expectedUpdatedAt {
-		t.Errorf("MarshalJSON() updated_at = %v, want %v", result["updated_at"], expectedUpdatedAt)
+	if result["updated_at"] != "2023-01-01T13:00:00Z" {
+		t.Errorf("MarshalJSON() updated_at = %v, want '2023-01-01T13:00:00Z'", result["updated_at"])
+	}
+}
+
+func TestTodo_MarshalJSON_Error(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockJSON := proxy.NewMockJSON(ctrl)
+	mockJSON.EXPECT().Marshal(gomock.Any()).Return(nil, errors.New("marshal error"))
+
+	// Initialize with mock JSON proxy for error simulation
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), mockJSON)
+
+	todo := Todo{
+		ID:          1,
+		Description: "Test todo",
+		Done:        false,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+
+	_, err := todo.MarshalJSON()
+	if err == nil {
+		t.Errorf("MarshalJSON() error = nil, want error")
 	}
 }
 
 func TestTodo_UnmarshalJSON(t *testing.T) {
+	// Initialize with real proxies for testing
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
 	tests := []struct {
 		name    string
-		json    string
+		data    string
 		wantErr bool
 		errType ErrorType
+		verify  func(*testing.T, *Todo)
 	}{
 		{
-			name: "positive testing",
-			json: `{
+			name: "Valid JSON",
+			data: `{
 				"id": 1,
 				"description": "Test todo",
 				"done": true,
-				"created_at": "2023-12-25T10:30:00Z",
-				"updated_at": "2023-12-25T11:30:00Z"
+				"created_at": "2023-01-01T12:00:00Z",
+				"updated_at": "2023-01-01T13:00:00Z"
 			}`,
 			wantErr: false,
+			verify: func(t *testing.T, todo *Todo) {
+				if todo.ID != 1 {
+					t.Errorf("UnmarshalJSON() ID = %v, want 1", todo.ID)
+				}
+				if todo.Description != "Test todo" {
+					t.Errorf("UnmarshalJSON() Description = %v, want 'Test todo'", todo.Description)
+				}
+				if todo.Done != true {
+					t.Errorf("UnmarshalJSON() Done = %v, want true", todo.Done)
+				}
+				expectedCreated := time.Date(2023, 1, 1, 12, 0, 0, 0, time.UTC)
+				if !todo.CreatedAt.Equal(expectedCreated) {
+					t.Errorf("UnmarshalJSON() CreatedAt = %v, want %v", todo.CreatedAt, expectedCreated)
+				}
+				expectedUpdated := time.Date(2023, 1, 1, 13, 0, 0, 0, time.UTC)
+				if !todo.UpdatedAt.Equal(expectedUpdated) {
+					t.Errorf("UnmarshalJSON() UpdatedAt = %v, want %v", todo.UpdatedAt, expectedUpdated)
+				}
+			},
 		},
 		{
-			name: "negative testing (invalid JSON format missing comma failed)",
-			json: `{
-				"id": 1,
-				"description": "Test todo"
-				"done": true
-			}`,
+			name:    "Invalid JSON",
+			data:    `{"invalid": json}`,
 			wantErr: true,
-			errType: ErrorTypeConfiguration, // json.Unmarshal returns regular error, not domain error
+			errType: ErrorTypeJSON,
 		},
 		{
-			name: "negative testing (invalid JSON format triggers domain error failed)",
-			json: `{
-				"id": "not-a-number",
-				"description": "Test todo",
-				"done": true,
-				"created_at": "2023-12-25T10:30:00Z",
-				"updated_at": "2023-12-25T11:30:00Z"
-			}`,
-			wantErr: true,
-			errType: ErrorTypeJSON, // This should trigger the domain error in UnmarshalJSON
-		},
-		{
-			name: "negative testing (JSON unmarshal error in custom method failed)",
-			json: `{
-				"id": 1,
-				"description": "Test todo",
-				"done": "not-a-boolean",
-				"created_at": "2023-12-25T10:30:00Z",
-				"updated_at": "2023-12-25T11:30:00Z"
-			}`,
-			wantErr: true,
-			errType: ErrorTypeJSON, // This should trigger the "failed to unmarshal todo" error
-		},
-		{
-			name: "negative testing (invalid created_at format failed)",
-			json: `{
+			name: "Invalid created_at format",
+			data: `{
 				"id": 1,
 				"description": "Test todo",
-				"done": true,
+				"done": false,
 				"created_at": "invalid-date",
-				"updated_at": "2023-12-25T11:30:00Z"
+				"updated_at": "2023-01-01T13:00:00Z"
 			}`,
 			wantErr: true,
 			errType: ErrorTypeJSON,
 		},
 		{
-			name: "negative testing (invalid updated_at format failed)",
-			json: `{
+			name: "Invalid updated_at format",
+			data: `{
 				"id": 1,
 				"description": "Test todo",
-				"done": true,
-				"created_at": "2023-12-25T10:30:00Z",
+				"done": false,
+				"created_at": "2023-01-01T12:00:00Z",
 				"updated_at": "invalid-date"
 			}`,
 			wantErr: true,
 			errType: ErrorTypeJSON,
 		},
 		{
-			name: "negative testing (validation failure empty description failed)",
-			json: `{
-				"id": 1,
-				"description": "",
-				"done": true,
-				"created_at": "2023-12-25T10:30:00Z",
-				"updated_at": "2023-12-25T11:30:00Z"
-			}`,
-			wantErr: true,
-			errType: ErrorTypeInvalidInput,
-		},
-		{
-			name: "negative testing (validation failure invalid ID failed)",
-			json: `{
+			name: "Invalid todo data (fails validation)",
+			data: `{
 				"id": 0,
 				"description": "Test todo",
-				"done": true,
-				"created_at": "2023-12-25T10:30:00Z",
-				"updated_at": "2023-12-25T11:30:00Z"
+				"done": false,
+				"created_at": "2023-01-01T12:00:00Z",
+				"updated_at": "2023-01-01T13:00:00Z"
 			}`,
 			wantErr: true,
 			errType: ErrorTypeInvalidInput,
@@ -618,11 +582,15 @@ func TestTodo_UnmarshalJSON(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var todo Todo
-			err := json.Unmarshal([]byte(tt.json), &todo)
+			err := todo.UnmarshalJSON([]byte(tt.data))
 
 			if tt.wantErr {
 				if err == nil {
-					t.Errorf("UnmarshalJSON() expected error but got none")
+					t.Errorf("UnmarshalJSON() error = nil, wantErr %v", tt.wantErr)
+					return
+				}
+				if !IsDomainError(err) {
+					t.Errorf("UnmarshalJSON() error is not a domain error: %v", err)
 					return
 				}
 				if GetErrorType(err) != tt.errType {
@@ -632,27 +600,138 @@ func TestTodo_UnmarshalJSON(t *testing.T) {
 			}
 
 			if err != nil {
-				t.Errorf("UnmarshalJSON() unexpected error = %v", err)
+				t.Errorf("UnmarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
-			// Verify the unmarshaled todo is valid
-			if err := todo.Validate(); err != nil {
-				t.Errorf("UnmarshalJSON() resulted in invalid todo: %v", err)
-			}
-
-			// Verify specific values for the valid case
-			if tt.name == "valid JSON" {
-				if todo.ID != 1 {
-					t.Errorf("UnmarshalJSON() ID = %v, want %v", todo.ID, 1)
-				}
-				if todo.Description != "Test todo" {
-					t.Errorf("UnmarshalJSON() Description = %v, want %v", todo.Description, "Test todo")
-				}
-				if todo.Done != true {
-					t.Errorf("UnmarshalJSON() Done = %v, want %v", todo.Done, true)
-				}
+			if tt.verify != nil {
+				tt.verify(t, &todo)
 			}
 		})
+	}
+}
+
+func TestTodo_UnmarshalJSON_Error(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockJSON := proxy.NewMockJSON(ctrl)
+	mockJSON.EXPECT().Unmarshal(gomock.Any(), gomock.Any()).Return(errors.New("unmarshal error"))
+
+	// Initialize with mock JSON proxy for error simulation
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), mockJSON)
+
+	var todo Todo
+	err := todo.UnmarshalJSON([]byte(`{"id": 1}`))
+
+	if err == nil {
+		t.Errorf("UnmarshalJSON() error = nil, want error")
+		return
+	}
+
+	if !IsDomainError(err) {
+		t.Errorf("UnmarshalJSON() error is not a domain error: %v", err)
+		return
+	}
+
+	if GetErrorType(err) != ErrorTypeJSON {
+		t.Errorf("UnmarshalJSON() error type = %v, want %v", GetErrorType(err), ErrorTypeJSON)
+	}
+}
+
+func TestValidateDescription(t *testing.T) {
+	// Initialize with real proxies for testing
+	InitializeDomain(proxy.NewTime(), proxy.NewStrings(), proxy.NewFmt(), proxy.NewJSON())
+
+	tests := []struct {
+		name        string
+		description string
+		wantErr     bool
+		errType     ErrorType
+	}{
+		{
+			name:        "Valid description",
+			description: "Valid description",
+			wantErr:     false,
+		},
+		{
+			name:        "Description with spaces",
+			description: "  Valid description  ",
+			wantErr:     false,
+		},
+		{
+			name:        "Empty description",
+			description: "",
+			wantErr:     true,
+			errType:     ErrorTypeInvalidInput,
+		},
+		{
+			name:        "Whitespace only",
+			description: "   ",
+			wantErr:     true,
+			errType:     ErrorTypeInvalidInput,
+		},
+		{
+			name:        "Description at limit (500 chars)",
+			description: strings.Repeat("a", 500),
+			wantErr:     false,
+		},
+		{
+			name:        "Description too long (501 chars)",
+			description: strings.Repeat("a", 501),
+			wantErr:     true,
+			errType:     ErrorTypeInvalidInput,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateDescription(tt.description)
+
+			if tt.wantErr {
+				if err == nil {
+					t.Errorf("validateDescription() error = nil, wantErr %v", tt.wantErr)
+					return
+				}
+				if !IsDomainError(err) {
+					t.Errorf("validateDescription() error is not a domain error: %v", err)
+					return
+				}
+				if GetErrorType(err) != tt.errType {
+					t.Errorf("validateDescription() error type = %v, want %v", GetErrorType(err), tt.errType)
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("validateDescription() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestInitializeDomain(t *testing.T) {
+	timeProxy := proxy.NewTime()
+	stringsProxy := proxy.NewStrings()
+	fmtProxy := proxy.NewFmt()
+	jsonProxy := proxy.NewJSON()
+
+	InitializeDomain(timeProxy, stringsProxy, fmtProxy, jsonProxy)
+
+	// Test that the proxies are set by creating a todo
+	todo, err := NewTodo(1, "Test todo")
+	if err != nil {
+		t.Errorf("After InitializeDomain, NewTodo() failed: %v", err)
+	}
+
+	if todo == nil {
+		t.Errorf("After InitializeDomain, NewTodo() returned nil")
+	}
+
+	// Test String method works (uses fmt proxy)
+	result := todo.String()
+	expected := "[ ] 1: Test todo"
+	if result != expected {
+		t.Errorf("After InitializeDomain, String() = %v, want %v", result, expected)
 	}
 }

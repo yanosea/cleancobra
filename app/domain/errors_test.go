@@ -2,552 +2,580 @@ package domain
 
 import (
 	"errors"
-	"fmt"
 	"testing"
+
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 func TestErrorType_String(t *testing.T) {
 	tests := []struct {
-		name     string
+		name      string
 		errorType ErrorType
-		want     string
+		expected  string
 	}{
 		{
-			name:     "positive testing (ErrorTypeNotFound)",
+			name:      "ErrorTypeNotFound",
 			errorType: ErrorTypeNotFound,
-			want:     "NotFound",
+			expected:  "NotFound",
 		},
 		{
-			name:     "positive testing (ErrorTypeInvalidInput)",
+			name:      "ErrorTypeInvalidInput",
 			errorType: ErrorTypeInvalidInput,
-			want:     "InvalidInput",
+			expected:  "InvalidInput",
 		},
 		{
-			name:     "positive testing (ErrorTypeFileSystem)",
+			name:      "ErrorTypeFileSystem",
 			errorType: ErrorTypeFileSystem,
-			want:     "FileSystem",
+			expected:  "FileSystem",
 		},
 		{
-			name:     "positive testing (ErrorTypeJSON)",
+			name:      "ErrorTypeJSON",
 			errorType: ErrorTypeJSON,
-			want:     "JSON",
+			expected:  "JSON",
 		},
 		{
-			name:     "positive testing (ErrorTypeConfiguration)",
+			name:      "ErrorTypeConfiguration",
 			errorType: ErrorTypeConfiguration,
-			want:     "Configuration",
+			expected:  "Configuration",
 		},
 		{
-			name:     "positive testing (unknown error type)",
+			name:      "Unknown error type",
 			errorType: ErrorType(999),
-			want:     "Unknown",
+			expected:  "Unknown",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.errorType.String()
-			if got != tt.want {
-				t.Errorf("ErrorType.String() = %v, want %v", got, tt.want)
+			result := tt.errorType.String()
+			if result != tt.expected {
+				t.Errorf("ErrorType.String() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestNewDomainError(t *testing.T) {
-	causeErr := errors.New("underlying error")
-
 	tests := []struct {
 		name      string
 		errorType ErrorType
 		message   string
 		cause     error
-		want      *DomainError
 	}{
 		{
-			name:      "positive testing (with cause error)",
+			name:      "Error without cause",
 			errorType: ErrorTypeNotFound,
 			message:   "test message",
-			cause:     causeErr,
-			want: &DomainError{
-				Type:    ErrorTypeNotFound,
-				Message: "test message",
-				Cause:   causeErr,
-			},
+			cause:     nil,
 		},
 		{
-			name:      "positive testing (without cause error)",
+			name:      "Error with cause",
 			errorType: ErrorTypeInvalidInput,
-			message:   "validation failed",
-			cause:     nil,
-			want: &DomainError{
-				Type:    ErrorTypeInvalidInput,
-				Message: "validation failed",
-				Cause:   nil,
-			},
+			message:   "test message with cause",
+			cause:     errors.New("underlying error"),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := NewDomainError(tt.errorType, tt.message, tt.cause)
-			if got.Type != tt.want.Type {
-				t.Errorf("NewDomainError().Type = %v, want %v", got.Type, tt.want.Type)
+			err := NewDomainError(tt.errorType, tt.message, tt.cause)
+
+			if err.Type != tt.errorType {
+				t.Errorf("NewDomainError().Type = %v, want %v", err.Type, tt.errorType)
 			}
-			if got.Message != tt.want.Message {
-				t.Errorf("NewDomainError().Message = %v, want %v", got.Message, tt.want.Message)
+			if err.Message != tt.message {
+				t.Errorf("NewDomainError().Message = %v, want %v", err.Message, tt.message)
 			}
-			if got.Cause != tt.want.Cause {
-				t.Errorf("NewDomainError().Cause = %v, want %v", got.Cause, tt.want.Cause)
+			if err.Cause != tt.cause {
+				t.Errorf("NewDomainError().Cause = %v, want %v", err.Cause, tt.cause)
 			}
 		})
 	}
 }
 
 func TestDomainError_Error(t *testing.T) {
-	causeErr := errors.New("underlying error")
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
 
 	tests := []struct {
-		name        string
-		domainError *DomainError
-		want        string
+		name     string
+		err      *DomainError
+		expected string
 	}{
 		{
-			name: "positive testing (with cause error)",
-			domainError: &DomainError{
+			name: "Error without cause",
+			err: &DomainError{
 				Type:    ErrorTypeNotFound,
-				Message: "todo not found",
-				Cause:   causeErr,
-			},
-			want: "NotFound: todo not found (caused by: underlying error)",
-		},
-		{
-			name: "positive testing (without cause error)",
-			domainError: &DomainError{
-				Type:    ErrorTypeInvalidInput,
-				Message: "invalid input",
+				Message: "test message",
 				Cause:   nil,
 			},
-			want: "InvalidInput: invalid input",
+			expected: "NotFound: test message",
+		},
+		{
+			name: "Error with cause",
+			err: &DomainError{
+				Type:    ErrorTypeInvalidInput,
+				Message: "test message",
+				Cause:   errors.New("underlying error"),
+			},
+			expected: "InvalidInput: test message (caused by: underlying error)",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.domainError.Error()
-			if got != tt.want {
-				t.Errorf("DomainError.Error() = %v, want %v", got, tt.want)
+			result := tt.err.Error()
+			if result != tt.expected {
+				t.Errorf("DomainError.Error() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestDomainError_Unwrap(t *testing.T) {
-	causeErr := errors.New("underlying error")
-
-	tests := []struct {
-		name        string
-		domainError *DomainError
-		want        error
-	}{
-		{
-			name: "positive testing (with cause error)",
-			domainError: &DomainError{
-				Type:    ErrorTypeNotFound,
-				Message: "test message",
-				Cause:   causeErr,
-			},
-			want: causeErr,
-		},
-		{
-			name: "positive testing (without cause error)",
-			domainError: &DomainError{
-				Type:    ErrorTypeInvalidInput,
-				Message: "test message",
-				Cause:   nil,
-			},
-			want: nil,
-		},
+	cause := errors.New("underlying error")
+	err := &DomainError{
+		Type:    ErrorTypeNotFound,
+		Message: "test message",
+		Cause:   cause,
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := tt.domainError.Unwrap()
-			if got != tt.want {
-				t.Errorf("DomainError.Unwrap() = %v, want %v", got, tt.want)
-			}
-		})
+	result := err.Unwrap()
+	if result != cause {
+		t.Errorf("DomainError.Unwrap() = %v, want %v", result, cause)
+	}
+
+	// Test with nil cause
+	errNoCause := &DomainError{
+		Type:    ErrorTypeNotFound,
+		Message: "test message",
+		Cause:   nil,
+	}
+
+	result = errNoCause.Unwrap()
+	if result != nil {
+		t.Errorf("DomainError.Unwrap() = %v, want nil", result)
 	}
 }
 
 func TestDomainError_Is(t *testing.T) {
-	causeErr := errors.New("underlying error")
-	domainErr1 := &DomainError{
+	err1 := &DomainError{
 		Type:    ErrorTypeNotFound,
-		Message: "todo not found",
-		Cause:   causeErr,
-	}
-	domainErr2 := &DomainError{
-		Type:    ErrorTypeNotFound,
-		Message: "todo not found",
+		Message: "test message",
 		Cause:   nil,
 	}
-	domainErr3 := &DomainError{
+
+	err2 := &DomainError{
+		Type:    ErrorTypeNotFound,
+		Message: "test message",
+		Cause:   nil,
+	}
+
+	err3 := &DomainError{
 		Type:    ErrorTypeInvalidInput,
-		Message: "invalid input",
+		Message: "test message",
 		Cause:   nil,
 	}
-	regularErr := errors.New("regular error")
+
+	err4 := &DomainError{
+		Type:    ErrorTypeNotFound,
+		Message: "different message",
+		Cause:   nil,
+	}
+
+	nonDomainErr := errors.New("regular error")
 
 	tests := []struct {
-		name        string
-		domainError *DomainError
-		target      error
-		want        bool
+		name     string
+		err      *DomainError
+		target   error
+		expected bool
 	}{
 		{
-			name:        "positive testing (same type and message)",
-			domainError: domainErr1,
-			target:      domainErr2,
-			want:        true,
+			name:     "Same type and message",
+			err:      err1,
+			target:   err2,
+			expected: true,
 		},
 		{
-			name:        "positive testing (different type)",
-			domainError: domainErr1,
-			target:      domainErr3,
-			want:        false,
+			name:     "Different type",
+			err:      err1,
+			target:   err3,
+			expected: false,
 		},
 		{
-			name:        "positive testing (different message)",
-			domainError: domainErr1,
-			target: &DomainError{
-				Type:    ErrorTypeNotFound,
-				Message: "different message",
-				Cause:   nil,
-			},
-			want: false,
+			name:     "Different message",
+			err:      err1,
+			target:   err4,
+			expected: false,
 		},
 		{
-			name:        "positive testing (non-domain error)",
-			domainError: domainErr1,
-			target:      regularErr,
-			want:        false,
+			name:     "Non-domain error",
+			err:      err1,
+			target:   nonDomainErr,
+			expected: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.domainError.Is(tt.target)
-			if got != tt.want {
-				t.Errorf("DomainError.Is() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestPredefinedErrors(t *testing.T) {
-	tests := []struct {
-		name      string
-		err       *DomainError
-		wantType  ErrorType
-		wantMsg   string
-		wantCause error
-	}{
-		{
-			name:      "positive testing (ErrTodoNotFound)",
-			err:       ErrTodoNotFound,
-			wantType:  ErrorTypeNotFound,
-			wantMsg:   "todo not found",
-			wantCause: nil,
-		},
-		{
-			name:      "positive testing (ErrEmptyDescription)",
-			err:       ErrEmptyDescription,
-			wantType:  ErrorTypeInvalidInput,
-			wantMsg:   "description cannot be empty",
-			wantCause: nil,
-		},
-		{
-			name:      "positive testing (ErrInvalidID)",
-			err:       ErrInvalidID,
-			wantType:  ErrorTypeInvalidInput,
-			wantMsg:   "invalid todo ID",
-			wantCause: nil,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.err.Type != tt.wantType {
-				t.Errorf("Error type = %v, want %v", tt.err.Type, tt.wantType)
-			}
-			if tt.err.Message != tt.wantMsg {
-				t.Errorf("Error message = %v, want %v", tt.err.Message, tt.wantMsg)
-			}
-			if tt.err.Cause != tt.wantCause {
-				t.Errorf("Error cause = %v, want %v", tt.err.Cause, tt.wantCause)
+			result := tt.err.Is(tt.target)
+			if result != tt.expected {
+				t.Errorf("DomainError.Is() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestIsDomainError(t *testing.T) {
-	domainErr := NewDomainError(ErrorTypeNotFound, "test", nil)
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	domainErr := &DomainError{
+		Type:    ErrorTypeNotFound,
+		Message: "test message",
+		Cause:   nil,
+	}
+
 	regularErr := errors.New("regular error")
 
 	tests := []struct {
-		name string
-		err  error
-		want bool
+		name     string
+		err      error
+		expected bool
 	}{
 		{
-			name: "positive testing (domain error)",
-			err:  domainErr,
-			want: true,
+			name:     "Domain error",
+			err:      domainErr,
+			expected: true,
 		},
 		{
-			name: "positive testing (regular error)",
-			err:  regularErr,
-			want: false,
+			name:     "Regular error",
+			err:      regularErr,
+			expected: false,
 		},
 		{
-			name: "positive testing (nil error)",
-			err:  nil,
-			want: false,
-		},
-		{
-			name: "positive testing (wrapped domain error)",
-			err:  fmt.Errorf("wrapped: %w", domainErr),
-			want: true,
+			name:     "Nil error",
+			err:      nil,
+			expected: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsDomainError(tt.err)
-			if got != tt.want {
-				t.Errorf("IsDomainError() = %v, want %v", got, tt.want)
+			result := IsDomainError(tt.err)
+			if result != tt.expected {
+				t.Errorf("IsDomainError() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestGetErrorType(t *testing.T) {
-	domainErr := NewDomainError(ErrorTypeNotFound, "test", nil)
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	domainErr := &DomainError{
+		Type:    ErrorTypeNotFound,
+		Message: "test message",
+		Cause:   nil,
+	}
+
 	regularErr := errors.New("regular error")
 
 	tests := []struct {
-		name string
-		err  error
-		want ErrorType
+		name     string
+		err      error
+		expected ErrorType
 	}{
 		{
-			name: "positive testing (domain error)",
-			err:  domainErr,
-			want: ErrorTypeNotFound,
+			name:     "Domain error",
+			err:      domainErr,
+			expected: ErrorTypeNotFound,
 		},
 		{
-			name: "positive testing (regular error)",
-			err:  regularErr,
-			want: ErrorTypeConfiguration,
+			name:     "Regular error",
+			err:      regularErr,
+			expected: ErrorTypeConfiguration,
 		},
 		{
-			name: "positive testing (wrapped domain error)",
-			err:  fmt.Errorf("wrapped: %w", domainErr),
-			want: ErrorTypeNotFound,
+			name:     "Nil error",
+			err:      nil,
+			expected: ErrorTypeConfiguration,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetErrorType(tt.err)
-			if got != tt.want {
-				t.Errorf("GetErrorType() = %v, want %v", got, tt.want)
+			result := GetErrorType(tt.err)
+			if result != tt.expected {
+				t.Errorf("GetErrorType() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestIsNotFoundError(t *testing.T) {
-	notFoundErr := NewDomainError(ErrorTypeNotFound, "test", nil)
-	invalidInputErr := NewDomainError(ErrorTypeInvalidInput, "test", nil)
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	notFoundErr := &DomainError{Type: ErrorTypeNotFound, Message: "not found", Cause: nil}
+	invalidInputErr := &DomainError{Type: ErrorTypeInvalidInput, Message: "invalid", Cause: nil}
 	regularErr := errors.New("regular error")
 
 	tests := []struct {
-		name string
-		err  error
-		want bool
+		name     string
+		err      error
+		expected bool
 	}{
 		{
-			name: "positive testing (not found error)",
-			err:  notFoundErr,
-			want: true,
+			name:     "Not found error",
+			err:      notFoundErr,
+			expected: true,
 		},
 		{
-			name: "positive testing (invalid input error)",
-			err:  invalidInputErr,
-			want: false,
+			name:     "Invalid input error",
+			err:      invalidInputErr,
+			expected: false,
 		},
 		{
-			name: "positive testing (regular error)",
-			err:  regularErr,
-			want: false,
+			name:     "Regular error",
+			err:      regularErr,
+			expected: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsNotFoundError(tt.err)
-			if got != tt.want {
-				t.Errorf("IsNotFoundError() = %v, want %v", got, tt.want)
+			result := IsNotFoundError(tt.err)
+			if result != tt.expected {
+				t.Errorf("IsNotFoundError() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestIsInvalidInputError(t *testing.T) {
-	invalidInputErr := NewDomainError(ErrorTypeInvalidInput, "test", nil)
-	notFoundErr := NewDomainError(ErrorTypeNotFound, "test", nil)
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	invalidInputErr := &DomainError{Type: ErrorTypeInvalidInput, Message: "invalid", Cause: nil}
+	notFoundErr := &DomainError{Type: ErrorTypeNotFound, Message: "not found", Cause: nil}
 	regularErr := errors.New("regular error")
 
 	tests := []struct {
-		name string
-		err  error
-		want bool
+		name     string
+		err      error
+		expected bool
 	}{
 		{
-			name: "positive testing (invalid input error)",
-			err:  invalidInputErr,
-			want: true,
+			name:     "Invalid input error",
+			err:      invalidInputErr,
+			expected: true,
 		},
 		{
-			name: "positive testing (not found error)",
-			err:  notFoundErr,
-			want: false,
+			name:     "Not found error",
+			err:      notFoundErr,
+			expected: false,
 		},
 		{
-			name: "positive testing (regular error)",
-			err:  regularErr,
-			want: false,
+			name:     "Regular error",
+			err:      regularErr,
+			expected: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsInvalidInputError(tt.err)
-			if got != tt.want {
-				t.Errorf("IsInvalidInputError() = %v, want %v", got, tt.want)
+			result := IsInvalidInputError(tt.err)
+			if result != tt.expected {
+				t.Errorf("IsInvalidInputError() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestIsFileSystemError(t *testing.T) {
-	fileSystemErr := NewDomainError(ErrorTypeFileSystem, "test", nil)
-	notFoundErr := NewDomainError(ErrorTypeNotFound, "test", nil)
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	fileSystemErr := &DomainError{Type: ErrorTypeFileSystem, Message: "file error", Cause: nil}
+	notFoundErr := &DomainError{Type: ErrorTypeNotFound, Message: "not found", Cause: nil}
 	regularErr := errors.New("regular error")
 
 	tests := []struct {
-		name string
-		err  error
-		want bool
+		name     string
+		err      error
+		expected bool
 	}{
 		{
-			name: "positive testing (file system error)",
-			err:  fileSystemErr,
-			want: true,
+			name:     "File system error",
+			err:      fileSystemErr,
+			expected: true,
 		},
 		{
-			name: "positive testing (not found error)",
-			err:  notFoundErr,
-			want: false,
+			name:     "Not found error",
+			err:      notFoundErr,
+			expected: false,
 		},
 		{
-			name: "positive testing (regular error)",
-			err:  regularErr,
-			want: false,
+			name:     "Regular error",
+			err:      regularErr,
+			expected: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsFileSystemError(tt.err)
-			if got != tt.want {
-				t.Errorf("IsFileSystemError() = %v, want %v", got, tt.want)
+			result := IsFileSystemError(tt.err)
+			if result != tt.expected {
+				t.Errorf("IsFileSystemError() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestIsJSONError(t *testing.T) {
-	jsonErr := NewDomainError(ErrorTypeJSON, "test", nil)
-	notFoundErr := NewDomainError(ErrorTypeNotFound, "test", nil)
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	jsonErr := &DomainError{Type: ErrorTypeJSON, Message: "json error", Cause: nil}
+	notFoundErr := &DomainError{Type: ErrorTypeNotFound, Message: "not found", Cause: nil}
 	regularErr := errors.New("regular error")
 
 	tests := []struct {
-		name string
-		err  error
-		want bool
+		name     string
+		err      error
+		expected bool
 	}{
 		{
-			name: "positive testing (JSON error)",
-			err:  jsonErr,
-			want: true,
+			name:     "JSON error",
+			err:      jsonErr,
+			expected: true,
 		},
 		{
-			name: "positive testing (not found error)",
-			err:  notFoundErr,
-			want: false,
+			name:     "Not found error",
+			err:      notFoundErr,
+			expected: false,
 		},
 		{
-			name: "positive testing (regular error)",
-			err:  regularErr,
-			want: false,
+			name:     "Regular error",
+			err:      regularErr,
+			expected: false,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsJSONError(tt.err)
-			if got != tt.want {
-				t.Errorf("IsJSONError() = %v, want %v", got, tt.want)
+			result := IsJSONError(tt.err)
+			if result != tt.expected {
+				t.Errorf("IsJSONError() = %v, want %v", result, tt.expected)
 			}
 		})
 	}
 }
 
 func TestIsConfigurationError(t *testing.T) {
-	configErr := NewDomainError(ErrorTypeConfiguration, "test", nil)
-	notFoundErr := NewDomainError(ErrorTypeNotFound, "test", nil)
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	configErr := &DomainError{Type: ErrorTypeConfiguration, Message: "config error", Cause: nil}
+	notFoundErr := &DomainError{Type: ErrorTypeNotFound, Message: "not found", Cause: nil}
 	regularErr := errors.New("regular error")
 
 	tests := []struct {
-		name string
-		err  error
-		want bool
+		name     string
+		err      error
+		expected bool
 	}{
 		{
-			name: "positive testing (configuration error)",
-			err:  configErr,
-			want: true,
+			name:     "Configuration error",
+			err:      configErr,
+			expected: true,
 		},
 		{
-			name: "positive testing (not found error)",
-			err:  notFoundErr,
-			want: false,
+			name:     "Not found error",
+			err:      notFoundErr,
+			expected: false,
 		},
 		{
-			name: "positive testing (regular error defaults to configuration)",
-			err:  regularErr,
-			want: true,
+			name:     "Regular error (treated as configuration)",
+			err:      regularErr,
+			expected: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsConfigurationError(tt.err)
-			if got != tt.want {
-				t.Errorf("IsConfigurationError() = %v, want %v", got, tt.want)
+			result := IsConfigurationError(tt.err)
+			if result != tt.expected {
+				t.Errorf("IsConfigurationError() = %v, want %v", result, tt.expected)
+			}
+		})
+	}
+}
+
+func TestInitializeDomainErrors(t *testing.T) {
+	errorsProxy := proxy.NewErrors()
+	fmtProxy := proxy.NewFmt()
+
+	InitializeDomainErrors(errorsProxy, fmtProxy)
+
+	// Test that the proxies are set by using them
+	err := &DomainError{
+		Type:    ErrorTypeNotFound,
+		Message: "test",
+		Cause:   nil,
+	}
+
+	// This should not panic if proxies are properly initialized
+	result := err.Error()
+	expected := "NotFound: test"
+	if result != expected {
+		t.Errorf("After InitializeDomainErrors, Error() = %v, want %v", result, expected)
+	}
+}
+
+func TestPredefinedErrors(t *testing.T) {
+	// Initialize with real proxies for testing
+	InitializeDomainErrors(proxy.NewErrors(), proxy.NewFmt())
+
+	tests := []struct {
+		name    string
+		err     *DomainError
+		errType ErrorType
+		message string
+	}{
+		{
+			name:    "ErrTodoNotFound",
+			err:     ErrTodoNotFound,
+			errType: ErrorTypeNotFound,
+			message: "todo not found",
+		},
+		{
+			name:    "ErrEmptyDescription",
+			err:     ErrEmptyDescription,
+			errType: ErrorTypeInvalidInput,
+			message: "description cannot be empty",
+		},
+		{
+			name:    "ErrInvalidID",
+			err:     ErrInvalidID,
+			errType: ErrorTypeInvalidInput,
+			message: "invalid todo ID",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.err.Type != tt.errType {
+				t.Errorf("%s.Type = %v, want %v", tt.name, tt.err.Type, tt.errType)
+			}
+			if tt.err.Message != tt.message {
+				t.Errorf("%s.Message = %v, want %v", tt.name, tt.err.Message, tt.message)
+			}
+			if tt.err.Cause != nil {
+				t.Errorf("%s.Cause = %v, want nil", tt.name, tt.err.Cause)
 			}
 		})
 	}

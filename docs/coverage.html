@@ -1,0 +1,4575 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>application: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/yanosea/gct/app/application/add_todo_usecase.go (0.0%)</option>
+				
+				<option value="file1">github.com/yanosea/gct/app/application/delete_todo_usecase.go (0.0%)</option>
+				
+				<option value="file2">github.com/yanosea/gct/app/application/list_todo_usecase.go (0.0%)</option>
+				
+				<option value="file3">github.com/yanosea/gct/app/application/toggle_todo_usecase.go (0.0%)</option>
+				
+				<option value="file4">github.com/yanosea/gct/app/config/config.go (0.0%)</option>
+				
+				<option value="file5">github.com/yanosea/gct/app/container/container.go (0.0%)</option>
+				
+				<option value="file6">github.com/yanosea/gct/app/domain/errors.go (100.0%)</option>
+				
+				<option value="file7">github.com/yanosea/gct/app/domain/todo.go (100.0%)</option>
+				
+				<option value="file8">github.com/yanosea/gct/app/infrastructure/json_repository.go (0.0%)</option>
+				
+				<option value="file9">github.com/yanosea/gct/app/presentation/cli/gct/commands/command.go (0.0%)</option>
+				
+				<option value="file10">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/add.go (0.0%)</option>
+				
+				<option value="file11">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion/bash.go (0.0%)</option>
+				
+				<option value="file12">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion/completion.go (0.0%)</option>
+				
+				<option value="file13">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion/fish.go (0.0%)</option>
+				
+				<option value="file14">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion/powershell.go (0.0%)</option>
+				
+				<option value="file15">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion/zsh.go (0.0%)</option>
+				
+				<option value="file16">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/delete.go (0.0%)</option>
+				
+				<option value="file17">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/list.go (0.0%)</option>
+				
+				<option value="file18">github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/toggle.go (0.0%)</option>
+				
+				<option value="file19">github.com/yanosea/gct/app/presentation/cli/gct/commands/root.go (0.0%)</option>
+				
+				<option value="file20">github.com/yanosea/gct/app/presentation/cli/gct/formatter/json.go (0.0%)</option>
+				
+				<option value="file21">github.com/yanosea/gct/app/presentation/cli/gct/formatter/plain.go (0.0%)</option>
+				
+				<option value="file22">github.com/yanosea/gct/app/presentation/cli/gct/formatter/table.go (0.0%)</option>
+				
+				<option value="file23">github.com/yanosea/gct/app/presentation/cli/gct/main.go (0.0%)</option>
+				
+				<option value="file24">github.com/yanosea/gct/app/presentation/cli/gct/presenter/presenter.go (0.0%)</option>
+				
+				<option value="file25">github.com/yanosea/gct/app/presentation/tui/gct-tui/main.go (0.0%)</option>
+				
+				<option value="file26">github.com/yanosea/gct/app/presentation/tui/gct-tui/model/input.go (0.0%)</option>
+				
+				<option value="file27">github.com/yanosea/gct/app/presentation/tui/gct-tui/model/item.go (0.0%)</option>
+				
+				<option value="file28">github.com/yanosea/gct/app/presentation/tui/gct-tui/model/mode.go (0.0%)</option>
+				
+				<option value="file29">github.com/yanosea/gct/app/presentation/tui/gct-tui/model/navigation.go (0.0%)</option>
+				
+				<option value="file30">github.com/yanosea/gct/app/presentation/tui/gct-tui/model/state.go (0.0%)</option>
+				
+				<option value="file31">github.com/yanosea/gct/app/presentation/tui/gct-tui/program/program.go (0.0%)</option>
+				
+				<option value="file32">github.com/yanosea/gct/app/presentation/tui/gct-tui/update/handler.go (0.0%)</option>
+				
+				<option value="file33">github.com/yanosea/gct/app/presentation/tui/gct-tui/update/item.go (0.0%)</option>
+				
+				<option value="file34">github.com/yanosea/gct/app/presentation/tui/gct-tui/update/keyboard.go (0.0%)</option>
+				
+				<option value="file35">github.com/yanosea/gct/app/presentation/tui/gct-tui/update/operations.go (0.0%)</option>
+				
+				<option value="file36">github.com/yanosea/gct/app/presentation/tui/gct-tui/view/footer.go (0.0%)</option>
+				
+				<option value="file37">github.com/yanosea/gct/app/presentation/tui/gct-tui/view/header.go (0.0%)</option>
+				
+				<option value="file38">github.com/yanosea/gct/app/presentation/tui/gct-tui/view/item.go (0.0%)</option>
+				
+				<option value="file39">github.com/yanosea/gct/app/presentation/tui/gct-tui/view/layout.go (0.0%)</option>
+				
+				<option value="file40">github.com/yanosea/gct/app/presentation/tui/gct-tui/view/list.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package application
+
+import (
+        "time"
+
+        "github.com/yanosea/gct/app/domain"
+)
+
+// AddTodoUseCase handles the business logic for adding new todos
+type AddTodoUseCase struct {
+        repository domain.TodoRepository
+}
+
+// NewAddTodoUseCase creates a new AddTodoUseCase instance
+func NewAddTodoUseCase(repository domain.TodoRepository) *AddTodoUseCase <span class="cov0" title="0">{
+        return &amp;AddTodoUseCase{
+                repository: repository,
+        }
+}</span>
+
+// Run executes the add todo use case
+func (uc *AddTodoUseCase) Run(description string) (*domain.Todo, error) <span class="cov0" title="0">{
+        // Validate input
+        if err := validateDescription(description); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Create new todo with current timestamp
+        <span class="cov0" title="0">now := time.Now()
+        todo := domain.Todo{
+                ID:          0, // Will be assigned by repository
+                Description: description,
+                Done:        false,
+                CreatedAt:   now,
+                UpdatedAt:   now,
+        }
+
+        // Note: Skip validation for new todos (ID=0) as ID will be assigned by repository
+
+        // Save to repository
+        savedTodos, err := uc.repository.Save(todo)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">if len(savedTodos) == 0 </span><span class="cov0" title="0">{
+                return nil, domain.NewDomainError(
+                        domain.ErrorTypeConfiguration,
+                        "repository returned empty result",
+                        nil,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return &amp;savedTodos[0], nil</span>
+}
+
+// validateDescription validates the todo description
+func validateDescription(description string) error <span class="cov0" title="0">{
+        if description == "" </span><span class="cov0" title="0">{
+                return domain.ErrEmptyDescription
+        }</span>
+
+        <span class="cov0" title="0">if len(description) &gt; 500 </span><span class="cov0" title="0">{
+                return domain.NewDomainError(
+                        domain.ErrorTypeInvalidInput,
+                        "description cannot exceed 500 characters",
+                        nil,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package application
+
+import (
+        "github.com/yanosea/gct/app/domain"
+)
+
+// DeleteTodoUseCase handles the business logic for deleting todos
+type DeleteTodoUseCase struct {
+        repository domain.TodoRepository
+}
+
+// NewDeleteTodoUseCase creates a new DeleteTodoUseCase instance
+func NewDeleteTodoUseCase(repository domain.TodoRepository) *DeleteTodoUseCase <span class="cov0" title="0">{
+        return &amp;DeleteTodoUseCase{
+                repository: repository,
+        }
+}</span>
+
+// Run executes the delete todo use case
+func (uc *DeleteTodoUseCase) Run(id int) error <span class="cov0" title="0">{
+        // Validate input
+        if id &lt;= 0 </span><span class="cov0" title="0">{
+                return domain.NewDomainError(
+                        domain.ErrorTypeInvalidInput,
+                        "todo ID must be positive",
+                        nil,
+                )
+        }</span>
+
+        // Delete the todo by ID
+        <span class="cov0" title="0">err := uc.repository.DeleteById(id)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package application
+
+import (
+        "github.com/yanosea/gct/app/domain"
+)
+
+// ListTodoUseCase handles the business logic for retrieving all todos
+type ListTodoUseCase struct {
+        repository domain.TodoRepository
+}
+
+// NewListTodoUseCase creates a new ListTodoUseCase instance
+func NewListTodoUseCase(repository domain.TodoRepository) *ListTodoUseCase <span class="cov0" title="0">{
+        return &amp;ListTodoUseCase{
+                repository: repository,
+        }
+}</span>
+
+// Run executes the list todos use case
+func (uc *ListTodoUseCase) Run() ([]domain.Todo, error) <span class="cov0" title="0">{
+        // Retrieve all todos from repository
+        todos, err := uc.repository.FindAll()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Return todos (empty slice if no todos exist)
+        <span class="cov0" title="0">return todos, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package application
+
+import (
+        "github.com/yanosea/gct/app/domain"
+)
+
+// ToggleTodoUseCase handles the business logic for toggling todo completion status
+type ToggleTodoUseCase struct {
+        repository domain.TodoRepository
+}
+
+// NewToggleTodoUseCase creates a new ToggleTodoUseCase instance
+func NewToggleTodoUseCase(repository domain.TodoRepository) *ToggleTodoUseCase <span class="cov0" title="0">{
+        return &amp;ToggleTodoUseCase{
+                repository: repository,
+        }
+}</span>
+
+// Run executes the toggle todo use case
+func (uc *ToggleTodoUseCase) Run(id int) (*domain.Todo, error) <span class="cov0" title="0">{
+        // Validate input
+        if id &lt;= 0 </span><span class="cov0" title="0">{
+                return nil, domain.NewDomainError(
+                        domain.ErrorTypeInvalidInput,
+                        "todo ID must be positive",
+                        nil,
+                )
+        }</span>
+
+        // Get all todos to find the one to toggle
+        <span class="cov0" title="0">todos, err := uc.repository.FindAll()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Find the todo with the specified ID
+        <span class="cov0" title="0">var todoToToggle *domain.Todo
+        for i, todo := range todos </span><span class="cov0" title="0">{
+                if todo.ID == id </span><span class="cov0" title="0">{
+                        todoToToggle = &amp;todos[i]
+                        break</span>
+                }
+        }
+
+        <span class="cov0" title="0">if todoToToggle == nil </span><span class="cov0" title="0">{
+                return nil, domain.ErrTodoNotFound
+        }</span>
+
+        // Toggle the completion status
+        <span class="cov0" title="0">todoToToggle.Toggle()
+
+        // Save the updated todo
+        savedTodos, err := uc.repository.Save(*todoToToggle)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">if len(savedTodos) == 0 </span><span class="cov0" title="0">{
+                return nil, domain.NewDomainError(
+                        domain.ErrorTypeConfiguration,
+                        "repository returned empty result",
+                        nil,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return &amp;savedTodos[0], nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package config
+
+import (
+        "github.com/yanosea/gct/app/domain"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// Config represents the application configuration
+type Config struct {
+        // DataFile is the path to the JSON file where todos are stored
+        DataFile string `envconfig:"GCT_DATA_FILE"`
+}
+
+// Load loads the configuration with injected dependencies for testing
+func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.Envconfig) (*Config, error) <span class="cov0" title="0">{
+        var cfg Config
+
+        // Load configuration from environment variables
+        if err := envconfigProxy.Process("", &amp;cfg); err != nil </span><span class="cov0" title="0">{
+                return nil, domain.NewDomainError(
+                        domain.ErrorTypeConfiguration,
+                        "failed to load configuration from environment",
+                        err,
+                )
+        }</span>
+
+        // Apply default data file path if not set
+        <span class="cov0" title="0">if cfg.DataFile == "" </span><span class="cov0" title="0">{
+                defaultPath, err := getDefaultDataFilePath(osProxy, filepathProxy)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, domain.NewDomainError(
+                                domain.ErrorTypeConfiguration,
+                                "failed to determine default data file path",
+                                err,
+                        )
+                }</span>
+                <span class="cov0" title="0">cfg.DataFile = defaultPath</span>
+        }
+
+        // Validate configuration
+        <span class="cov0" title="0">if err := cfg.ValidateWithDeps(osProxy, filepathProxy); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return &amp;cfg, nil</span>
+}
+
+// Validate validates the configuration values
+// This method is deprecated. Use ValidateWithDeps instead.
+func (c *Config) Validate() error <span class="cov0" title="0">{
+        return domain.NewDomainError(
+                domain.ErrorTypeConfiguration,
+                "Validate() is deprecated, use ValidateWithDeps() with injected proxy dependencies",
+                nil,
+        )
+}</span>
+
+// ValidateWithDeps validates the configuration values with injected dependencies
+func (c *Config) ValidateWithDeps(osProxy proxy.OS, filepathProxy proxy.Filepath) error <span class="cov0" title="0">{
+        if c.DataFile == "" </span><span class="cov0" title="0">{
+                return domain.NewDomainError(
+                        domain.ErrorTypeInvalidInput,
+                        "data file path cannot be empty",
+                        nil,
+                )
+        }</span>
+
+        // Check if the directory exists or can be created
+        <span class="cov0" title="0">dir := filepathProxy.Dir(c.DataFile)
+        if err := ensureDirectoryExistsWithDeps(dir, osProxy); err != nil </span><span class="cov0" title="0">{
+                return domain.NewDomainError(
+                        domain.ErrorTypeFileSystem,
+                        "failed to ensure data directory exists",
+                        err,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+// getDefaultDataFilePath returns the default path for the data file
+// Following XDG Base Directory Specification with fallback to home directory
+func getDefaultDataFilePath(osProxy proxy.OS, filepathProxy proxy.Filepath) (string, error) <span class="cov0" title="0">{
+        // Try XDG_DATA_HOME first
+        if xdgDataHome := osProxy.Getenv("XDG_DATA_HOME"); xdgDataHome != "" </span><span class="cov0" title="0">{
+                return filepathProxy.Join(xdgDataHome, "gct", "todos.json"), nil
+        }</span>
+
+        // Fallback to ~/.local/share/gct/todos.json
+        <span class="cov0" title="0">homeDir, err := osProxy.UserHomeDir()
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov0" title="0">return filepathProxy.Join(homeDir, ".local", "share", "gct", "todos.json"), nil</span>
+}
+
+// ensureDirectoryExistsWithDeps creates the directory if it doesn't exist using injected dependencies
+func ensureDirectoryExistsWithDeps(dir string, osProxy proxy.OS) error <span class="cov0" title="0">{
+        if _, err := osProxy.Stat(dir); osProxy.IsNotExist(err) </span><span class="cov0" title="0">{
+                if err := osProxy.MkdirAll(dir, 0755); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        } else<span class="cov0" title="0"> if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package container
+
+import (
+        "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/config"
+        "github.com/yanosea/gct/app/domain"
+        "github.com/yanosea/gct/app/infrastructure"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// Container manages all application dependencies
+type Container struct {
+        config     *config.Config
+        proxies    *Proxies
+        repository domain.TodoRepository
+        useCases   *UseCases
+}
+
+// Proxies organizes all proxy dependencies
+type Proxies struct {
+        OS        proxy.OS
+        Filepath  proxy.Filepath
+        JSON      proxy.JSON
+        Time      proxy.Time
+        IO        proxy.IO
+        Fmt       proxy.Fmt
+        Strings   proxy.Strings
+        Strconv   proxy.Strconv
+        Cobra     proxy.Cobra
+        Bubbletea proxy.Bubbletea
+        Bubbles   proxy.Bubbles
+        Lipgloss  proxy.Lipgloss
+        Color     proxy.Color
+        Envconfig proxy.Envconfig
+        Errors    proxy.Errors
+}
+
+// UseCases organizes all use case dependencies
+type UseCases struct {
+        AddTodo    *application.AddTodoUseCase
+        DeleteTodo *application.DeleteTodoUseCase
+        ListTodo   *application.ListTodoUseCase
+        ToggleTodo *application.ToggleTodoUseCase
+}
+
+// No need for proxy provider anymore
+
+// NewContainer creates a new Container with all dependencies properly initialized
+func NewContainer() (*Container, error) <span class="cov0" title="0">{
+        // Initialize proxies first
+        proxies := &amp;Proxies{
+                OS:        proxy.NewOS(),
+                Filepath:  proxy.NewFilepath(),
+                JSON:      proxy.NewJSON(),
+                Time:      proxy.NewTime(),
+                IO:        proxy.NewIO(),
+                Fmt:       proxy.NewFmt(),
+                Strings:   proxy.NewStrings(),
+                Strconv:   proxy.NewStrconv(),
+                Cobra:     proxy.NewCobra(),
+                Bubbletea: proxy.NewBubbletea(),
+                Bubbles:   proxy.NewBubbles(),
+                Lipgloss:  proxy.NewLipgloss(),
+                Color:     proxy.NewColor(),
+                Envconfig: proxy.NewEnvconfig(),
+                Errors:    proxy.NewErrors(),
+        }
+
+        // Initialize domain
+        domain.InitializeDomain(
+                proxies.Time,
+                proxies.Strings,
+                proxies.Fmt,
+                proxies.JSON,
+        )
+
+        // Initialize domain error
+        domain.InitializeDomainErrors(
+                proxies.Errors,
+                proxies.Fmt,
+        )
+
+        // Load configuration
+        cfg, err := config.Load(
+                proxies.OS,
+                proxies.Filepath,
+                proxies.Envconfig,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Initialize repository with required proxies
+        <span class="cov0" title="0">repository := infrastructure.NewJSONRepository(
+                cfg.DataFile,
+                proxies.OS,
+                proxies.JSON,
+        )
+
+        // Initialize use cases with repository dependency
+        useCases := &amp;UseCases{
+                AddTodo:    application.NewAddTodoUseCase(repository),
+                DeleteTodo: application.NewDeleteTodoUseCase(repository),
+                ListTodo:   application.NewListTodoUseCase(repository),
+                ToggleTodo: application.NewToggleTodoUseCase(repository),
+        }
+
+        container := &amp;Container{
+                config:     cfg,
+                proxies:    proxies,
+                repository: repository,
+                useCases:   useCases,
+        }
+
+        return container, nil</span>
+}
+
+// GetUseCases returns the use cases struct
+func (c *Container) GetUseCases() *UseCases <span class="cov0" title="0">{
+        return c.useCases
+}</span>
+
+// GetRepository returns the todo repository
+func (c *Container) GetRepository() domain.TodoRepository <span class="cov0" title="0">{
+        return c.repository
+}</span>
+
+// GetConfig returns the application configuration
+func (c *Container) GetConfig() *config.Config <span class="cov0" title="0">{
+        return c.config
+}</span>
+
+// GetProxies returns the proxies struct
+func (c *Container) GetProxies() *Proxies <span class="cov0" title="0">{
+        return c.proxies
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package domain
+
+import (
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// ErrorType represents the type of domain error
+type ErrorType int
+
+// DomainError represents a domain-specific error
+type DomainError struct {
+        Type    ErrorType
+        Message string
+        Cause   error
+}
+
+const (
+        // ErrorTypeNotFound indicates a resource was not found
+        ErrorTypeNotFound ErrorType = iota
+        // ErrorTypeInvalidInput indicates invalid input was provided
+        ErrorTypeInvalidInput
+        // ErrorTypeFileSystem indicates a file system operation failed
+        ErrorTypeFileSystem
+        // ErrorTypeJSON indicates a JSON operation failed
+        ErrorTypeJSON
+        // ErrorTypeConfiguration indicates a configuration error
+        ErrorTypeConfiguration
+)
+
+// Domain error proxies for dependency injection
+var (
+        // deep is a proxy for the errors package for dependency injection
+        deep proxy.Errors
+        // defp is a proxy for the fmt package for dependency injection
+        defp proxy.Fmt
+)
+
+// Predefined domain errors
+var (
+        // ErrTodoNotFound indicates a todo was not found
+        ErrTodoNotFound = NewDomainError(ErrorTypeNotFound, "todo not found", nil)
+        // ErrEmptyDescription indicates an empty description was provided
+        ErrEmptyDescription = NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
+        // ErrInvalidID indicates an invalid ID was provided
+        ErrInvalidID = NewDomainError(ErrorTypeInvalidInput, "invalid todo ID", nil)
+)
+
+// InitializeDomainErrors sets the proxy for the domain errors
+func InitializeDomainErrors(errorsProxy proxy.Errors, fmtProxy proxy.Fmt) <span class="cov8" title="1">{
+        deep = errorsProxy
+        defp = fmtProxy
+}</span>
+
+// String returns the string representation of the error type
+func (et ErrorType) String() string <span class="cov8" title="1">{
+        switch et </span>{
+        case ErrorTypeNotFound:<span class="cov8" title="1">
+                return "NotFound"</span>
+        case ErrorTypeInvalidInput:<span class="cov8" title="1">
+                return "InvalidInput"</span>
+        case ErrorTypeFileSystem:<span class="cov8" title="1">
+                return "FileSystem"</span>
+        case ErrorTypeJSON:<span class="cov8" title="1">
+                return "JSON"</span>
+        case ErrorTypeConfiguration:<span class="cov8" title="1">
+                return "Configuration"</span>
+        default:<span class="cov8" title="1">
+                return "Unknown"</span>
+        }
+}
+
+// NewDomainError creates a new domain error
+func NewDomainError(errorType ErrorType, message string, cause error) *DomainError <span class="cov8" title="1">{
+        return &amp;DomainError{
+                Type:    errorType,
+                Message: message,
+                Cause:   cause,
+        }
+}</span>
+
+// Error implements the error interface
+func (e *DomainError) Error() string <span class="cov8" title="1">{
+        if e.Cause != nil </span><span class="cov8" title="1">{
+                return defp.Sprintf("%s: %s (caused by: %v)", e.Type.String(), e.Message, e.Cause)
+        }</span>
+        <span class="cov8" title="1">return defp.Sprintf("%s: %s", e.Type.String(), e.Message)</span>
+}
+
+// Unwrap returns the underlying cause error
+func (e *DomainError) Unwrap() error <span class="cov8" title="1">{
+        return e.Cause
+}</span>
+
+// Is checks if the error matches the target error
+func (e *DomainError) Is(target error) bool <span class="cov8" title="1">{
+        if t, ok := target.(*DomainError); ok </span><span class="cov8" title="1">{
+                return e.Type == t.Type &amp;&amp; e.Message == t.Message
+        }</span>
+        <span class="cov8" title="1">return false</span>
+}
+
+// IsDomainError checks if an error is a domain error
+func IsDomainError(err error) bool <span class="cov8" title="1">{
+        var domainErr *DomainError
+        return deep.As(err, &amp;domainErr)
+}</span>
+
+// GetErrorType returns the error type of a domain error, or ErrorTypeConfiguration for non-domain errors
+func GetErrorType(err error) ErrorType <span class="cov8" title="1">{
+        var domainErr *DomainError
+        if deep.As(err, &amp;domainErr) </span><span class="cov8" title="1">{
+                return domainErr.Type
+        }</span>
+        <span class="cov8" title="1">return ErrorTypeConfiguration</span>
+}
+
+// IsNotFoundError checks if an error is a not found error
+func IsNotFoundError(err error) bool <span class="cov8" title="1">{
+        return GetErrorType(err) == ErrorTypeNotFound
+}</span>
+
+// IsInvalidInputError checks if an error is an invalid input error
+func IsInvalidInputError(err error) bool <span class="cov8" title="1">{
+        return GetErrorType(err) == ErrorTypeInvalidInput
+}</span>
+
+// IsFileSystemError checks if an error is a file system error
+func IsFileSystemError(err error) bool <span class="cov8" title="1">{
+        return GetErrorType(err) == ErrorTypeFileSystem
+}</span>
+
+// IsJSONError checks if an error is a JSON error
+func IsJSONError(err error) bool <span class="cov8" title="1">{
+        return GetErrorType(err) == ErrorTypeJSON
+}</span>
+
+// IsConfigurationError checks if an error is a configuration error
+func IsConfigurationError(err error) bool <span class="cov8" title="1">{
+        return GetErrorType(err) == ErrorTypeConfiguration
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package domain
+
+import (
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// Domain proxies for dependency injection
+var (
+        // dtp is a proxy for the time package for dependency injection
+        dtp proxy.Time
+        // dsp is a proxy for the strings package for dependency injection
+        dsp proxy.Strings
+        // dfp is a proxy for the fmt package for dependency injection
+        dfp proxy.Fmt
+        // djp is a proxy for the json package for dependency injection
+        djp proxy.JSON
+)
+
+// Todo represents a todo item in the domain
+type Todo struct {
+        ID          int             `json:"id"`
+        Description string          `json:"description"`
+        Done        bool            `json:"done"`
+        CreatedAt   proxy.TimeAlias `json:"created_at"`
+        UpdatedAt   proxy.TimeAlias `json:"updated_at"`
+}
+
+// InitializeDomain sets the proxy for the domain
+func InitializeDomain(timeProxy proxy.Time, stringsProxy proxy.Strings, fmtProxy proxy.Fmt, jsonProxy proxy.JSON) <span class="cov8" title="1">{
+        dtp = timeProxy
+        dsp = stringsProxy
+        dfp = fmtProxy
+        djp = jsonProxy
+}</span>
+
+// NewTodo creates a new Todo with the given description
+func NewTodo(id int, description string) (*Todo, error) <span class="cov8" title="1">{
+        if err := validateDescription(description); err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">trimmedDesc := dsp.TrimSpace(description)
+        return &amp;Todo{
+                ID:          id,
+                Description: trimmedDesc,
+                Done:        false,
+                CreatedAt:   dtp.Now(),
+                UpdatedAt:   dtp.Now(),
+        }, nil</span>
+}
+
+// Toggle toggles the completion status of the todo
+func (t *Todo) Toggle() <span class="cov8" title="1">{
+        t.Done = !t.Done
+        t.UpdatedAt = dtp.Now()
+}</span>
+
+// UpdateDescription updates the description of the todo
+func (t *Todo) UpdateDescription(description string) error <span class="cov8" title="1">{
+        if err := validateDescription(description); err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">t.Description = dsp.TrimSpace(description)
+        t.UpdatedAt = dtp.Now()
+        return nil</span>
+}
+
+// Validate validates the todo entity
+func (t *Todo) Validate() error <span class="cov8" title="1">{
+        if t.ID &lt;= 0 </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeInvalidInput, "todo ID must be positive", nil)
+        }</span>
+
+        <span class="cov8" title="1">if err := validateDescription(t.Description); err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if t.CreatedAt.IsZero() </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeInvalidInput, "created_at cannot be zero", nil)
+        }</span>
+
+        <span class="cov8" title="1">if t.UpdatedAt.IsZero() </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeInvalidInput, "updated_at cannot be zero", nil)
+        }</span>
+
+        <span class="cov8" title="1">if t.UpdatedAt.Before(t.CreatedAt) </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeInvalidInput, "updated_at cannot be before created_at", nil)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// validateDescription validates the todo description
+func validateDescription(description string) error <span class="cov8" title="1">{
+        trimmed := dsp.TrimSpace(description)
+        if trimmed == "" </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
+        }</span>
+
+        <span class="cov8" title="1">if len(trimmed) &gt; 500 </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeInvalidInput, "description cannot exceed 500 characters", nil)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// String returns a string representation of the todo
+func (t *Todo) String() string <span class="cov8" title="1">{
+        status := "[ ]"
+        if t.Done </span><span class="cov8" title="1">{
+                status = "[x]"
+        }</span>
+        <span class="cov8" title="1">return dfp.Sprintf("%s %d: %s", status, t.ID, t.Description)</span>
+}
+
+// MarshalJSON implements custom JSON marshaling
+func (t *Todo) MarshalJSON() ([]byte, error) <span class="cov8" title="1">{
+        type Alias Todo
+        return djp.Marshal(&amp;struct {
+                *Alias
+                CreatedAt string `json:"created_at"`
+                UpdatedAt string `json:"updated_at"`
+        }{
+                Alias:     (*Alias)(t),
+                CreatedAt: t.CreatedAt.Format(proxy.RFC3339),
+                UpdatedAt: t.UpdatedAt.Format(proxy.RFC3339),
+        })
+}</span>
+
+// UnmarshalJSON implements custom JSON unmarshalling
+func (t *Todo) UnmarshalJSON(data []byte) error <span class="cov8" title="1">{
+        type Alias Todo
+        aux := &amp;struct {
+                *Alias
+                CreatedAt string `json:"created_at"`
+                UpdatedAt string `json:"updated_at"`
+        }{
+                Alias: (*Alias)(t),
+        }
+
+        if err := djp.Unmarshal(data, &amp;aux); err != nil </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeJSON, "failed to unmarshal todo", err)
+        }</span>
+
+        <span class="cov8" title="1">var err error
+        t.CreatedAt, err = dtp.Parse(proxy.RFC3339, aux.CreatedAt)
+        if err != nil </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeJSON, "invalid created_at format", err)
+        }</span>
+
+        <span class="cov8" title="1">t.UpdatedAt, err = dtp.Parse(proxy.RFC3339, aux.UpdatedAt)
+        if err != nil </span><span class="cov8" title="1">{
+                return NewDomainError(ErrorTypeJSON, "invalid updated_at format", err)
+        }</span>
+
+        <span class="cov8" title="1">return t.Validate()</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package infrastructure
+
+import (
+        "os"
+        "path/filepath"
+        "sort"
+
+        "github.com/yanosea/gct/app/domain"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// JSONRepository implements TodoRepository interface using JSON file storage
+type JSONRepository struct {
+        filePath  string
+        osProxy   proxy.OS
+        jsonProxy proxy.JSON
+}
+
+// NewJSONRepository creates a new JSONRepository instance
+func NewJSONRepository(filePath string, osProxy proxy.OS, jsonProxy proxy.JSON) *JSONRepository <span class="cov0" title="0">{
+        return &amp;JSONRepository{
+                filePath:  filePath,
+                osProxy:   osProxy,
+                jsonProxy: jsonProxy,
+        }
+}</span>
+
+// FindAll retrieves all todos from the JSON file
+func (r *JSONRepository) FindAll() ([]domain.Todo, error) <span class="cov0" title="0">{
+        // Check if file exists
+        if _, err := r.osProxy.Stat(r.filePath); r.osProxy.IsNotExist(err) </span><span class="cov0" title="0">{
+                // File doesn't exist, return empty slice
+                return []domain.Todo{}, nil
+        }</span> else<span class="cov0" title="0"> if err != nil </span><span class="cov0" title="0">{
+                return nil, domain.NewDomainError(
+                        domain.ErrorTypeFileSystem,
+                        "failed to check file status",
+                        err,
+                )
+        }</span>
+
+        // Read file content
+        <span class="cov0" title="0">file, err := r.osProxy.OpenFile(r.filePath, os.O_RDONLY, 0644)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, domain.NewDomainError(
+                        domain.ErrorTypeFileSystem,
+                        "failed to open file for reading",
+                        err,
+                )
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        // Decode JSON
+        var todos []domain.Todo
+        if err := r.jsonProxy.NewDecoder(file).Decode(&amp;todos); err != nil </span><span class="cov0" title="0">{
+                return nil, domain.NewDomainError(
+                        domain.ErrorTypeJSON,
+                        "failed to decode JSON data",
+                        err,
+                )
+        }</span>
+
+        // Sort todos by ID for consistent ordering
+        <span class="cov0" title="0">sort.Slice(todos, func(i, j int) bool </span><span class="cov0" title="0">{
+                return todos[i].ID &lt; todos[j].ID
+        }</span>)
+
+        <span class="cov0" title="0">return todos, nil</span>
+}
+
+// Save saves one or more todos to the JSON file
+func (r *JSONRepository) Save(todos ...domain.Todo) ([]domain.Todo, error) <span class="cov0" title="0">{
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return []domain.Todo{}, nil
+        }</span>
+
+        // Load existing todos
+        <span class="cov0" title="0">existingTodos, err := r.FindAll()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Create a map for quick lookup of existing todos
+        <span class="cov0" title="0">todoMap := make(map[int]domain.Todo)
+        for _, todo := range existingTodos </span><span class="cov0" title="0">{
+                todoMap[todo.ID] = todo
+        }</span>
+
+        // Find the next available ID
+        <span class="cov0" title="0">nextID := r.getNextID(existingTodos)
+
+        var savedTodos []domain.Todo
+        for _, todo := range todos </span><span class="cov0" title="0">{
+                if todo.ID == 0 </span><span class="cov0" title="0">{
+                        // New todo - assign ID
+                        todo.ID = nextID
+                        nextID++
+                }</span> else<span class="cov0" title="0"> {
+                        // Update existing todo - check if it exists
+                        if _, exists := todoMap[todo.ID]; !exists </span><span class="cov0" title="0">{
+                                return nil, domain.ErrTodoNotFound
+                        }</span>
+                }
+
+                // Add or update in the map
+                <span class="cov0" title="0">todoMap[todo.ID] = todo
+                savedTodos = append(savedTodos, todo)</span>
+        }
+
+        // Convert map back to slice
+        <span class="cov0" title="0">allTodos := make([]domain.Todo, 0, len(todoMap))
+        for _, todo := range todoMap </span><span class="cov0" title="0">{
+                allTodos = append(allTodos, todo)
+        }</span>
+
+        // Sort by ID for consistent ordering
+        <span class="cov0" title="0">sort.Slice(allTodos, func(i, j int) bool </span><span class="cov0" title="0">{
+                return allTodos[i].ID &lt; allTodos[j].ID
+        }</span>)
+
+        // Write to file
+        <span class="cov0" title="0">if err := r.writeToFile(allTodos); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return savedTodos, nil</span>
+}
+
+// DeleteById removes a todo with the specified ID from the JSON file
+func (r *JSONRepository) DeleteById(id int) error <span class="cov0" title="0">{
+        // Load existing todos
+        existingTodos, err := r.FindAll()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        // Find and remove the todo
+        <span class="cov0" title="0">var updatedTodos []domain.Todo
+        found := false
+        for _, todo := range existingTodos </span><span class="cov0" title="0">{
+                if todo.ID == id </span><span class="cov0" title="0">{
+                        found = true
+                        continue</span> // Skip this todo (delete it)
+                }
+                <span class="cov0" title="0">updatedTodos = append(updatedTodos, todo)</span>
+        }
+
+        <span class="cov0" title="0">if !found </span><span class="cov0" title="0">{
+                return domain.ErrTodoNotFound
+        }</span>
+
+        // Resequence IDs to maintain consecutive numbering
+        <span class="cov0" title="0">for i := range updatedTodos </span><span class="cov0" title="0">{
+                updatedTodos[i].ID = i + 1
+        }</span>
+
+        // Write updated todos back to file
+        <span class="cov0" title="0">return r.writeToFile(updatedTodos)</span>
+}
+
+// getNextID finds the next available ID
+func (r *JSONRepository) getNextID(todos []domain.Todo) int <span class="cov0" title="0">{
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return 1
+        }</span>
+
+        <span class="cov0" title="0">maxID := 0
+        for _, todo := range todos </span><span class="cov0" title="0">{
+                if todo.ID &gt; maxID </span><span class="cov0" title="0">{
+                        maxID = todo.ID
+                }</span>
+        }
+
+        <span class="cov0" title="0">return maxID + 1</span>
+}
+
+// writeToFile writes todos to the JSON file
+func (r *JSONRepository) writeToFile(todos []domain.Todo) error <span class="cov0" title="0">{
+        // Ensure directory exists
+        fileDir := filepath.Dir(r.filePath)
+        if err := r.osProxy.MkdirAll(fileDir, 0755); err != nil </span><span class="cov0" title="0">{
+                return domain.NewDomainError(
+                        domain.ErrorTypeFileSystem,
+                        "failed to create directory",
+                        err,
+                )
+        }</span>
+
+        // Create or truncate file
+        <span class="cov0" title="0">file, err := r.osProxy.OpenFile(r.filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+        if err != nil </span><span class="cov0" title="0">{
+                return domain.NewDomainError(
+                        domain.ErrorTypeFileSystem,
+                        "failed to open file for writing",
+                        err,
+                )
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        // Encode JSON with indentation for readability
+        encoder := r.jsonProxy.NewEncoder(file)
+        encoder.SetIndent("", "  ")
+        if err := encoder.Encode(todos); err != nil </span><span class="cov0" title="0">{
+                return domain.NewDomainError(
+                        domain.ErrorTypeJSON,
+                        "failed to encode JSON data",
+                        err,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package commands
+
+import (
+        "github.com/yanosea/gct/app/container"
+        "github.com/yanosea/gct/app/presentation/cli/gct/commands/gct"
+        "github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion"
+        "github.com/yanosea/gct/app/presentation/cli/gct/formatter"
+        "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// InitializeCommand initializes the CLI application with all commands and dependencies
+func InitializeCommand() (proxy.Command, error) <span class="cov0" title="0">{
+        // Initialize dependency injection container
+        c, err := container.NewContainer()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // No need to setup proxy provider anymore
+
+        // Initialize formatters
+        <span class="cov0" title="0">jsonFormatter := formatter.NewJSONFormatter(c.GetProxies().JSON)
+        tableFormatter := formatter.NewTableFormatter(c.GetProxies().Color, c.GetProxies().Strings, c.GetProxies().Fmt)
+        plainFormatter := formatter.NewPlainFormatter()
+
+        // Initialize presenter
+        todoPresenter := presenter.NewTodoPresenter(
+                jsonFormatter,
+                tableFormatter,
+                plainFormatter,
+                c.GetProxies().Fmt,
+                c.GetProxies().OS,
+        )
+
+        // Initialize root command
+        rootCmd := NewRootCommand(
+                c.GetProxies().Cobra,
+                c.GetUseCases().ListTodo,
+                todoPresenter,
+        )
+
+        // Add subcommands
+        rootCmd.AddCommand(gct.NewAddCommand(
+                c.GetProxies().Cobra,
+                c.GetUseCases().AddTodo,
+                todoPresenter,
+        ))
+
+        rootCmd.AddCommand(gct.NewListCommand(
+                c.GetProxies().Cobra,
+                c.GetUseCases().ListTodo,
+                todoPresenter,
+        ))
+
+        rootCmd.AddCommand(gct.NewToggleCommand(
+                c.GetProxies().Cobra,
+                c.GetProxies().Strconv,
+                c.GetUseCases().ToggleTodo,
+                todoPresenter,
+        ))
+
+        rootCmd.AddCommand(gct.NewDeleteCommand(
+                c.GetProxies().Cobra,
+                c.GetProxies().Strconv,
+                c.GetUseCases().DeleteTodo,
+                todoPresenter,
+        ))
+
+        // Add completion command with subcommands
+        completionCmd := completion.NewCompletionCommand(c.GetProxies().Cobra)
+        completionCmd.AddCommand(completion.NewBashCompletionCommand(c.GetProxies().Cobra, rootCmd))
+        completionCmd.AddCommand(completion.NewZshCompletionCommand(c.GetProxies().Cobra, rootCmd))
+        completionCmd.AddCommand(completion.NewFishCompletionCommand(c.GetProxies().Cobra, rootCmd))
+        completionCmd.AddCommand(completion.NewPowershellCompletionCommand(c.GetProxies().Cobra, rootCmd))
+        rootCmd.AddCommand(completionCmd)
+
+        return rootCmd, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package gct
+
+import (
+        "github.com/spf13/cobra"
+        "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewAddCommand creates the add command for the gct CLI application
+func NewAddCommand(
+        cobraProxy proxy.Cobra,
+        addUseCase *application.AddTodoUseCase,
+        presenter *presenter.TodoPresenter,
+) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("add &lt;description&gt;")
+        cmd.SetShort("Add a new todo")
+        cmd.SetLong(`Add a new todo with the specified description.
+
+The description is required and cannot be empty.
+
+Examples:
+  gct add "Buy groceries"
+  gct add "Complete project documentation"`)
+        cmd.SetArgs(cobraProxy.ExactArgs(1))
+        cmd.SetSilenceErrors(true)
+        cmd.SetSilenceUsage(true)
+
+        // Set the run function
+        cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                return RunAdd(addUseCase, presenter, args[0])
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+// RunAdd executes the add todo functionality
+func RunAdd(addUseCase *application.AddTodoUseCase, presenter *presenter.TodoPresenter, description string) error <span class="cov0" title="0">{
+        todo, err := addUseCase.Run(description)
+        if err != nil </span><span class="cov0" title="0">{
+                presenter.ShowError(err)
+                return err
+        }</span>
+
+        <span class="cov0" title="0">presenter.ShowAddSuccess(todo)
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package completion
+
+import (
+        "os"
+
+        "github.com/spf13/cobra"
+
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewBashCompletionCommand creates the bash completion subcommand
+func NewBashCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("bash")
+        cmd.SetShort("Generate bash completion script")
+        cmd.SetLong(`Generate bash completion script for gct.
+
+To load completions:
+
+Bash:
+  $ source &lt;(gct completion bash)
+
+  # To load completions for each session, execute once:
+  # Linux:
+  $ gct completion bash &gt; /etc/bash_completion.d/gct
+  # macOS:
+  $ gct completion bash &gt; /usr/local/etc/bash_completion.d/gct
+
+You will need to start a new shell for this setup to take effect.`)
+        cmd.SetArgs(cobraProxy.NoArgs())
+        cmd.SetSilenceErrors(true)
+        cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
+                return runBashCompletion(rootCmd)
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+func runBashCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
+        return rootCmd.GenBashCompletion(os.Stdout)
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package completion
+
+import (
+        "fmt"
+
+        "github.com/spf13/cobra"
+
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewCompletionCommand creates the completion parent command
+func NewCompletionCommand(cobraProxy proxy.Cobra) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("completion")
+        cmd.SetShort("Generate shell completion scripts")
+        cmd.SetLong(`Generate shell completion scripts for gct.
+
+The completion command allows you to generate shell completion scripts for bash, zsh, fish, and powershell.
+
+To load completions:
+
+Bash:
+  $ source &lt;(gct completion bash)
+
+  # To load completions for each session, execute once:
+  # Linux:
+  $ gct completion bash &gt; /etc/bash_completion.d/gct
+  # macOS:
+  $ gct completion bash &gt; /usr/local/etc/bash_completion.d/gct
+
+Zsh:
+  # If shell completion is not already enabled in your environment,
+  # you will need to enable it.  You can execute the following once:
+  $ echo "autoload -U compinit; compinit" &gt;&gt; ~/.zshrc
+
+  # To load completions for each session, execute once:
+  $ gct completion zsh &gt; "${fpath[1]}/_gct"
+
+  # You will need to start a new shell for this setup to take effect.
+
+Fish:
+  $ gct completion fish | source
+
+  # To load completions for each session, execute once:
+  $ gct completion fish &gt; ~/.config/fish/completions/gct.fish
+
+PowerShell:
+  PS&gt; gct completion powershell | Out-String | Invoke-Expression
+
+  # To load completions for every new session, run:
+  PS&gt; gct completion powershell &gt; gct.ps1
+  # and source this file from your PowerShell profile.
+`)
+        cmd.SetArgs(cobraProxy.ExactArgs(1))
+        cmd.SetSilenceErrors(true)
+        cmd.SetRunE(func(_ *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                return runCompletion(args[0])
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+func runCompletion(shell string) error <span class="cov0" title="0">{
+        return fmt.Errorf("completion command requires a subcommand: bash, zsh, fish, or powershell")
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package completion
+
+import (
+        "os"
+
+        "github.com/spf13/cobra"
+
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewFishCompletionCommand creates the fish completion subcommand
+func NewFishCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("fish")
+        cmd.SetShort("Generate fish completion script")
+        cmd.SetLong(`Generate fish completion script for gct.
+
+To load completions:
+
+Fish:
+  $ gct completion fish | source
+
+  # To load completions for each session, execute once:
+  $ gct completion fish &gt; ~/.config/fish/completions/gct.fish`)
+        cmd.SetArgs(cobraProxy.NoArgs())
+        cmd.SetSilenceErrors(true)
+        cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
+                return runFishCompletion(rootCmd)
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+func runFishCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
+        return rootCmd.GenFishCompletion(os.Stdout, true)
+}</span>
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package completion
+
+import (
+        "os"
+
+        "github.com/spf13/cobra"
+
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewPowershellCompletionCommand creates the powershell completion subcommand
+func NewPowershellCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("powershell")
+        cmd.SetShort("Generate powershell completion script")
+        cmd.SetLong(`Generate powershell completion script for gct.
+
+To load completions:
+
+PowerShell:
+  PS&gt; gct completion powershell | Out-String | Invoke-Expression
+
+  # To load completions for every new session, run:
+  PS&gt; gct completion powershell &gt; gct.ps1
+  # and source this file from your PowerShell profile.`)
+        cmd.SetArgs(cobraProxy.NoArgs())
+        cmd.SetSilenceErrors(true)
+        cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
+                return runPowershellCompletion(rootCmd)
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+func runPowershellCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
+        return rootCmd.GenPowerShellCompletion(os.Stdout)
+}</span>
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package completion
+
+import (
+        "os"
+
+        "github.com/spf13/cobra"
+
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewZshCompletionCommand creates the zsh completion subcommand
+func NewZshCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("zsh")
+        cmd.SetShort("Generate zsh completion script")
+        cmd.SetLong(`Generate zsh completion script for gct.
+
+To load completions:
+
+Zsh:
+  # If shell completion is not already enabled in your environment,
+  # you will need to enable it.  You can execute the following once:
+  $ echo "autoload -U compinit; compinit" &gt;&gt; ~/.zshrc
+
+  # To load completions for each session, execute once:
+  $ gct completion zsh &gt; "${fpath[1]}/_gct"
+
+  # You will need to start a new shell for this setup to take effect.`)
+        cmd.SetArgs(cobraProxy.NoArgs())
+        cmd.SetSilenceErrors(true)
+        cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
+                return runZshCompletion(rootCmd)
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+func runZshCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
+        return rootCmd.GenZshCompletion(os.Stdout)
+}</span>
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package gct
+
+import (
+        "github.com/spf13/cobra"
+        "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewDeleteCommand creates the delete command for the gct CLI application
+func NewDeleteCommand(
+        cobraProxy proxy.Cobra,
+        strconvProxy proxy.Strconv,
+        deleteUseCase *application.DeleteTodoUseCase,
+        presenter *presenter.TodoPresenter,
+) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("delete &lt;id&gt;")
+        cmd.SetShort("Delete a todo")
+        cmd.SetLong(`Delete a todo by its ID.
+
+The ID must be a positive integer that corresponds to an existing todo.
+Once deleted, the todo cannot be recovered.
+
+Examples:
+  gct delete 1
+  gct delete 5`)
+        cmd.SetArgs(cobraProxy.ExactArgs(1))
+        cmd.SetSilenceErrors(true)
+        cmd.SetSilenceUsage(true)
+
+        // Set the run function
+        cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                return RunDelete(strconvProxy, deleteUseCase, presenter, args[0])
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+// RunDelete executes the delete todo functionality
+func RunDelete(strconvProxy proxy.Strconv, deleteUseCase *application.DeleteTodoUseCase, presenter *presenter.TodoPresenter, idStr string) error <span class="cov0" title="0">{
+        // Parse the ID from string to int
+        id, err := strconvProxy.Atoi(idStr)
+        if err != nil </span><span class="cov0" title="0">{
+                presenter.ShowValidationError("invalid todo ID: must be a number")
+                return err
+        }</span>
+
+        // Validate that ID is positive
+        <span class="cov0" title="0">if id &lt;= 0 </span><span class="cov0" title="0">{
+                presenter.ShowValidationError("invalid todo ID: must be positive")
+                return nil
+        }</span>
+
+        // Execute the delete use case
+        <span class="cov0" title="0">err = deleteUseCase.Run(id)
+        if err != nil </span><span class="cov0" title="0">{
+                presenter.ShowError(err)
+                return err
+        }</span>
+
+        <span class="cov0" title="0">presenter.ShowDeleteSuccess(id)
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package gct
+
+import (
+        "github.com/spf13/cobra"
+        "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewListCommand creates the list command for the gct CLI application
+func NewListCommand(
+        cobraProxy proxy.Cobra,
+        listUseCase *application.ListTodoUseCase,
+        presenter *presenter.TodoPresenter,
+) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("list")
+        cmd.SetShort("List all todos")
+        cmd.SetLong(`List all todos with their current status.
+
+Supports multiple output formats:
+- table: Human-readable table format (default)
+- json: JSON format for programmatic use
+- plain: Simple plain text format`)
+        cmd.SetSilenceErrors(true)
+        cmd.SetSilenceUsage(true)
+
+        // Add format flag
+        formatFlag := cmd.Flags().StringP("format", "f", "table", "Output format (json, table, plain)")
+
+        // Set the run function
+        cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                // Get format from flag
+                format := "table"
+                if formatFlag != nil </span><span class="cov0" title="0">{
+                        format = *formatFlag
+                }</span>
+                <span class="cov0" title="0">return RunList(listUseCase, presenter, format)</span>
+        })
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+// RunList executes the list todos functionality
+func RunList(listUseCase *application.ListTodoUseCase, presenter *presenter.TodoPresenter, format string) error <span class="cov0" title="0">{
+        todos, err := listUseCase.Run()
+        if err != nil </span><span class="cov0" title="0">{
+                presenter.ShowError(err)
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return presenter.ShowListResults(todos, format)</span>
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package gct
+
+import (
+        "github.com/spf13/cobra"
+        "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewToggleCommand creates the toggle command for the gct CLI application
+func NewToggleCommand(
+        cobraProxy proxy.Cobra,
+        strconvProxy proxy.Strconv,
+        toggleUseCase *application.ToggleTodoUseCase,
+        presenter *presenter.TodoPresenter,
+) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("toggle &lt;id&gt;")
+        cmd.SetShort("Toggle the completion status of a todo")
+        cmd.SetLong(`Toggle the completion status of a todo by its ID.
+
+The ID must be a positive integer that corresponds to an existing todo.
+
+Examples:
+  gct toggle 1
+  gct toggle 5`)
+        cmd.SetArgs(cobraProxy.ExactArgs(1))
+        cmd.SetSilenceErrors(true)
+        cmd.SetSilenceUsage(true)
+
+        // Set the run function
+        cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                return RunToggle(strconvProxy, toggleUseCase, presenter, args[0])
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+// RunToggle executes the toggle todo functionality
+func RunToggle(strconvProxy proxy.Strconv, toggleUseCase *application.ToggleTodoUseCase, presenter *presenter.TodoPresenter, idStr string) error <span class="cov0" title="0">{
+        // Parse the ID from string to int
+        id, err := strconvProxy.Atoi(idStr)
+        if err != nil </span><span class="cov0" title="0">{
+                presenter.ShowValidationError("invalid todo ID: must be a number")
+                return err
+        }</span>
+
+        // Validate that ID is positive
+        <span class="cov0" title="0">if id &lt;= 0 </span><span class="cov0" title="0">{
+                presenter.ShowValidationError("invalid todo ID: must be positive")
+                return nil
+        }</span>
+
+        // Execute the toggle use case
+        <span class="cov0" title="0">todo, err := toggleUseCase.Run(id)
+        if err != nil </span><span class="cov0" title="0">{
+                presenter.ShowError(err)
+                return err
+        }</span>
+
+        <span class="cov0" title="0">presenter.ShowToggleSuccess(todo)
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package commands
+
+import (
+        "github.com/spf13/cobra"
+        "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/presentation/cli/gct/commands/gct"
+        "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// NewRootCommand creates the root command for the gct CLI application
+func NewRootCommand(
+        cobraProxy proxy.Cobra,
+        listUseCase *application.ListTodoUseCase,
+        presenter *presenter.TodoPresenter,
+) proxy.Command <span class="cov0" title="0">{
+        cmd := cobraProxy.NewCommand()
+        cmd.SetUse("gct")
+        cmd.SetShort("A clean architecture todo application")
+        cmd.SetLong(`gct is a todo application built with clean architecture principles.
+It provides both CLI and TUI interfaces for managing your todos.
+
+When run without any subcommands, it will list all todos.`)
+        cmd.SetSilenceErrors(true)
+        cmd.SetSilenceUsage(true)
+
+        // Add global flags
+        formatFlag := cmd.PersistentFlags().StringP("format", "f", "table", "Output format (json, table, plain)")
+
+        // Set the default run function to execute list command
+        cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                // Get format from flag
+                format := "table"
+                if formatFlag != nil </span><span class="cov0" title="0">{
+                        format = *formatFlag
+                }</span>
+                <span class="cov0" title="0">return runRoot(listUseCase, presenter, format)</span>
+        })
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+// runRoot executes the root command functionality (delegates to list command)
+func runRoot(listUseCase *application.ListTodoUseCase, presenter *presenter.TodoPresenter, format string) error <span class="cov0" title="0">{
+        // Call the actual list command implementation from gct/list.go
+        return gct.RunList(listUseCase, presenter, format)
+}</span>
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package formatter
+
+import (
+        "github.com/yanosea/gct/app/domain"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// JSONFormatter formats todos as JSON output
+type JSONFormatter struct {
+        jsonProxy proxy.JSON
+}
+
+// NewJSONFormatter creates a new JSONFormatter instance
+func NewJSONFormatter(jsonProxy proxy.JSON) *JSONFormatter <span class="cov0" title="0">{
+        return &amp;JSONFormatter{
+                jsonProxy: jsonProxy,
+        }
+}</span>
+
+// Format formats a slice of todos as JSON string
+func (f *JSONFormatter) Format(todos []domain.Todo) (string, error) <span class="cov0" title="0">{
+        data, err := f.jsonProxy.Marshal(todos)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", domain.NewDomainError(
+                        domain.ErrorTypeJSON,
+                        "failed to marshal todos to JSON",
+                        err,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return string(data), nil</span>
+}
+
+// FormatSingle formats a single todo as JSON string
+func (f *JSONFormatter) FormatSingle(todo domain.Todo) (string, error) <span class="cov0" title="0">{
+        data, err := f.jsonProxy.Marshal(todo)
+        if err != nil </span><span class="cov0" title="0">{
+                return "", domain.NewDomainError(
+                        domain.ErrorTypeJSON,
+                        "failed to marshal todo to JSON",
+                        err,
+                )
+        }</span>
+
+        <span class="cov0" title="0">return string(data), nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package formatter
+
+import (
+        "fmt"
+        "strconv"
+        "strings"
+
+        "github.com/yanosea/gct/app/domain"
+)
+
+// PlainFormatter formats todos as simple plain text output
+type PlainFormatter struct{}
+
+// NewPlainFormatter creates a new PlainFormatter instance
+func NewPlainFormatter() *PlainFormatter <span class="cov0" title="0">{
+        return &amp;PlainFormatter{}
+}</span>
+
+// Format formats a slice of todos as plain text string
+func (f *PlainFormatter) Format(todos []domain.Todo) (string, error) <span class="cov0" title="0">{
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return "No todos found.", nil
+        }</span>
+
+        <span class="cov0" title="0">var result strings.Builder
+
+        for _, todo := range todos </span><span class="cov0" title="0">{
+                line := f.formatTodoLine(todo)
+                result.WriteString(line)
+                result.WriteString("\n")
+        }</span>
+
+        <span class="cov0" title="0">return strings.TrimSpace(result.String()), nil</span>
+}
+
+// FormatSingle formats a single todo as plain text string
+func (f *PlainFormatter) FormatSingle(todo domain.Todo) (string, error) <span class="cov0" title="0">{
+        return f.formatTodoLine(todo), nil
+}</span>
+
+// formatTodoLine formats a single todo as a plain text line
+func (f *PlainFormatter) formatTodoLine(todo domain.Todo) string <span class="cov0" title="0">{
+        // Status indicator
+        status := "[ ]"
+        if todo.Done </span><span class="cov0" title="0">{
+                status = "[x]"
+        }</span>
+
+        // Format: [x] 1: Buy groceries
+        <span class="cov0" title="0">return fmt.Sprintf("%s %s: %s",
+                status,
+                strconv.Itoa(todo.ID),
+                todo.Description,
+        )</span>
+}
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package formatter
+
+import (
+        "github.com/yanosea/gct/app/domain"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// TableFormatter formats todos as human-readable table output
+type TableFormatter struct {
+        colorProxy   proxy.Color
+        stringsProxy proxy.Strings
+        fmtProxy     proxy.Fmt
+}
+
+// NewTableFormatter creates a new TableFormatter instance
+func NewTableFormatter(colorProxy proxy.Color, stringsProxy proxy.Strings, fmtProxy proxy.Fmt) *TableFormatter <span class="cov0" title="0">{
+        return &amp;TableFormatter{
+                colorProxy:   colorProxy,
+                stringsProxy: stringsProxy,
+                fmtProxy:     fmtProxy,
+        }
+}</span>
+
+// Format formats a slice of todos as a human-readable table string
+func (f *TableFormatter) Format(todos []domain.Todo) (string, error) <span class="cov0" title="0">{
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return f.colorProxy.Yellow("No todos found."), nil
+        }</span>
+
+        <span class="cov0" title="0">var result []string
+
+        // Add header
+        header := f.fmtProxy.Sprintf("%-4s %-6s %s",
+                f.colorProxy.Cyan("ID"),
+                f.colorProxy.Cyan("Status"),
+                f.colorProxy.Cyan("Description"))
+        result = append(result, header)
+
+        // Add separator line
+        separator := f.fmtProxy.Sprintf("%-4s %-6s %s", "----", "------", "-----------")
+        result = append(result, separator)
+
+        // Add todos
+        for _, todo := range todos </span><span class="cov0" title="0">{
+                line := f.formatTodoLine(todo)
+                result = append(result, line)
+        }</span>
+
+        <span class="cov0" title="0">return f.stringsProxy.Join(result, "\n"), nil</span>
+}
+
+// FormatSingle formats a single todo as a human-readable table string
+func (f *TableFormatter) FormatSingle(todo domain.Todo) (string, error) <span class="cov0" title="0">{
+        var result []string
+
+        // Add header
+        header := f.fmtProxy.Sprintf("%-4s %-6s %s",
+                f.colorProxy.Cyan("ID"),
+                f.colorProxy.Cyan("Status"),
+                f.colorProxy.Cyan("Description"))
+        result = append(result, header)
+
+        // Add separator line
+        separator := f.fmtProxy.Sprintf("%-4s %-6s %s", "----", "------", "-----------")
+        result = append(result, separator)
+
+        // Add the todo
+        line := f.formatTodoLine(todo)
+        result = append(result, line)
+
+        return f.stringsProxy.Join(result, "\n"), nil
+}</span>
+
+// formatTodoLine formats a single todo as a table row
+func (f *TableFormatter) formatTodoLine(todo domain.Todo) string <span class="cov0" title="0">{
+        var status string
+        var description string
+
+        if todo.Done </span><span class="cov0" title="0">{
+                status = f.colorProxy.Green("✓ Done")
+                description = f.colorProxy.Green(todo.Description)
+        }</span> else<span class="cov0" title="0"> {
+                status = f.colorProxy.Red("✗ Todo")
+                description = todo.Description
+        }</span>
+
+        <span class="cov0" title="0">return f.fmtProxy.Sprintf("%-4d %-6s %s", todo.ID, status, description)</span>
+}
+</pre>
+		
+		<pre class="file" id="file23" style="display: none">package main
+
+import (
+        "os"
+
+        "github.com/yanosea/gct/app/presentation/cli/gct/commands"
+)
+
+func main() <span class="cov0" title="0">{
+        // Initialize commands and dependencies
+        cmd, err := commands.InitializeCommand()
+        if err != nil </span><span class="cov0" title="0">{
+                os.Exit(1)
+        }</span>
+
+        // Execute the command
+        <span class="cov0" title="0">if err := cmd.Execute(); err != nil </span><span class="cov0" title="0">{
+                os.Exit(1)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file24" style="display: none">package presenter
+
+import (
+        "errors"
+
+        "github.com/yanosea/gct/app/domain"
+        "github.com/yanosea/gct/app/presentation/cli/gct/formatter"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// Formatter interface defines the contract for todo formatters
+type Formatter interface {
+        Format(todos []domain.Todo) (string, error)
+        FormatSingle(todo domain.Todo) (string, error)
+}
+
+// TodoPresenter handles presentation logic for todo operations
+type TodoPresenter struct {
+        jsonFormatter  *formatter.JSONFormatter
+        tableFormatter *formatter.TableFormatter
+        plainFormatter *formatter.PlainFormatter
+        fmtProxy       proxy.Fmt
+        osProxy        proxy.OS
+}
+
+// NewTodoPresenter creates a new TodoPresenter instance
+func NewTodoPresenter(
+        jsonFormatter *formatter.JSONFormatter,
+        tableFormatter *formatter.TableFormatter,
+        plainFormatter *formatter.PlainFormatter,
+        fmtProxy proxy.Fmt,
+        osProxy proxy.OS,
+) *TodoPresenter <span class="cov0" title="0">{
+        return &amp;TodoPresenter{
+                jsonFormatter:  jsonFormatter,
+                tableFormatter: tableFormatter,
+                plainFormatter: plainFormatter,
+                fmtProxy:       fmtProxy,
+                osProxy:        osProxy,
+        }
+}</span>
+
+// ShowAddSuccess displays success message for adding a todo
+func (p *TodoPresenter) ShowAddSuccess(todo *domain.Todo) <span class="cov0" title="0">{
+        p.fmtProxy.Printf("Todo added successfully: %s (ID: %d)\n", todo.Description, todo.ID)
+}</span>
+
+// ShowListResults displays the list of todos with the specified format
+func (p *TodoPresenter) ShowListResults(todos []domain.Todo, format string) error <span class="cov0" title="0">{
+        var formatter Formatter
+
+        switch format </span>{
+        case "json":<span class="cov0" title="0">
+                formatter = p.jsonFormatter</span>
+        case "table":<span class="cov0" title="0">
+                formatter = p.tableFormatter</span>
+        case "plain":<span class="cov0" title="0">
+                formatter = p.plainFormatter</span>
+        default:<span class="cov0" title="0">
+                formatter = p.tableFormatter</span> // default to table format
+        }
+
+        <span class="cov0" title="0">output, err := formatter.Format(todos)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">p.fmtProxy.Println(output)
+        return nil</span>
+}
+
+// ShowToggleSuccess displays success message for toggling a todo
+func (p *TodoPresenter) ShowToggleSuccess(todo *domain.Todo) <span class="cov0" title="0">{
+        status := "incomplete"
+        if todo.Done </span><span class="cov0" title="0">{
+                status = "complete"
+        }</span>
+        <span class="cov0" title="0">p.fmtProxy.Printf("Todo %d marked as %s: %s\n", todo.ID, status, todo.Description)</span>
+}
+
+// ShowDeleteSuccess displays success message for deleting a todo
+func (p *TodoPresenter) ShowDeleteSuccess(todoID int) <span class="cov0" title="0">{
+        p.fmtProxy.Printf("Todo %d deleted successfully\n", todoID)
+}</span>
+
+// ShowError displays user-friendly error messages
+func (p *TodoPresenter) ShowError(err error) <span class="cov0" title="0">{
+        if err == nil </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">var domainErr *domain.DomainError
+        if errors.As(err, &amp;domainErr) </span><span class="cov0" title="0">{
+                switch domainErr.Type </span>{
+                case domain.ErrorTypeNotFound:<span class="cov0" title="0">
+                        p.fmtProxy.Printf("Error: %s\n", domainErr.Message)</span>
+                case domain.ErrorTypeInvalidInput:<span class="cov0" title="0">
+                        p.fmtProxy.Printf("Error: %s\n", domainErr.Message)</span>
+                case domain.ErrorTypeFileSystem:<span class="cov0" title="0">
+                        p.fmtProxy.Printf("File system error: %s\n", domainErr.Message)</span>
+                case domain.ErrorTypeJSON:<span class="cov0" title="0">
+                        p.fmtProxy.Printf("JSON error: %s\n", domainErr.Message)</span>
+                case domain.ErrorTypeConfiguration:<span class="cov0" title="0">
+                        p.fmtProxy.Printf("Configuration error: %s\n", domainErr.Message)</span>
+                default:<span class="cov0" title="0">
+                        p.fmtProxy.Printf("Unknown error: %s\n", domainErr.Message)</span>
+                }
+        } else<span class="cov0" title="0"> {
+                p.fmtProxy.Printf("Error: %s\n", err.Error())
+        }</span>
+}
+
+// ShowUsageError displays usage error with helpful message
+func (p *TodoPresenter) ShowUsageError(message string) <span class="cov0" title="0">{
+        p.fmtProxy.Printf("Usage error: %s\n", message)
+}</span>
+
+// ShowValidationError displays validation error message
+func (p *TodoPresenter) ShowValidationError(message string) <span class="cov0" title="0">{
+        p.fmtProxy.Printf("Validation error: %s\n", message)
+}</span>
+</pre>
+		
+		<pre class="file" id="file25" style="display: none">package main
+
+import (
+        "os"
+
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/program"
+)
+
+func main() <span class="cov0" title="0">{
+        // Initialize program and dependencies
+        prog, err := program.InitializeProgram()
+        if err != nil </span><span class="cov0" title="0">{
+                os.Exit(1)
+        }</span>
+
+        // Execute the program
+        <span class="cov0" title="0">if _, err := prog.Run(); err != nil </span><span class="cov0" title="0">{
+                os.Exit(1)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file26" style="display: none">package model
+
+import (
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// InputState manages text input state for the TUI
+type InputState struct {
+        textInput proxy.TextInput
+        focused   bool
+}
+
+// NewInputState creates a new input state with the given bubbles proxy
+func NewInputState(bubbles proxy.Bubbles) *InputState <span class="cov0" title="0">{
+        input := bubbles.NewTextInput()
+        input.SetPlaceholder("Enter todo description...")
+        input.SetCharLimit(500)
+        input.SetWidth(50)
+
+        return &amp;InputState{
+                textInput: input,
+                focused:   false,
+        }
+}</span>
+
+// TextInput returns the underlying text input model
+func (i *InputState) TextInput() proxy.TextInput <span class="cov0" title="0">{
+        return i.textInput
+}</span>
+
+// Value returns the current input value
+func (i *InputState) Value() string <span class="cov0" title="0">{
+        return i.textInput.Value()
+}</span>
+
+// SetValue sets the input value
+func (i *InputState) SetValue(value string) <span class="cov0" title="0">{
+        i.textInput.SetValue(value)
+}</span>
+
+// Focus focuses the input
+func (i *InputState) Focus() <span class="cov0" title="0">{
+        i.textInput.Focus()
+        i.focused = true
+}</span>
+
+// Blur blurs the input
+func (i *InputState) Blur() <span class="cov0" title="0">{
+        i.textInput.Blur()
+        i.focused = false
+}</span>
+
+// IsFocused returns whether the input is focused
+func (i *InputState) IsFocused() bool <span class="cov0" title="0">{
+        return i.focused
+}</span>
+
+// Clear clears the input value
+func (i *InputState) Clear() <span class="cov0" title="0">{
+        i.textInput.SetValue("")
+}</span>
+
+// SetWidth sets the input width
+func (i *InputState) SetWidth(width int) <span class="cov0" title="0">{
+        i.textInput.SetWidth(width)
+}</span>
+
+// SetPlaceholder sets the input placeholder
+func (i *InputState) SetPlaceholder(placeholder string) <span class="cov0" title="0">{
+        i.textInput.SetPlaceholder(placeholder)
+}</span>
+
+// View returns the input view
+func (i *InputState) View() string <span class="cov0" title="0">{
+        return i.textInput.View()
+}</span>
+</pre>
+		
+		<pre class="file" id="file27" style="display: none">package model
+
+import (
+        tea "github.com/charmbracelet/bubbletea"
+        "github.com/yanosea/gct/app/domain"
+)
+
+// ItemModel represents the model for individual todo items in the TUI
+type ItemModel struct {
+        todo     *domain.Todo
+        selected bool
+        editing  bool
+}
+
+// NewItemModel creates a new ItemModel with the given todo
+func NewItemModel(todo *domain.Todo) *ItemModel <span class="cov0" title="0">{
+        return &amp;ItemModel{
+                todo:     todo,
+                selected: false,
+                editing:  false,
+        }
+}</span>
+
+// Todo returns the underlying todo entity
+func (m *ItemModel) Todo() *domain.Todo <span class="cov0" title="0">{
+        return m.todo
+}</span>
+
+// SetTodo updates the underlying todo entity
+func (m *ItemModel) SetTodo(todo *domain.Todo) <span class="cov0" title="0">{
+        m.todo = todo
+}</span>
+
+// IsSelected returns whether this item is currently selected
+func (m *ItemModel) IsSelected() bool <span class="cov0" title="0">{
+        return m.selected
+}</span>
+
+// SetSelected sets the selection state of this item
+func (m *ItemModel) SetSelected(selected bool) <span class="cov0" title="0">{
+        m.selected = selected
+}</span>
+
+// IsEditing returns whether this item is currently being edited
+func (m *ItemModel) IsEditing() bool <span class="cov0" title="0">{
+        return m.editing
+}</span>
+
+// SetEditing sets the editing state of this item
+func (m *ItemModel) SetEditing(editing bool) <span class="cov0" title="0">{
+        m.editing = editing
+}</span>
+
+// Toggle toggles the completion status of the todo item
+func (m *ItemModel) Toggle() <span class="cov0" title="0">{
+        if m.todo != nil </span><span class="cov0" title="0">{
+                m.todo.Toggle()
+        }</span>
+}
+
+// UpdateDescription updates the description of the todo item
+func (m *ItemModel) UpdateDescription(description string) error <span class="cov0" title="0">{
+        if m.todo != nil </span><span class="cov0" title="0">{
+                return m.todo.UpdateDescription(description)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// Init implements tea.Model interface for individual item initialization
+func (m *ItemModel) Init() tea.Cmd <span class="cov0" title="0">{
+        return nil
+}</span>
+
+// Update implements tea.Model interface for individual item updates
+func (m *ItemModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        switch msg := msg.(type) </span>{
+        case tea.KeyMsg:<span class="cov0" title="0">
+                return m.handleKeyMsg(msg)</span>
+        case ItemToggleMsg:<span class="cov0" title="0">
+                if msg.ID == m.todo.ID </span><span class="cov0" title="0">{
+                        m.Toggle()
+                }</span>
+                <span class="cov0" title="0">return m, nil</span>
+        case ItemEditMsg:<span class="cov0" title="0">
+                if msg.ID == m.todo.ID </span><span class="cov0" title="0">{
+                        m.SetEditing(msg.Editing)
+                }</span>
+                <span class="cov0" title="0">return m, nil</span>
+        case ItemSelectMsg:<span class="cov0" title="0">
+                if msg.ID == m.todo.ID </span><span class="cov0" title="0">{
+                        m.SetSelected(msg.Selected)
+                }</span>
+                <span class="cov0" title="0">return m, nil</span>
+        }
+        <span class="cov0" title="0">return m, nil</span>
+}
+
+// View implements tea.Model interface for individual item rendering
+func (m *ItemModel) View() string <span class="cov0" title="0">{
+        if m.todo == nil </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        // Basic rendering - will be enhanced in view layer
+        <span class="cov0" title="0">status := "[ ]"
+        if m.todo.Done </span><span class="cov0" title="0">{
+                status = "[x]"
+        }</span>
+
+        <span class="cov0" title="0">prefix := "  "
+        if m.selected </span><span class="cov0" title="0">{
+                prefix = "&gt; "
+        }</span>
+
+        <span class="cov0" title="0">return prefix + status + " " + m.todo.Description</span>
+}
+
+// handleKeyMsg handles keyboard input for individual items
+func (m *ItemModel) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        if !m.selected </span><span class="cov0" title="0">{
+                return m, nil
+        }</span>
+
+        <span class="cov0" title="0">switch msg.String() </span>{
+        case " ":<span class="cov0" title="0">
+                // Toggle completion status
+                return m, func() tea.Msg </span><span class="cov0" title="0">{
+                        return ItemToggleMsg{ID: m.todo.ID}
+                }</span>
+        case "e":<span class="cov0" title="0">
+                // Enter edit mode
+                return m, func() tea.Msg </span><span class="cov0" title="0">{
+                        return ItemEditMsg{ID: m.todo.ID, Editing: true}
+                }</span>
+        }
+
+        <span class="cov0" title="0">return m, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file28" style="display: none">package model
+
+// Mode represents the current mode of the TUI application
+type Mode int
+
+const (
+        // ModeNormal is the default navigation mode
+        ModeNormal Mode = iota
+        // ModeInput is the mode for adding new todos
+        ModeInput
+        // ModeConfirmation is the mode for confirming actions like deletion
+        ModeConfirmation
+        // ModeEdit is the mode for editing existing todos
+        ModeEdit
+)
+
+// String returns the string representation of the mode
+func (m Mode) String() string <span class="cov0" title="0">{
+        switch m </span>{
+        case ModeNormal:<span class="cov0" title="0">
+                return "Normal"</span>
+        case ModeInput:<span class="cov0" title="0">
+                return "Input"</span>
+        case ModeConfirmation:<span class="cov0" title="0">
+                return "Confirmation"</span>
+        case ModeEdit:<span class="cov0" title="0">
+                return "Edit"</span>
+        default:<span class="cov0" title="0">
+                return "Unknown"</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file29" style="display: none">package model
+
+// NavigationState manages cursor position and selection state
+type NavigationState struct {
+        cursor   int
+        selected map[int]struct{}
+}
+
+// NewNavigationState creates a new navigation state
+func NewNavigationState() *NavigationState <span class="cov0" title="0">{
+        return &amp;NavigationState{
+                cursor:   0,
+                selected: make(map[int]struct{}),
+        }
+}</span>
+
+// Cursor returns the current cursor position
+func (n *NavigationState) Cursor() int <span class="cov0" title="0">{
+        return n.cursor
+}</span>
+
+// SetCursor sets the cursor position with bounds checking
+func (n *NavigationState) SetCursor(cursor, maxItems int) <span class="cov0" title="0">{
+        if cursor &lt; 0 </span><span class="cov0" title="0">{
+                cursor = 0
+        }</span>
+        <span class="cov0" title="0">if cursor &gt;= maxItems </span><span class="cov0" title="0">{
+                cursor = maxItems - 1
+        }</span>
+        <span class="cov0" title="0">if cursor &lt; 0 </span><span class="cov0" title="0">{
+                cursor = 0
+        }</span>
+        <span class="cov0" title="0">n.cursor = cursor</span>
+}
+
+// MoveCursorUp moves the cursor up by one position
+func (n *NavigationState) MoveCursorUp(maxItems int) <span class="cov0" title="0">{
+        n.SetCursor(n.cursor-1, maxItems)
+}</span>
+
+// MoveCursorDown moves the cursor down by one position
+func (n *NavigationState) MoveCursorDown(maxItems int) <span class="cov0" title="0">{
+        n.SetCursor(n.cursor+1, maxItems)
+}</span>
+
+// MoveCursorToTop moves the cursor to the first position
+func (n *NavigationState) MoveCursorToTop() <span class="cov0" title="0">{
+        n.cursor = 0
+}</span>
+
+// MoveCursorToBottom moves the cursor to the last position
+func (n *NavigationState) MoveCursorToBottom(maxItems int) <span class="cov0" title="0">{
+        if maxItems &gt; 0 </span><span class="cov0" title="0">{
+                n.cursor = maxItems - 1
+        }</span> else<span class="cov0" title="0"> {
+                n.cursor = 0
+        }</span>
+}
+
+// IsSelected returns whether the given index is selected
+func (n *NavigationState) IsSelected(index int) bool <span class="cov0" title="0">{
+        _, exists := n.selected[index]
+        return exists
+}</span>
+
+// SetSelected sets the selection state for the given index
+func (n *NavigationState) SetSelected(index int, selected bool) <span class="cov0" title="0">{
+        if selected </span><span class="cov0" title="0">{
+                n.selected[index] = struct{}{}
+        }</span> else<span class="cov0" title="0"> {
+                delete(n.selected, index)
+        }</span>
+}
+
+// ClearSelection clears all selections
+func (n *NavigationState) ClearSelection() <span class="cov0" title="0">{
+        n.selected = make(map[int]struct{})
+}</span>
+
+// GetSelectedIndices returns a slice of all selected indices
+func (n *NavigationState) GetSelectedIndices() []int <span class="cov0" title="0">{
+        indices := make([]int, 0, len(n.selected))
+        for index := range n.selected </span><span class="cov0" title="0">{
+                indices = append(indices, index)
+        }</span>
+        <span class="cov0" title="0">return indices</span>
+}
+
+// HasSelection returns whether any items are selected
+func (n *NavigationState) HasSelection() bool <span class="cov0" title="0">{
+        return len(n.selected) &gt; 0
+}</span>
+</pre>
+		
+		<pre class="file" id="file30" style="display: none">package model
+
+import (
+        tea "github.com/charmbracelet/bubbletea"
+        "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// StateModel represents the main application state model for the TUI
+type StateModel struct {
+        // Todo management
+        todos []*ItemModel
+
+        // UI state components
+        mode       Mode
+        navigation *NavigationState
+        input      *InputState
+
+        // Use cases for business logic
+        addUseCase    *application.AddTodoUseCase
+        listUseCase   *application.ListTodoUseCase
+        toggleUseCase *application.ToggleTodoUseCase
+        deleteUseCase *application.DeleteTodoUseCase
+
+        // Confirmation state
+        confirmationMessage string
+        confirmationAction  func() tea.Cmd
+
+        // Error state
+        errorMessage string
+
+        // Dimensions
+        width  int
+        height int
+}
+
+// NewStateModel creates a new StateModel with the given use cases
+func NewStateModel(
+        addUseCase *application.AddTodoUseCase,
+        listUseCase *application.ListTodoUseCase,
+        toggleUseCase *application.ToggleTodoUseCase,
+        deleteUseCase *application.DeleteTodoUseCase,
+        bubbles proxy.Bubbles,
+) *StateModel <span class="cov0" title="0">{
+        return &amp;StateModel{
+                todos:         make([]*ItemModel, 0),
+                mode:          ModeNormal,
+                navigation:    NewNavigationState(),
+                input:         NewInputState(bubbles),
+                addUseCase:    addUseCase,
+                listUseCase:   listUseCase,
+                toggleUseCase: toggleUseCase,
+                deleteUseCase: deleteUseCase,
+                width:         80,
+                height:        24,
+        }
+}</span>
+
+// Todos returns the list of todo item models
+func (m *StateModel) Todos() []*ItemModel <span class="cov0" title="0">{
+        return m.todos
+}</span>
+
+// SetTodos updates the list of todo item models
+func (m *StateModel) SetTodos(todos []*ItemModel) <span class="cov0" title="0">{
+        m.todos = todos
+        // Adjust cursor if it's out of bounds using navigation state
+        m.navigation.SetCursor(m.navigation.Cursor(), len(m.todos))
+}</span>
+
+// LoadTodos loads todos from the use case and converts them to item models
+func (m *StateModel) LoadTodos() tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                todos, err := m.listUseCase.Run()
+                if err != nil </span><span class="cov0" title="0">{
+                        return ErrorMsg{Error: err}
+                }</span>
+
+                <span class="cov0" title="0">itemModels := make([]*ItemModel, len(todos))
+                for i, todo := range todos </span><span class="cov0" title="0">{
+                        itemModels[i] = NewItemModel(&amp;todo)
+                }</span>
+
+                <span class="cov0" title="0">return TodosLoadedMsg{Todos: itemModels}</span>
+        }
+}
+
+// Cursor returns the current cursor position
+func (m *StateModel) Cursor() int <span class="cov0" title="0">{
+        return m.navigation.Cursor()
+}</span>
+
+// SetCursor sets the cursor position
+func (m *StateModel) SetCursor(cursor int) <span class="cov0" title="0">{
+        m.navigation.SetCursor(cursor, len(m.todos))
+
+        // Update selection state
+        m.clearSelection()
+        if cursor &gt;= 0 &amp;&amp; cursor &lt; len(m.todos) </span><span class="cov0" title="0">{
+                m.todos[cursor].SetSelected(true)
+                m.navigation.SetSelected(cursor, true)
+        }</span>
+}
+
+// MoveCursorUp moves the cursor up by one position
+func (m *StateModel) MoveCursorUp() <span class="cov0" title="0">{
+        m.navigation.MoveCursorUp(len(m.todos))
+        m.updateSelectionFromNavigation()
+}</span>
+
+// MoveCursorDown moves the cursor down by one position
+func (m *StateModel) MoveCursorDown() <span class="cov0" title="0">{
+        m.navigation.MoveCursorDown(len(m.todos))
+        m.updateSelectionFromNavigation()
+}</span>
+
+// MoveCursorToTop moves the cursor to the first position
+func (m *StateModel) MoveCursorToTop() <span class="cov0" title="0">{
+        m.navigation.MoveCursorToTop()
+        m.updateSelectionFromNavigation()
+}</span>
+
+// MoveCursorToBottom moves the cursor to the last position
+func (m *StateModel) MoveCursorToBottom() <span class="cov0" title="0">{
+        m.navigation.MoveCursorToBottom(len(m.todos))
+        m.updateSelectionFromNavigation()
+}</span>
+
+// clearSelection clears all selection states
+func (m *StateModel) clearSelection() <span class="cov0" title="0">{
+        for _, todo := range m.todos </span><span class="cov0" title="0">{
+                todo.SetSelected(false)
+        }</span>
+        <span class="cov0" title="0">m.navigation.ClearSelection()</span>
+}
+
+// updateSelectionFromNavigation updates todo selection based on navigation state
+func (m *StateModel) updateSelectionFromNavigation() <span class="cov0" title="0">{
+        m.clearSelection()
+        cursor := m.navigation.Cursor()
+        if cursor &gt;= 0 &amp;&amp; cursor &lt; len(m.todos) </span><span class="cov0" title="0">{
+                m.todos[cursor].SetSelected(true)
+                m.navigation.SetSelected(cursor, true)
+        }</span>
+}
+
+// Mode returns the current mode
+func (m *StateModel) Mode() Mode <span class="cov0" title="0">{
+        return m.mode
+}</span>
+
+// SetMode sets the current mode
+func (m *StateModel) SetMode(mode Mode) <span class="cov0" title="0">{
+        m.mode = mode
+
+        switch mode </span>{
+        case ModeInput:<span class="cov0" title="0">
+                m.input.Clear()
+                m.input.Focus()</span>
+        case ModeEdit:<span class="cov0" title="0">
+                cursor := m.navigation.Cursor()
+                if cursor &gt;= 0 &amp;&amp; cursor &lt; len(m.todos) &amp;&amp; m.todos[cursor].Todo() != nil </span><span class="cov0" title="0">{
+                        m.input.SetValue(m.todos[cursor].Todo().Description)
+                        m.input.Focus()
+                }</span>
+        default:<span class="cov0" title="0">
+                m.input.Blur()</span>
+        }
+}
+
+// Input returns the input state
+func (m *StateModel) Input() *InputState <span class="cov0" title="0">{
+        return m.input
+}</span>
+
+// AddTodo adds a new todo with the given description
+func (m *StateModel) AddTodo(description string) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                todo, err := m.addUseCase.Run(description)
+                if err != nil </span><span class="cov0" title="0">{
+                        return ErrorMsg{Error: err}
+                }</span>
+                <span class="cov0" title="0">return TodoAddedMsg{Todo: todo}</span>
+        }
+}
+
+// ToggleTodo toggles the completion status of the todo at the current cursor position
+func (m *StateModel) ToggleTodo() tea.Cmd <span class="cov0" title="0">{
+        cursor := m.navigation.Cursor()
+        if cursor &lt; 0 || cursor &gt;= len(m.todos) || m.todos[cursor].Todo() == nil </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">todoID := m.todos[cursor].Todo().ID
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                todo, err := m.toggleUseCase.Run(todoID)
+                if err != nil </span><span class="cov0" title="0">{
+                        return ErrorMsg{Error: err}
+                }</span>
+                <span class="cov0" title="0">return TodoToggledMsg{Todo: todo}</span>
+        }
+}
+
+// DeleteTodo deletes the todo at the current cursor position
+func (m *StateModel) DeleteTodo() tea.Cmd <span class="cov0" title="0">{
+        cursor := m.navigation.Cursor()
+        if cursor &lt; 0 || cursor &gt;= len(m.todos) || m.todos[cursor].Todo() == nil </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">todoID := m.todos[cursor].Todo().ID
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                err := m.deleteUseCase.Run(todoID)
+                if err != nil </span><span class="cov0" title="0">{
+                        return ErrorMsg{Error: err}
+                }</span>
+                <span class="cov0" title="0">return TodoDeletedMsg{ID: todoID}</span>
+        }
+}
+
+// UpdateTodo updates the description of the todo at the current cursor position
+func (m *StateModel) UpdateTodo(description string) tea.Cmd <span class="cov0" title="0">{
+        cursor := m.navigation.Cursor()
+        if cursor &lt; 0 || cursor &gt;= len(m.todos) || m.todos[cursor].Todo() == nil </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">todo := m.todos[cursor].Todo()
+        if err := todo.UpdateDescription(description); err != nil </span><span class="cov0" title="0">{
+                return func() tea.Msg </span><span class="cov0" title="0">{
+                        return ErrorMsg{Error: err}
+                }</span>
+        }
+
+        // Save the updated todo
+        <span class="cov0" title="0">return func() tea.Msg </span><span class="cov0" title="0">{
+                // Note: We need to save through repository, but for now we'll simulate
+                // In a real implementation, we'd need an UpdateTodoUseCase
+                return TodoUpdatedMsg{Todo: todo}
+        }</span>
+}
+
+// SetConfirmation sets up a confirmation dialog
+func (m *StateModel) SetConfirmation(message string, action func() tea.Cmd) <span class="cov0" title="0">{
+        m.confirmationMessage = message
+        m.confirmationAction = action
+        m.SetMode(ModeConfirmation)
+}</span>
+
+// ConfirmationMessage returns the current confirmation message
+func (m *StateModel) ConfirmationMessage() string <span class="cov0" title="0">{
+        return m.confirmationMessage
+}</span>
+
+// ExecuteConfirmation executes the confirmed action
+func (m *StateModel) ExecuteConfirmation() tea.Cmd <span class="cov0" title="0">{
+        if m.confirmationAction != nil </span><span class="cov0" title="0">{
+                cmd := m.confirmationAction()
+                m.confirmationAction = nil
+                m.confirmationMessage = ""
+                m.SetMode(ModeNormal)
+                return cmd
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+// CancelConfirmation cancels the confirmation dialog
+func (m *StateModel) CancelConfirmation() <span class="cov0" title="0">{
+        m.confirmationAction = nil
+        m.confirmationMessage = ""
+        m.SetMode(ModeNormal)
+}</span>
+
+// SetError sets an error message
+func (m *StateModel) SetError(err error) <span class="cov0" title="0">{
+        if err != nil </span><span class="cov0" title="0">{
+                m.errorMessage = err.Error()
+        }</span> else<span class="cov0" title="0"> {
+                m.errorMessage = ""
+        }</span>
+}
+
+// ErrorMessage returns the current error message
+func (m *StateModel) ErrorMessage() string <span class="cov0" title="0">{
+        return m.errorMessage
+}</span>
+
+// ClearError clears the current error message
+func (m *StateModel) ClearError() <span class="cov0" title="0">{
+        m.errorMessage = ""
+}</span>
+
+// SetSize sets the dimensions of the TUI
+func (m *StateModel) SetSize(width, height int) <span class="cov0" title="0">{
+        m.width = width
+        m.height = height
+
+        // Adjust input width based on available space
+        if width &gt; 10 </span><span class="cov0" title="0">{
+                m.input.SetWidth(width - 10)
+        }</span>
+}
+
+// Width returns the current width
+func (m *StateModel) Width() int <span class="cov0" title="0">{
+        return m.width
+}</span>
+
+// Height returns the current height
+func (m *StateModel) Height() int <span class="cov0" title="0">{
+        return m.height
+}</span>
+
+// Init implements tea.Model interface
+func (m *StateModel) Init() tea.Cmd <span class="cov0" title="0">{
+        return m.LoadTodos()
+}</span>
+
+// Update implements tea.Model interface
+func (m *StateModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        switch msg := msg.(type) </span>{
+        case tea.WindowSizeMsg:<span class="cov0" title="0">
+                m.SetSize(msg.Width, msg.Height)
+                return m, nil</span>
+
+        case tea.KeyMsg:<span class="cov0" title="0">
+                return m.handleKeyMsg(msg)</span>
+
+        case TodosLoadedMsg:<span class="cov0" title="0">
+                m.SetTodos(msg.Todos)
+                if len(m.todos) &gt; 0 </span><span class="cov0" title="0">{
+                        m.SetCursor(0)
+                }</span>
+                <span class="cov0" title="0">return m, nil</span>
+
+        case TodoAddedMsg:<span class="cov0" title="0">
+                // Reload todos to get the updated list
+                return m, m.LoadTodos()</span>
+
+        case TodoToggledMsg:<span class="cov0" title="0">
+                // Update the specific todo in our list
+                for _, itemModel := range m.todos </span><span class="cov0" title="0">{
+                        if itemModel.Todo() != nil &amp;&amp; itemModel.Todo().ID == msg.Todo.ID </span><span class="cov0" title="0">{
+                                itemModel.SetTodo(msg.Todo)
+                                break</span>
+                        }
+                }
+                <span class="cov0" title="0">return m, nil</span>
+
+        case TodoDeletedMsg:<span class="cov0" title="0">
+                // Reload todos to get the updated list
+                return m, m.LoadTodos()</span>
+
+        case TodoUpdatedMsg:<span class="cov0" title="0">
+                // Update the specific todo in our list
+                for _, itemModel := range m.todos </span><span class="cov0" title="0">{
+                        if itemModel.Todo() != nil &amp;&amp; itemModel.Todo().ID == msg.Todo.ID </span><span class="cov0" title="0">{
+                                itemModel.SetTodo(msg.Todo)
+                                break</span>
+                        }
+                }
+                <span class="cov0" title="0">m.SetMode(ModeNormal)
+                return m, nil</span>
+
+        case ErrorMsg:<span class="cov0" title="0">
+                m.SetError(msg.Error)
+                m.SetMode(ModeNormal)
+                return m, nil</span>
+        }
+
+        // Handle input updates when in input modes
+        <span class="cov0" title="0">if m.mode == ModeInput || m.mode == ModeEdit </span><span class="cov0" title="0">{
+                var cmd tea.Cmd
+                textInput := m.input.TextInput()
+                textInput, cmd = textInput.Update(msg)
+                return m, cmd
+        }</span>
+
+        <span class="cov0" title="0">return m, nil</span>
+}
+
+// View implements tea.Model interface
+func (m *StateModel) View() string <span class="cov0" title="0">{
+        // Basic view implementation - will be enhanced in view layer
+        switch m.mode </span>{
+        case ModeInput:<span class="cov0" title="0">
+                return "Add Todo: " + m.input.View()</span>
+        case ModeEdit:<span class="cov0" title="0">
+                return "Edit Todo: " + m.input.View()</span>
+        case ModeConfirmation:<span class="cov0" title="0">
+                return m.confirmationMessage + " (y/n)"</span>
+        default:<span class="cov0" title="0">
+                view := "Todos:\n"
+                cursor := m.navigation.Cursor()
+                for i, todo := range m.todos </span><span class="cov0" title="0">{
+                        prefix := "  "
+                        if i == cursor </span><span class="cov0" title="0">{
+                                prefix = "&gt; "
+                        }</span>
+                        <span class="cov0" title="0">view += prefix + todo.View() + "\n"</span>
+                }
+                <span class="cov0" title="0">if m.errorMessage != "" </span><span class="cov0" title="0">{
+                        view += "\nError: " + m.errorMessage
+                }</span>
+                <span class="cov0" title="0">return view</span>
+        }
+}
+
+// handleKeyMsg handles keyboard input based on current mode
+func (m *StateModel) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        switch m.mode </span>{
+        case ModeNormal:<span class="cov0" title="0">
+                return m.handleNormalModeKeys(msg)</span>
+        case ModeInput:<span class="cov0" title="0">
+                return m.handleInputModeKeys(msg)</span>
+        case ModeEdit:<span class="cov0" title="0">
+                return m.handleEditModeKeys(msg)</span>
+        case ModeConfirmation:<span class="cov0" title="0">
+                return m.handleConfirmationModeKeys(msg)</span>
+        }
+        <span class="cov0" title="0">return m, nil</span>
+}
+
+// handleNormalModeKeys handles keyboard input in normal mode
+func (m *StateModel) handleNormalModeKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "ctrl+c", "q":<span class="cov0" title="0">
+                return m, tea.Quit</span>
+        case "up", "k":<span class="cov0" title="0">
+                m.MoveCursorUp()
+                return m, nil</span>
+        case "down", "j":<span class="cov0" title="0">
+                m.MoveCursorDown()
+                return m, nil</span>
+        case "g":<span class="cov0" title="0">
+                m.MoveCursorToTop()
+                return m, nil</span>
+        case "G":<span class="cov0" title="0">
+                m.MoveCursorToBottom()
+                return m, nil</span>
+        case " ":<span class="cov0" title="0">
+                return m, m.ToggleTodo()</span>
+        case "a":<span class="cov0" title="0">
+                m.SetMode(ModeInput)
+                return m, nil</span>
+        case "e":<span class="cov0" title="0">
+                if len(m.todos) &gt; 0 </span><span class="cov0" title="0">{
+                        m.SetMode(ModeEdit)
+                }</span>
+                <span class="cov0" title="0">return m, nil</span>
+        case "d":<span class="cov0" title="0">
+                cursor := m.navigation.Cursor()
+                if len(m.todos) &gt; 0 &amp;&amp; cursor &gt;= 0 &amp;&amp; cursor &lt; len(m.todos) </span><span class="cov0" title="0">{
+                        todo := m.todos[cursor].Todo()
+                        if todo != nil </span><span class="cov0" title="0">{
+                                m.SetConfirmation(
+                                        "Delete '"+todo.Description+"'?",
+                                        m.DeleteTodo,
+                                )
+                        }</span>
+                }
+                <span class="cov0" title="0">return m, nil</span>
+        case "r":<span class="cov0" title="0">
+                return m, m.LoadTodos()</span>
+        case "esc":<span class="cov0" title="0">
+                m.ClearError()
+                return m, nil</span>
+        }
+        <span class="cov0" title="0">return m, nil</span>
+}
+
+// handleInputModeKeys handles keyboard input in input mode
+func (m *StateModel) handleInputModeKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "enter":<span class="cov0" title="0">
+                description := m.input.Value()
+                if description != "" </span><span class="cov0" title="0">{
+                        m.SetMode(ModeNormal)
+                        return m, m.AddTodo(description)
+                }</span>
+                <span class="cov0" title="0">return m, nil</span>
+        case "esc":<span class="cov0" title="0">
+                m.SetMode(ModeNormal)
+                return m, nil</span>
+        }
+        <span class="cov0" title="0">return m, nil</span>
+}
+
+// handleEditModeKeys handles keyboard input in edit mode
+func (m *StateModel) handleEditModeKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "enter":<span class="cov0" title="0">
+                description := m.input.Value()
+                if description != "" </span><span class="cov0" title="0">{
+                        return m, m.UpdateTodo(description)
+                }</span>
+                <span class="cov0" title="0">return m, nil</span>
+        case "esc":<span class="cov0" title="0">
+                m.SetMode(ModeNormal)
+                return m, nil</span>
+        }
+        <span class="cov0" title="0">return m, nil</span>
+}
+
+// handleConfirmationModeKeys handles keyboard input in confirmation mode
+func (m *StateModel) handleConfirmationModeKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "y", "Y":<span class="cov0" title="0">
+                return m, m.ExecuteConfirmation()</span>
+        case "n", "N", "esc":<span class="cov0" title="0">
+                m.CancelConfirmation()
+                return m, nil</span>
+        }
+        <span class="cov0" title="0">return m, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file31" style="display: none">package program
+
+import (
+        tea "github.com/charmbracelet/bubbletea"
+        "github.com/yanosea/gct/app/container"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+)
+
+// InitializeProgram initializes the TUI application with all dependencies
+func InitializeProgram() (*tea.Program, error) <span class="cov0" title="0">{
+        // Initialize dependency injection container
+        container, err := container.NewContainer()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Get dependencies from container
+        <span class="cov0" title="0">useCases := container.GetUseCases()
+        proxies := container.GetProxies()
+
+        // Create the TUI model with dependencies
+        stateModel := model.NewStateModel(
+                useCases.AddTodo,
+                useCases.ListTodo,
+                useCases.ToggleTodo,
+                useCases.DeleteTodo,
+                proxies.Bubbles,
+        )
+
+        // Create the bubbletea program
+        program := tea.NewProgram(
+                stateModel,
+                tea.WithAltScreen(),
+                tea.WithMouseCellMotion(),
+        )
+
+        return program, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file32" style="display: none">package update
+
+import (
+        tea "github.com/charmbracelet/bubbletea"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+)
+
+// HandlerUpdateResult represents the result of a handler update operation
+type HandlerUpdateResult struct {
+        Model *model.StateModel
+        Cmd   tea.Cmd
+}
+
+// UpdateHandler handles the main update function with message routing
+func UpdateHandler(stateModel *model.StateModel, msg tea.Msg) HandlerUpdateResult <span class="cov0" title="0">{
+        // Create operations handler
+        opsHandler := NewOperationsHandler()
+
+        switch msg := msg.(type) </span>{
+        case tea.WindowSizeMsg:<span class="cov0" title="0">
+                return handleWindowSize(stateModel, msg)</span>
+        case tea.KeyMsg:<span class="cov0" title="0">
+                return KeyboardHandler(stateModel, msg)</span>
+        case model.TodosLoadedMsg:<span class="cov0" title="0">
+                return opsHandler.HandleTodosLoaded(stateModel, msg)</span>
+        case model.TodoAddedMsg:<span class="cov0" title="0">
+                return opsHandler.HandleTodoAdded(stateModel, msg)</span>
+        case model.TodoToggledMsg:<span class="cov0" title="0">
+                return opsHandler.HandleTodoToggled(stateModel, msg)</span>
+        case model.TodoDeletedMsg:<span class="cov0" title="0">
+                return opsHandler.HandleTodoDeleted(stateModel, msg)</span>
+        case model.TodoUpdatedMsg:<span class="cov0" title="0">
+                return opsHandler.HandleTodoUpdated(stateModel, msg)</span>
+        case model.ErrorMsg:<span class="cov0" title="0">
+                return opsHandler.HandleError(stateModel, msg)</span>
+        case ItemAddMsg:<span class="cov0" title="0">
+                return opsHandler.HandleItemAdd(stateModel, msg)</span>
+        case ItemDeleteMsg:<span class="cov0" title="0">
+                return opsHandler.HandleItemDelete(stateModel, msg)</span>
+        case ItemToggleAsyncMsg:<span class="cov0" title="0">
+                return opsHandler.HandleItemToggleAsync(stateModel, msg)</span>
+        case ItemEditStateMsg:<span class="cov0" title="0">
+                return opsHandler.HandleItemEditState(stateModel, msg)</span>
+        case ItemUpdatedAsyncMsg:<span class="cov0" title="0">
+                return opsHandler.HandleItemUpdatedAsync(stateModel, msg)</span>
+        }
+
+        // Handle input updates when in input modes
+        <span class="cov0" title="0">if stateModel.Mode() == model.ModeInput || stateModel.Mode() == model.ModeEdit </span><span class="cov0" title="0">{
+                return handleInputUpdate(stateModel, msg)
+        }</span>
+
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// handleWindowSize handles window size changes
+func handleWindowSize(stateModel *model.StateModel, msg tea.WindowSizeMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        stateModel.SetSize(msg.Width, msg.Height)
+        return HandlerUpdateResult{Model: stateModel, Cmd: nil}
+}</span>
+
+// handleInputUpdate handles text input updates in input/edit modes
+func handleInputUpdate(stateModel *model.StateModel, msg tea.Msg) HandlerUpdateResult <span class="cov0" title="0">{
+        var cmd tea.Cmd
+        textInput := stateModel.Input().TextInput()
+        textInput, cmd = textInput.Update(msg)
+
+        return HandlerUpdateResult{Model: stateModel, Cmd: cmd}
+}</span>
+</pre>
+		
+		<pre class="file" id="file33" style="display: none">package update
+
+import (
+        tea "github.com/charmbracelet/bubbletea"
+        "github.com/yanosea/gct/app/domain"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+)
+
+// ItemUpdateResult represents the result of an item update operation
+type ItemUpdateResult struct {
+        Model *model.ItemModel
+        Cmd   tea.Cmd
+}
+
+// UpdateItem handles item-specific update operations
+func UpdateItem(itemModel *model.ItemModel, msg tea.Msg) ItemUpdateResult <span class="cov0" title="0">{
+        switch msg := msg.(type) </span>{
+        case tea.KeyMsg:<span class="cov0" title="0">
+                return handleItemKeyMsg(itemModel, msg)</span>
+        case model.ItemToggleMsg:<span class="cov0" title="0">
+                return handleItemToggle(itemModel, msg)</span>
+        case model.ItemEditMsg:<span class="cov0" title="0">
+                return handleItemEdit(itemModel, msg)</span>
+        case model.ItemSelectMsg:<span class="cov0" title="0">
+                return handleItemSelect(itemModel, msg)</span>
+        case model.ItemUpdateMsg:<span class="cov0" title="0">
+                return handleItemUpdate(itemModel, msg)</span>
+        }
+
+        <span class="cov0" title="0">return ItemUpdateResult{Model: itemModel, Cmd: nil}</span>
+}
+
+// handleItemKeyMsg handles keyboard input for individual items
+func handleItemKeyMsg(itemModel *model.ItemModel, msg tea.KeyMsg) ItemUpdateResult <span class="cov0" title="0">{
+        if !itemModel.IsSelected() </span><span class="cov0" title="0">{
+                return ItemUpdateResult{Model: itemModel, Cmd: nil}
+        }</span>
+
+        <span class="cov0" title="0">switch msg.String() </span>{
+        case " ":<span class="cov0" title="0">
+                // Generate toggle command
+                return ItemUpdateResult{
+                        Model: itemModel,
+                        Cmd: func() tea.Msg </span><span class="cov0" title="0">{
+                                return model.ItemToggleMsg{ID: itemModel.Todo().ID}
+                        }</span>,
+                }
+        case "e":<span class="cov0" title="0">
+                // Generate edit command
+                return ItemUpdateResult{
+                        Model: itemModel,
+                        Cmd: func() tea.Msg </span><span class="cov0" title="0">{
+                                return model.ItemEditMsg{ID: itemModel.Todo().ID, Editing: true}
+                        }</span>,
+                }
+        case "d":<span class="cov0" title="0">
+                // Generate delete command
+                return ItemUpdateResult{
+                        Model: itemModel,
+                        Cmd: func() tea.Msg </span><span class="cov0" title="0">{
+                                return ItemDeleteMsg{ID: itemModel.Todo().ID}
+                        }</span>,
+                }
+        }
+
+        <span class="cov0" title="0">return ItemUpdateResult{Model: itemModel, Cmd: nil}</span>
+}
+
+// handleItemToggle handles toggle operations for items
+func handleItemToggle(itemModel *model.ItemModel, msg model.ItemToggleMsg) ItemUpdateResult <span class="cov0" title="0">{
+        if msg.ID == itemModel.Todo().ID </span><span class="cov0" title="0">{
+                itemModel.Toggle()
+
+                // Generate async command to persist the toggle
+                return ItemUpdateResult{
+                        Model: itemModel,
+                        Cmd: func() tea.Msg </span><span class="cov0" title="0">{
+                                return ItemToggleAsyncMsg{
+                                        ID:      msg.ID,
+                                        NewDone: itemModel.Todo().Done,
+                                }
+                        }</span>,
+                }
+        }
+
+        <span class="cov0" title="0">return ItemUpdateResult{Model: itemModel, Cmd: nil}</span>
+}
+
+// handleItemEdit handles edit operations for items
+func handleItemEdit(itemModel *model.ItemModel, msg model.ItemEditMsg) ItemUpdateResult <span class="cov0" title="0">{
+        if msg.ID == itemModel.Todo().ID </span><span class="cov0" title="0">{
+                itemModel.SetEditing(msg.Editing)
+
+                // Generate command to notify state model about edit mode change
+                return ItemUpdateResult{
+                        Model: itemModel,
+                        Cmd: func() tea.Msg </span><span class="cov0" title="0">{
+                                return ItemEditStateMsg{
+                                        ID:      msg.ID,
+                                        Editing: msg.Editing,
+                                }
+                        }</span>,
+                }
+        }
+
+        <span class="cov0" title="0">return ItemUpdateResult{Model: itemModel, Cmd: nil}</span>
+}
+
+// handleItemSelect handles selection operations for items
+func handleItemSelect(itemModel *model.ItemModel, msg model.ItemSelectMsg) ItemUpdateResult <span class="cov0" title="0">{
+        if msg.ID == itemModel.Todo().ID </span><span class="cov0" title="0">{
+                itemModel.SetSelected(msg.Selected)
+        }</span>
+
+        <span class="cov0" title="0">return ItemUpdateResult{Model: itemModel, Cmd: nil}</span>
+}
+
+// handleItemUpdate handles update operations for items
+func handleItemUpdate(itemModel *model.ItemModel, msg model.ItemUpdateMsg) ItemUpdateResult <span class="cov0" title="0">{
+        if msg.Todo != nil &amp;&amp; itemModel.Todo() != nil &amp;&amp; msg.Todo.ID == itemModel.Todo().ID </span><span class="cov0" title="0">{
+                itemModel.SetTodo(msg.Todo)
+
+                // Generate command to notify about successful update
+                return ItemUpdateResult{
+                        Model: itemModel,
+                        Cmd: func() tea.Msg </span><span class="cov0" title="0">{
+                                return ItemUpdatedAsyncMsg{Todo: msg.Todo}
+                        }</span>,
+                }
+        }
+
+        <span class="cov0" title="0">return ItemUpdateResult{Model: itemModel, Cmd: nil}</span>
+}
+
+// BatchUpdateItems updates multiple items with the same message
+func BatchUpdateItems(items []*model.ItemModel, msg tea.Msg) ([]tea.Cmd, bool) <span class="cov0" title="0">{
+        var commands []tea.Cmd
+        updated := false
+
+        for _, item := range items </span><span class="cov0" title="0">{
+                result := UpdateItem(item, msg)
+                if result.Cmd != nil </span><span class="cov0" title="0">{
+                        commands = append(commands, result.Cmd)
+                        updated = true
+                }</span>
+        }
+
+        <span class="cov0" title="0">return commands, updated</span>
+}
+
+// CreateItemAddCommand creates a command to add a new item
+func CreateItemAddCommand(description string) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                return ItemAddMsg{Description: description}
+        }</span>
+}
+
+// CreateItemDeleteCommand creates a command to delete an item
+func CreateItemDeleteCommand(id int) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                return ItemDeleteMsg{ID: id}
+        }</span>
+}
+
+// CreateItemToggleCommand creates a command to toggle an item
+func CreateItemToggleCommand(id int) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                return model.ItemToggleMsg{ID: id}
+        }</span>
+}
+
+// CreateItemSelectCommand creates a command to select an item
+func CreateItemSelectCommand(id int, selected bool) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                return model.ItemSelectMsg{ID: id, Selected: selected}
+        }</span>
+}
+
+// Message types for item operations
+
+// ItemAddMsg is sent when a new item should be added
+type ItemAddMsg struct {
+        Description string
+}
+
+// ItemDeleteMsg is sent when an item should be deleted
+type ItemDeleteMsg struct {
+        ID int
+}
+
+// ItemToggleAsyncMsg is sent when an item toggle operation should be persisted
+type ItemToggleAsyncMsg struct {
+        ID      int
+        NewDone bool
+}
+
+// ItemEditStateMsg is sent when an item's edit state changes
+type ItemEditStateMsg struct {
+        ID      int
+        Editing bool
+}
+
+// ItemUpdatedAsyncMsg is sent when an item has been successfully updated
+type ItemUpdatedAsyncMsg struct {
+        Todo *domain.Todo
+}
+</pre>
+		
+		<pre class="file" id="file34" style="display: none">package update
+
+import (
+        tea "github.com/charmbracelet/bubbletea"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+)
+
+// KeyboardHandler handles keyboard input routing based on current mode
+func KeyboardHandler(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        switch stateModel.Mode() </span>{
+        case model.ModeNormal:<span class="cov0" title="0">
+                return handleNormalModeKeys(stateModel, msg)</span>
+        case model.ModeInput:<span class="cov0" title="0">
+                return handleInputModeKeys(stateModel, msg)</span>
+        case model.ModeEdit:<span class="cov0" title="0">
+                return handleEditModeKeys(stateModel, msg)</span>
+        case model.ModeConfirmation:<span class="cov0" title="0">
+                return handleConfirmationModeKeys(stateModel, msg)</span>
+        }
+
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// handleNormalModeKeys handles keyboard input in normal navigation mode
+func handleNormalModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "ctrl+c", "q":<span class="cov0" title="0">
+                return HandlerUpdateResult{Model: stateModel, Cmd: tea.Quit}</span>
+
+        case "up", "k":<span class="cov0" title="0">
+                stateModel.MoveCursorUp()
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "down", "j":<span class="cov0" title="0">
+                stateModel.MoveCursorDown()
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "g":<span class="cov0" title="0">
+                stateModel.MoveCursorToTop()
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "G":<span class="cov0" title="0">
+                stateModel.MoveCursorToBottom()
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case " ":<span class="cov0" title="0">
+                return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.ToggleTodo()}</span>
+
+        case "a":<span class="cov0" title="0">
+                stateModel.SetMode(model.ModeInput)
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "e":<span class="cov0" title="0">
+                if len(stateModel.Todos()) &gt; 0 &amp;&amp; stateModel.Cursor() &gt;= 0 &amp;&amp; stateModel.Cursor() &lt; len(stateModel.Todos()) </span><span class="cov0" title="0">{
+                        stateModel.SetMode(model.ModeEdit)
+                }</span>
+                <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "d":<span class="cov0" title="0">
+                if len(stateModel.Todos()) &gt; 0 &amp;&amp; stateModel.Cursor() &gt;= 0 &amp;&amp; stateModel.Cursor() &lt; len(stateModel.Todos()) </span><span class="cov0" title="0">{
+                        todo := stateModel.Todos()[stateModel.Cursor()].Todo()
+                        if todo != nil </span><span class="cov0" title="0">{
+                                stateModel.SetConfirmation(
+                                        "Delete '"+todo.Description+"'?",
+                                        stateModel.DeleteTodo,
+                                )
+                        }</span>
+                }
+                <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "r":<span class="cov0" title="0">
+                return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.LoadTodos()}</span>
+
+        case "esc":<span class="cov0" title="0">
+                stateModel.ClearError()
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+        }
+
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// handleInputModeKeys handles keyboard input in add todo mode
+func handleInputModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "enter":<span class="cov0" title="0">
+                description := stateModel.Input().Value()
+                if description != "" </span><span class="cov0" title="0">{
+                        stateModel.SetMode(model.ModeNormal)
+                        return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.AddTodo(description)}
+                }</span>
+                <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "esc":<span class="cov0" title="0">
+                stateModel.SetMode(model.ModeNormal)
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+        }
+
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// handleEditModeKeys handles keyboard input in edit todo mode
+func handleEditModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "enter":<span class="cov0" title="0">
+                description := stateModel.Input().Value()
+                if description != "" </span><span class="cov0" title="0">{
+                        return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.UpdateTodo(description)}
+                }</span>
+                <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+
+        case "esc":<span class="cov0" title="0">
+                stateModel.SetMode(model.ModeNormal)
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+        }
+
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// handleConfirmationModeKeys handles keyboard input in confirmation mode
+func handleConfirmationModeKeys(stateModel *model.StateModel, msg tea.KeyMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        switch msg.String() </span>{
+        case "y", "Y":<span class="cov0" title="0">
+                return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.ExecuteConfirmation()}</span>
+
+        case "n", "N", "esc":<span class="cov0" title="0">
+                stateModel.CancelConfirmation()
+                return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+        }
+
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+</pre>
+		
+		<pre class="file" id="file35" style="display: none">package update
+
+import (
+        tea "github.com/charmbracelet/bubbletea"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+)
+
+// OperationsHandler handles todo operations (add, delete, toggle, update)
+type OperationsHandler struct{}
+
+// NewOperationsHandler creates a new operations handler
+func NewOperationsHandler() *OperationsHandler <span class="cov0" title="0">{
+        return &amp;OperationsHandler{}
+}</span>
+
+// HandleTodosLoaded handles the todos loaded message
+func (h *OperationsHandler) HandleTodosLoaded(stateModel *model.StateModel, msg model.TodosLoadedMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        stateModel.SetTodos(msg.Todos)
+        if len(stateModel.Todos()) &gt; 0 </span><span class="cov0" title="0">{
+                stateModel.SetCursor(0)
+        }</span>
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// HandleTodoAdded handles the todo added message
+func (h *OperationsHandler) HandleTodoAdded(stateModel *model.StateModel, msg model.TodoAddedMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        // Reload todos to get the updated list
+        return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.LoadTodos()}
+}</span>
+
+// HandleTodoToggled handles the todo toggled message
+func (h *OperationsHandler) HandleTodoToggled(stateModel *model.StateModel, msg model.TodoToggledMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        // Update the specific todo in our list
+        for _, itemModel := range stateModel.Todos() </span><span class="cov0" title="0">{
+                if itemModel.Todo() != nil &amp;&amp; itemModel.Todo().ID == msg.Todo.ID </span><span class="cov0" title="0">{
+                        itemModel.SetTodo(msg.Todo)
+                        break</span>
+                }
+        }
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// HandleTodoDeleted handles the todo deleted message
+func (h *OperationsHandler) HandleTodoDeleted(stateModel *model.StateModel, msg model.TodoDeletedMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        // Reload todos to get the updated list
+        return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.LoadTodos()}
+}</span>
+
+// HandleTodoUpdated handles the todo updated message
+func (h *OperationsHandler) HandleTodoUpdated(stateModel *model.StateModel, msg model.TodoUpdatedMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        // Update the specific todo in our list
+        for _, itemModel := range stateModel.Todos() </span><span class="cov0" title="0">{
+                if itemModel.Todo() != nil &amp;&amp; itemModel.Todo().ID == msg.Todo.ID </span><span class="cov0" title="0">{
+                        itemModel.SetTodo(msg.Todo)
+                        break</span>
+                }
+        }
+        <span class="cov0" title="0">stateModel.SetMode(model.ModeNormal)
+        return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// HandleError handles error messages
+func (h *OperationsHandler) HandleError(stateModel *model.StateModel, msg model.ErrorMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        stateModel.SetError(msg.Error)
+        stateModel.SetMode(model.ModeNormal)
+        return HandlerUpdateResult{Model: stateModel, Cmd: nil}
+}</span>
+
+// HandleItemAdd handles item add messages from item update layer
+func (h *OperationsHandler) HandleItemAdd(stateModel *model.StateModel, msg ItemAddMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        return HandlerUpdateResult{Model: stateModel, Cmd: stateModel.AddTodo(msg.Description)}
+}</span>
+
+// HandleItemDelete handles item delete messages from item update layer
+func (h *OperationsHandler) HandleItemDelete(stateModel *model.StateModel, msg ItemDeleteMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        // Find the todo by ID and set up confirmation
+        for _, itemModel := range stateModel.Todos() </span><span class="cov0" title="0">{
+                if itemModel.Todo() != nil &amp;&amp; itemModel.Todo().ID == msg.ID </span><span class="cov0" title="0">{
+                        stateModel.SetConfirmation(
+                                "Delete '"+itemModel.Todo().Description+"'?",
+                                stateModel.DeleteTodo,
+                        )
+                        break</span>
+                }
+        }
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// HandleItemToggleAsync handles async toggle operations from item update layer
+func (h *OperationsHandler) HandleItemToggleAsync(stateModel *model.StateModel, msg ItemToggleAsyncMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        // Find and toggle the specific todo
+        for _, itemModel := range stateModel.Todos() </span><span class="cov0" title="0">{
+                if itemModel.Todo() != nil &amp;&amp; itemModel.Todo().ID == msg.ID </span><span class="cov0" title="0">{
+                        // The toggle has already been applied to the model, now persist it
+                        return HandlerUpdateResult{
+                                Model: stateModel,
+                                Cmd:   stateModel.ToggleTodo(),
+                        }
+                }</span>
+        }
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// HandleItemEditState handles edit state changes from item update layer
+func (h *OperationsHandler) HandleItemEditState(stateModel *model.StateModel, msg ItemEditStateMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        if msg.Editing </span><span class="cov0" title="0">{
+                // Find the todo and switch to edit mode
+                for i, itemModel := range stateModel.Todos() </span><span class="cov0" title="0">{
+                        if itemModel.Todo() != nil &amp;&amp; itemModel.Todo().ID == msg.ID </span><span class="cov0" title="0">{
+                                stateModel.SetCursor(i)
+                                stateModel.SetMode(model.ModeEdit)
+                                break</span>
+                        }
+                }
+        } else<span class="cov0" title="0"> {
+                stateModel.SetMode(model.ModeNormal)
+        }</span>
+        <span class="cov0" title="0">return HandlerUpdateResult{Model: stateModel, Cmd: nil}</span>
+}
+
+// HandleItemUpdatedAsync handles async update operations from item update layer
+func (h *OperationsHandler) HandleItemUpdatedAsync(stateModel *model.StateModel, msg ItemUpdatedAsyncMsg) HandlerUpdateResult <span class="cov0" title="0">{
+        // The update has been applied, just acknowledge it
+        return HandlerUpdateResult{Model: stateModel, Cmd: nil}
+}</span>
+
+// CreateModeTransitionCommand creates a command to transition between modes
+func CreateModeTransitionCommand(mode model.Mode) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                return ModeTransitionMsg{Mode: mode}
+        }</span>
+}
+
+// CreateNavigationCommand creates a command for navigation actions
+func CreateNavigationCommand(action NavigationAction, value int) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                return NavigationMsg{Action: action, Value: value}
+        }</span>
+}
+
+// CreateAsyncOperationCommand creates a command for async operations
+func CreateAsyncOperationCommand(operation AsyncOperation, data interface{}) tea.Cmd <span class="cov0" title="0">{
+        return func() tea.Msg </span><span class="cov0" title="0">{
+                return AsyncOperationMsg{Operation: operation, Data: data}
+        }</span>
+}
+
+// Message types for operations
+
+// ModeTransitionMsg is sent when the application should transition between modes
+type ModeTransitionMsg struct {
+        Mode model.Mode
+}
+
+// NavigationMsg is sent for navigation operations
+type NavigationMsg struct {
+        Action NavigationAction
+        Value  int
+}
+
+// NavigationAction represents different navigation actions
+type NavigationAction int
+
+const (
+        NavigationUp NavigationAction = iota
+        NavigationDown
+        NavigationTop
+        NavigationBottom
+        NavigationTo
+)
+
+// AsyncOperationMsg is sent for async operations
+type AsyncOperationMsg struct {
+        Operation AsyncOperation
+        Data      interface{}
+}
+
+// AsyncOperation represents different async operations
+type AsyncOperation int
+
+const (
+        AsyncOperationAdd AsyncOperation = iota
+        AsyncOperationToggle
+        AsyncOperationDelete
+        AsyncOperationUpdate
+        AsyncOperationLoad
+)
+</pre>
+		
+		<pre class="file" id="file36" style="display: none">package view
+
+import (
+        "github.com/charmbracelet/lipgloss"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// FooterView handles the application footer rendering
+type FooterView struct {
+        lipgloss    proxy.Lipgloss
+        footerStyle proxy.Style
+        helpStyle   proxy.Style
+}
+
+// NewFooterView creates a new FooterView with the given lipgloss proxy
+func NewFooterView(lg proxy.Lipgloss) *FooterView <span class="cov0" title="0">{
+        return &amp;FooterView{
+                lipgloss:    lg,
+                footerStyle: lg.NewStyle().Foreground(lipgloss.Color("8")).Padding(0, 1),
+                helpStyle:   lg.NewStyle().Foreground(lipgloss.Color("8")).Italic(true),
+        }
+}</span>
+
+// Render renders the application footer with help text
+func (v *FooterView) Render(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        helpText := v.getHelpText(stateModel.Mode())
+        return v.footerStyle.Width(width).Render(helpText)
+}</span>
+
+// RenderCompact renders a compact footer for smaller terminals
+func (v *FooterView) RenderCompact(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        helpText := v.getCompactHelpText(stateModel.Mode())
+        return v.footerStyle.Width(width).Render(helpText)
+}</span>
+
+// RenderWithScrollIndicator renders footer with scroll indicator
+func (v *FooterView) RenderWithScrollIndicator(stateModel *model.StateModel, width int, scrollIndicator string) string <span class="cov0" title="0">{
+        helpText := v.getHelpText(stateModel.Mode())
+
+        // Combine help text with scroll indicator
+        content := v.lipgloss.JoinVertical(
+                v.lipgloss.Left(),
+                scrollIndicator,
+                helpText,
+        )
+
+        return v.footerStyle.Width(width).Render(content)
+}</span>
+
+// getHelpText returns appropriate help text based on current mode
+func (v *FooterView) getHelpText(mode model.Mode) string <span class="cov0" title="0">{
+        switch mode </span>{
+        case model.ModeInput:<span class="cov0" title="0">
+                return "Enter: Add • Esc: Cancel"</span>
+        case model.ModeEdit:<span class="cov0" title="0">
+                return "Enter: Save • Esc: Cancel"</span>
+        case model.ModeConfirmation:<span class="cov0" title="0">
+                return "y: Yes • n/Esc: No"</span>
+        default:<span class="cov0" title="0">
+                return "↑/k: Up • ↓/j: Down • g: Top • G: Bottom • Space: Toggle • a: Add • e: Edit • d: Delete • r: Refresh • q: Quit"</span>
+        }
+}
+
+// getCompactHelpText returns compact help text for smaller terminals
+func (v *FooterView) getCompactHelpText(mode model.Mode) string <span class="cov0" title="0">{
+        switch mode </span>{
+        case model.ModeInput:<span class="cov0" title="0">
+                return "Enter:Add Esc:Cancel"</span>
+        case model.ModeEdit:<span class="cov0" title="0">
+                return "Enter:Save Esc:Cancel"</span>
+        case model.ModeConfirmation:<span class="cov0" title="0">
+                return "y:Yes n:No"</span>
+        default:<span class="cov0" title="0">
+                return "↑↓:Move Space:Toggle a:Add e:Edit d:Del q:Quit"</span>
+        }
+}
+
+// RenderModeSpecificHelp renders help text specific to the current context
+func (v *FooterView) RenderModeSpecificHelp(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        var helpLines []string
+
+        switch stateModel.Mode() </span>{
+        case model.ModeNormal:<span class="cov0" title="0">
+                helpLines = []string{
+                        "Navigation: ↑/k (up), ↓/j (down), g (top), G (bottom)",
+                        "Actions: Space (toggle), a (add), e (edit), d (delete), r (refresh)",
+                        "Other: q (quit), Esc (clear error)",
+                }</span>
+        case model.ModeInput:<span class="cov0" title="0">
+                helpLines = []string{
+                        "Type your todo description and press Enter to add",
+                        "Press Esc to cancel without adding",
+                }</span>
+        case model.ModeEdit:<span class="cov0" title="0">
+                helpLines = []string{
+                        "Edit the todo description and press Enter to save",
+                        "Press Esc to cancel without saving changes",
+                }</span>
+        case model.ModeConfirmation:<span class="cov0" title="0">
+                helpLines = []string{
+                        "Press 'y' or 'Y' to confirm the action",
+                        "Press 'n', 'N', or Esc to cancel",
+                }</span>
+        }
+
+        <span class="cov0" title="0">content := ""
+        for i, line := range helpLines </span><span class="cov0" title="0">{
+                if i &gt; 0 </span><span class="cov0" title="0">{
+                        content += "\n"
+                }</span>
+                <span class="cov0" title="0">content += v.helpStyle.Render(line)</span>
+        }
+
+        <span class="cov0" title="0">return v.footerStyle.Width(width).Render(content)</span>
+}
+
+// GetHeight returns the height needed for the footer
+func (v *FooterView) GetHeight() int <span class="cov0" title="0">{
+        return 1
+}</span>
+
+// GetExpandedHeight returns the height needed for expanded help
+func (v *FooterView) GetExpandedHeight(mode model.Mode) int <span class="cov0" title="0">{
+        switch mode </span>{
+        case model.ModeNormal:<span class="cov0" title="0">
+                return 3</span>
+        default:<span class="cov0" title="0">
+                return 2</span>
+        }
+}
+
+// SetStyle allows customization of the footer style
+func (v *FooterView) SetStyle(style proxy.Style) <span class="cov0" title="0">{
+        v.footerStyle = style
+}</span>
+
+// SetHelpStyle allows customization of the help text style
+func (v *FooterView) SetHelpStyle(style proxy.Style) <span class="cov0" title="0">{
+        v.helpStyle = style
+}</span>
+</pre>
+		
+		<pre class="file" id="file37" style="display: none">package view
+
+import (
+        "fmt"
+        "strings"
+
+        "github.com/charmbracelet/lipgloss"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// HeaderView handles the application header rendering
+type HeaderView struct {
+        lipgloss    proxy.Lipgloss
+        headerStyle proxy.Style
+}
+
+// NewHeaderView creates a new HeaderView with the given lipgloss proxy
+func NewHeaderView(lg proxy.Lipgloss) *HeaderView <span class="cov0" title="0">{
+        return &amp;HeaderView{
+                lipgloss:    lg,
+                headerStyle: lg.NewStyle().Bold(true).Foreground(lipgloss.Color("12")).Padding(0, 1),
+        }
+}</span>
+
+// Render renders the application header
+func (v *HeaderView) Render(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        title := "GCT - Go Clean-Architecture Todo"
+        todoCount := len(stateModel.Todos())
+        completedCount := v.GetCompletedCount(stateModel.Todos())
+
+        status := fmt.Sprintf("(%d/%d todos)", completedCount, todoCount)
+
+        // Create header with title and status
+        paddingLength := width - len(title) - len(status) - 4
+        if paddingLength &lt; 0 </span><span class="cov0" title="0">{
+                paddingLength = 0
+        }</span>
+        <span class="cov0" title="0">headerContent := v.lipgloss.JoinHorizontal(
+                v.lipgloss.Left(),
+                title,
+                strings.Repeat(" ", paddingLength), // Padding
+                status,
+        )
+
+        return v.headerStyle.Width(width).Render(headerContent)</span>
+}
+
+// RenderCompact renders a compact header for smaller terminals
+func (v *HeaderView) RenderCompact(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        todoCount := len(stateModel.Todos())
+        completedCount := v.GetCompletedCount(stateModel.Todos())
+
+        title := "GCT"
+        status := fmt.Sprintf("(%d/%d)", completedCount, todoCount)
+
+        // Create compact header
+        paddingLength := width - len(title) - len(status) - 4
+        if paddingLength &lt; 0 </span><span class="cov0" title="0">{
+                paddingLength = 0
+        }</span>
+        <span class="cov0" title="0">headerContent := v.lipgloss.JoinHorizontal(
+                v.lipgloss.Left(),
+                title,
+                strings.Repeat(" ", paddingLength),
+                status,
+        )
+
+        return v.headerStyle.Width(width).Render(headerContent)</span>
+}
+
+// RenderWithMode renders header with current mode indication
+func (v *HeaderView) RenderWithMode(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        title := "GCT"
+        todoCount := len(stateModel.Todos())
+        completedCount := v.GetCompletedCount(stateModel.Todos())
+
+        // Add mode indicator
+        modeIndicator := v.getModeIndicator(stateModel.Mode())
+        status := fmt.Sprintf("%s (%d/%d)", modeIndicator, completedCount, todoCount)
+
+        // Create header with mode and status
+        paddingLength := width - len(title) - len(status) - 4
+        if paddingLength &lt; 0 </span><span class="cov0" title="0">{
+                paddingLength = 0
+        }</span>
+        <span class="cov0" title="0">headerContent := v.lipgloss.JoinHorizontal(
+                v.lipgloss.Left(),
+                title,
+                strings.Repeat(" ", paddingLength),
+                status,
+        )
+
+        return v.headerStyle.Width(width).Render(headerContent)</span>
+}
+
+// GetCompletedCount returns the number of completed todos
+func (v *HeaderView) GetCompletedCount(todos []*model.ItemModel) int <span class="cov0" title="0">{
+        count := 0
+        for _, todo := range todos </span><span class="cov0" title="0">{
+                if todo.Todo() != nil &amp;&amp; todo.Todo().Done </span><span class="cov0" title="0">{
+                        count++
+                }</span>
+        }
+        <span class="cov0" title="0">return count</span>
+}
+
+// getModeIndicator returns a visual indicator for the current mode
+func (v *HeaderView) getModeIndicator(mode model.Mode) string <span class="cov0" title="0">{
+        switch mode </span>{
+        case model.ModeInput:<span class="cov0" title="0">
+                return "ADD"</span>
+        case model.ModeEdit:<span class="cov0" title="0">
+                return "EDIT"</span>
+        case model.ModeConfirmation:<span class="cov0" title="0">
+                return "CONFIRM"</span>
+        default:<span class="cov0" title="0">
+                return "NORMAL"</span>
+        }
+}
+
+// GetHeight returns the height needed for the header
+func (v *HeaderView) GetHeight() int <span class="cov0" title="0">{
+        return 1
+}</span>
+
+// SetStyle allows customization of the header style
+func (v *HeaderView) SetStyle(style proxy.Style) <span class="cov0" title="0">{
+        v.headerStyle = style
+}</span>
+</pre>
+		
+		<pre class="file" id="file38" style="display: none">package view
+
+import (
+        "github.com/charmbracelet/lipgloss"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// ItemView handles rendering of individual todo items
+type ItemView struct {
+        lipgloss proxy.Lipgloss
+
+        // Styles for different item states
+        normalStyle    proxy.Style
+        selectedStyle  proxy.Style
+        completedStyle proxy.Style
+        editingStyle   proxy.Style
+}
+
+// NewItemView creates a new ItemView with the given lipgloss proxy
+func NewItemView(lg proxy.Lipgloss) *ItemView <span class="cov0" title="0">{
+        return &amp;ItemView{
+                lipgloss:       lg,
+                normalStyle:    lg.NewStyle().Padding(0, 1),
+                selectedStyle:  lg.NewStyle().Padding(0, 1).Background(lipgloss.Color("240")),
+                completedStyle: lg.NewStyle().Padding(0, 1).Foreground(lipgloss.Color("240")),
+                editingStyle:   lg.NewStyle().Padding(0, 1).Border(lipgloss.RoundedBorder(), true),
+        }
+}</span>
+
+// RenderItem renders a single todo item with appropriate styling
+func (v *ItemView) RenderItem(item *model.ItemModel, width int) string <span class="cov0" title="0">{
+        if item == nil || item.Todo() == nil </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        <span class="cov0" title="0">todo := item.Todo()
+
+        // Status indicator
+        status := "[ ]"
+        if todo.Done </span><span class="cov0" title="0">{
+                status = "[✓]"
+        }</span>
+
+        // Build the content
+        <span class="cov0" title="0">content := status + " " + todo.Description
+
+        // Apply styling based on item state
+        style := v.getItemStyle(item)
+
+        // Adjust width for responsive layout
+        if width &gt; 0 </span><span class="cov0" title="0">{
+                style = style.Width(width - 2) // Account for padding
+        }</span>
+
+        <span class="cov0" title="0">return style.Render(content)</span>
+}
+
+// RenderItemWithSelection renders an item with selection highlighting
+func (v *ItemView) RenderItemWithSelection(item *model.ItemModel, isSelected bool, width int) string <span class="cov0" title="0">{
+        if item == nil || item.Todo() == nil </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        <span class="cov0" title="0">todo := item.Todo()
+
+        // Status indicator with better Unicode symbols
+        status := "○"
+        if todo.Done </span><span class="cov0" title="0">{
+                status = "●"
+        }</span>
+
+        // Selection indicator
+        <span class="cov0" title="0">cursor := "  "
+        if isSelected </span><span class="cov0" title="0">{
+                cursor = "▶ "
+        }</span>
+
+        // Build the content
+        <span class="cov0" title="0">content := cursor + status + " " + todo.Description
+
+        // Apply styling
+        style := v.getItemStyleWithSelection(item, isSelected)
+
+        // Adjust width for responsive layout
+        if width &gt; 0 </span><span class="cov0" title="0">{
+                style = style.Width(width - 2)
+        }</span>
+
+        <span class="cov0" title="0">return style.Render(content)</span>
+}
+
+// RenderCompactItem renders a compact version of the item for smaller terminals
+func (v *ItemView) RenderCompactItem(item *model.ItemModel, isSelected bool, width int) string <span class="cov0" title="0">{
+        if item == nil || item.Todo() == nil </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        <span class="cov0" title="0">todo := item.Todo()
+
+        // Compact status indicator
+        status := "□"
+        if todo.Done </span><span class="cov0" title="0">{
+                status = "■"
+        }</span>
+
+        // Selection indicator
+        <span class="cov0" title="0">cursor := " "
+        if isSelected </span><span class="cov0" title="0">{
+                cursor = "&gt;"
+        }</span>
+
+        // Truncate description if too long
+        <span class="cov0" title="0">description := todo.Description
+        maxDescLength := width - 10 // Account for cursor, status, and padding
+        if maxDescLength &gt; 0 &amp;&amp; len(description) &gt; maxDescLength </span><span class="cov0" title="0">{
+                description = description[:maxDescLength-3] + "..."
+        }</span>
+
+        <span class="cov0" title="0">content := cursor + status + " " + description
+
+        // Apply minimal styling for compact view
+        style := v.lipgloss.NewStyle()
+        if isSelected </span><span class="cov0" title="0">{
+                style = style.Bold(true)
+        }</span>
+        <span class="cov0" title="0">if todo.Done </span><span class="cov0" title="0">{
+                style = style.Foreground(lipgloss.Color("240")) // Gray color
+        }</span>
+
+        <span class="cov0" title="0">return style.Render(content)</span>
+}
+
+// getItemStyle returns the appropriate style for an item based on its state
+func (v *ItemView) getItemStyle(item *model.ItemModel) proxy.Style <span class="cov0" title="0">{
+        if item.IsEditing() </span><span class="cov0" title="0">{
+                return v.editingStyle
+        }</span>
+
+        <span class="cov0" title="0">if item.Todo().Done </span><span class="cov0" title="0">{
+                return v.completedStyle
+        }</span>
+
+        <span class="cov0" title="0">if item.IsSelected() </span><span class="cov0" title="0">{
+                return v.selectedStyle
+        }</span>
+
+        <span class="cov0" title="0">return v.normalStyle</span>
+}
+
+// getItemStyleWithSelection returns the appropriate style with selection highlighting
+func (v *ItemView) getItemStyleWithSelection(item *model.ItemModel, isSelected bool) proxy.Style <span class="cov0" title="0">{
+        baseStyle := v.lipgloss.NewStyle().Padding(0, 1)
+
+        if item.IsEditing() </span><span class="cov0" title="0">{
+                baseStyle = baseStyle.Border(lipgloss.RoundedBorder(), true)
+        }</span>
+
+        <span class="cov0" title="0">if isSelected </span><span class="cov0" title="0">{
+                baseStyle = baseStyle.Background(lipgloss.Color("240")).
+                        Foreground(lipgloss.Color("15")) // Highlight selected item
+        }</span>
+
+        <span class="cov0" title="0">if item.Todo().Done </span><span class="cov0" title="0">{
+                baseStyle = baseStyle.Foreground(lipgloss.Color("240")).
+                        Strikethrough(true) // Gray and strikethrough for completed
+        }</span>
+
+        <span class="cov0" title="0">return baseStyle</span>
+}
+
+// GetItemHeight returns the height needed to render an item
+func (v *ItemView) GetItemHeight(item *model.ItemModel) int <span class="cov0" title="0">{
+        if item == nil </span><span class="cov0" title="0">{
+                return 0
+        }</span>
+
+        // Most items are single line, but editing mode might need more space
+        <span class="cov0" title="0">if item.IsEditing() </span><span class="cov0" title="0">{
+                return 3 // Account for border
+        }</span>
+
+        <span class="cov0" title="0">return 1</span>
+}
+
+// GetMinimumWidth returns the minimum width needed to render items properly
+func (v *ItemView) GetMinimumWidth() int <span class="cov0" title="0">{
+        return 20 // Minimum width for reasonable display
+}</span>
+
+// CreateStatusIndicator creates a styled status indicator
+func (v *ItemView) CreateStatusIndicator(done bool, selected bool) string <span class="cov0" title="0">{
+        var indicator string
+        var style proxy.Style
+
+        if done </span><span class="cov0" title="0">{
+                indicator = "✓"
+                style = v.lipgloss.NewStyle().Foreground(lipgloss.Color("2")) // Green
+        }</span> else<span class="cov0" title="0"> {
+                indicator = " "
+                style = v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")) // Gray
+        }</span>
+
+        <span class="cov0" title="0">if selected </span><span class="cov0" title="0">{
+                style = style.Bold(true)
+        }</span>
+
+        <span class="cov0" title="0">return "[" + style.Render(indicator) + "]"</span>
+}
+
+// CreateSelectionIndicator creates a selection cursor indicator
+func (v *ItemView) CreateSelectionIndicator(selected bool) string <span class="cov0" title="0">{
+        if selected </span><span class="cov0" title="0">{
+                return v.lipgloss.NewStyle().
+                        Foreground(lipgloss.Color("12")).
+                        Bold(true).
+                        Render("▶")
+        }</span>
+        <span class="cov0" title="0">return " "</span>
+}
+</pre>
+		
+		<pre class="file" id="file39" style="display: none">package view
+
+import (
+        "fmt"
+        "strings"
+
+        "github.com/charmbracelet/lipgloss"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// LayoutView handles the main application layout rendering
+type LayoutView struct {
+        lipgloss   proxy.Lipgloss
+        headerView *HeaderView
+        footerView *FooterView
+        listView   *ListView
+        itemView   *ItemView
+
+        // Layout styles
+        contentStyle proxy.Style
+        inputStyle   proxy.Style
+        errorStyle   proxy.Style
+        confirmStyle proxy.Style
+        helpStyle    proxy.Style
+}
+
+// NewLayoutView creates a new LayoutView with the given dependencies
+func NewLayoutView(lg proxy.Lipgloss, itemView *ItemView) *LayoutView <span class="cov0" title="0">{
+        headerView := NewHeaderView(lg)
+        footerView := NewFooterView(lg)
+        listView := NewListView(lg, itemView)
+
+        return &amp;LayoutView{
+                lipgloss:     lg,
+                headerView:   headerView,
+                footerView:   footerView,
+                listView:     listView,
+                itemView:     itemView,
+                contentStyle: lg.NewStyle().Padding(1, 2),
+                inputStyle:   lg.NewStyle().Border(lipgloss.RoundedBorder(), true).Padding(0, 1),
+                errorStyle:   lg.NewStyle().Foreground(lipgloss.Color("1")).Bold(true).Padding(0, 1),
+                confirmStyle: lg.NewStyle().Foreground(lipgloss.Color("3")).Bold(true).Padding(0, 1),
+                helpStyle:    lg.NewStyle().Foreground(lipgloss.Color("8")).Italic(true),
+        }
+}</span>
+
+// Render renders the complete application layout
+func (v *LayoutView) Render(stateModel *model.StateModel) string <span class="cov0" title="0">{
+        width := stateModel.Width()
+        height := stateModel.Height()
+
+        // Build layout components using new component structure
+        header := v.headerView.Render(stateModel, width)
+        content := v.renderContent(stateModel, width, height-4) // Reserve space for header and footer
+        footer := v.footerView.Render(stateModel, width)
+
+        // Combine components vertically
+        return v.lipgloss.JoinVertical(
+                v.lipgloss.Left(),
+                header,
+                content,
+                footer,
+        )
+}</span>
+
+// renderContent renders the main content area
+func (v *LayoutView) renderContent(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        switch stateModel.Mode() </span>{
+        case model.ModeInput:<span class="cov0" title="0">
+                return v.renderInputMode(stateModel, width, height)</span>
+        case model.ModeEdit:<span class="cov0" title="0">
+                return v.renderEditMode(stateModel, width, height)</span>
+        case model.ModeConfirmation:<span class="cov0" title="0">
+                return v.renderConfirmationMode(stateModel, width, height)</span>
+        default:<span class="cov0" title="0">
+                return v.renderNormalMode(stateModel, width, height)</span>
+        }
+}
+
+// renderNormalMode renders the normal todo list view
+func (v *LayoutView) renderNormalMode(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        // Use the new ListView component
+        content := v.listView.Render(stateModel, width, height)
+
+        // Add error message if present
+        if errorMsg := stateModel.ErrorMessage(); errorMsg != "" </span><span class="cov0" title="0">{
+                content += "\n\n" + v.errorStyle.Render("Error: "+errorMsg)
+        }</span>
+
+        <span class="cov0" title="0">return content</span>
+}
+
+// renderInputMode renders the add todo input mode
+func (v *LayoutView) renderInputMode(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        prompt := "Add new todo:"
+        inputField := stateModel.Input().View()
+
+        content := v.lipgloss.JoinVertical(
+                v.lipgloss.Left(),
+                prompt,
+                "",
+                v.inputStyle.Width(width-6).Render(inputField),
+                "",
+                v.helpStyle.Render("Press Enter to add, Esc to cancel"),
+        )
+
+        return v.contentStyle.
+                Width(width).
+                Height(height).
+                AlignVertical(v.lipgloss.Center()).
+                Render(content)
+}</span>
+
+// renderEditMode renders the edit todo mode
+func (v *LayoutView) renderEditMode(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        prompt := "Edit todo:"
+        inputField := stateModel.Input().View()
+
+        // Show current todo being edited
+        currentTodo := ""
+        if cursor := stateModel.Cursor(); cursor &gt;= 0 &amp;&amp; cursor &lt; len(stateModel.Todos()) </span><span class="cov0" title="0">{
+                if todo := stateModel.Todos()[cursor].Todo(); todo != nil </span><span class="cov0" title="0">{
+                        currentTodo = fmt.Sprintf("Current: %s", todo.Description)
+                }</span>
+        }
+
+        <span class="cov0" title="0">content := v.lipgloss.JoinVertical(
+                v.lipgloss.Left(),
+                prompt,
+                v.helpStyle.Render(currentTodo),
+                "",
+                v.inputStyle.Width(width-6).Render(inputField),
+                "",
+                v.helpStyle.Render("Press Enter to save, Esc to cancel"),
+        )
+
+        return v.contentStyle.
+                Width(width).
+                Height(height).
+                AlignVertical(v.lipgloss.Center()).
+                Render(content)</span>
+}
+
+// renderConfirmationMode renders the confirmation dialog
+func (v *LayoutView) renderConfirmationMode(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        message := stateModel.ConfirmationMessage()
+
+        content := v.lipgloss.JoinVertical(
+                v.lipgloss.Center(),
+                v.confirmStyle.Render(message),
+                "",
+                v.helpStyle.Render("Press 'y' to confirm, 'n' or Esc to cancel"),
+        )
+
+        return v.contentStyle.
+                Width(width).
+                Height(height).
+                AlignHorizontal(v.lipgloss.Center()).
+                AlignVertical(v.lipgloss.Center()).
+                Render(content)
+}</span>
+
+// RenderCompact renders a compact version of the layout for smaller terminals
+func (v *LayoutView) RenderCompact(stateModel *model.StateModel) string <span class="cov0" title="0">{
+        width := stateModel.Width()
+        height := stateModel.Height()
+
+        // Use new component structure for compact rendering
+        header := v.headerView.RenderCompact(stateModel, width)
+
+        // Compact content
+        var content string
+        switch stateModel.Mode() </span>{
+        case model.ModeInput:<span class="cov0" title="0">
+                content = "Add: " + stateModel.Input().View()</span>
+        case model.ModeEdit:<span class="cov0" title="0">
+                content = "Edit: " + stateModel.Input().View()</span>
+        case model.ModeConfirmation:<span class="cov0" title="0">
+                content = stateModel.ConfirmationMessage() + " (y/n)"</span>
+        default:<span class="cov0" title="0">
+                content = v.listView.RenderCompact(stateModel, width, height-2)</span>
+        }
+
+        // Use new component structure for compact footer
+        <span class="cov0" title="0">footer := v.footerView.RenderCompact(stateModel, width)
+
+        return v.lipgloss.JoinVertical(
+                v.lipgloss.Left(),
+                header,
+                content,
+                footer,
+        )</span>
+}
+
+// GetMinimumSize returns the minimum terminal size needed for proper display
+func (v *LayoutView) GetMinimumSize() (width, height int) <span class="cov0" title="0">{
+        return 40, 10 // Minimum 40x10 for reasonable display
+}</span>
+
+// IsCompactMode determines if compact mode should be used based on terminal size
+func (v *LayoutView) IsCompactMode(width, height int) bool <span class="cov0" title="0">{
+        minWidth, minHeight := v.GetMinimumSize()
+        return width &lt; minWidth || height &lt; minHeight
+}</span>
+
+// RenderScrollIndicator renders scroll indicators when content is scrolled
+func (v *LayoutView) RenderScrollIndicator(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        todos := stateModel.Todos()
+        cursor := stateModel.Cursor()
+
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        // Calculate scroll position
+        <span class="cov0" title="0">scrollPercent := float64(cursor) / float64(len(todos)-1)
+        if len(todos) == 1 </span><span class="cov0" title="0">{
+                scrollPercent = 0
+        }</span>
+
+        // Create scroll bar
+        <span class="cov0" title="0">barWidth := width - 4
+        if barWidth &lt; 10 </span><span class="cov0" title="0">{
+                barWidth = 10
+        }</span>
+
+        <span class="cov0" title="0">position := int(scrollPercent * float64(barWidth-1))
+
+        scrollBar := strings.Repeat("─", barWidth)
+        if position &gt;= 0 &amp;&amp; position &lt; len(scrollBar) </span><span class="cov0" title="0">{
+                scrollBar = scrollBar[:position] + "●" + scrollBar[position+1:]
+        }</span>
+
+        <span class="cov0" title="0">return v.helpStyle.Render(scrollBar)</span>
+}
+</pre>
+		
+		<pre class="file" id="file40" style="display: none">package view
+
+import (
+        "strings"
+
+        "github.com/charmbracelet/lipgloss"
+        "github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+        "github.com/yanosea/gct/pkg/proxy"
+)
+
+// ListView handles the todo list rendering
+type ListView struct {
+        lipgloss     proxy.Lipgloss
+        itemView     *ItemView
+        contentStyle proxy.Style
+        emptyStyle   proxy.Style
+}
+
+// NewListView creates a new ListView with the given dependencies
+func NewListView(lg proxy.Lipgloss, itemView *ItemView) *ListView <span class="cov0" title="0">{
+        return &amp;ListView{
+                lipgloss:     lg,
+                itemView:     itemView,
+                contentStyle: lg.NewStyle().Padding(1, 2),
+                emptyStyle:   lg.NewStyle().Foreground(lipgloss.Color("8")).Italic(true),
+        }
+}</span>
+
+// Render renders the todo list
+func (v *ListView) Render(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        todos := stateModel.Todos()
+
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return v.renderEmptyState(width, height)
+        }</span>
+
+        <span class="cov0" title="0">return v.renderTodoList(stateModel, width, height)</span>
+}
+
+// RenderCompact renders a compact version of the todo list
+func (v *ListView) RenderCompact(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        todos := stateModel.Todos()
+
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return v.emptyStyle.Render("No todos")
+        }</span>
+
+        <span class="cov0" title="0">var todoLines []string
+        cursor := stateModel.Cursor()
+        visibleHeight := height - 1
+
+        startIndex, endIndex := v.CalculateVisibleRange(cursor, len(todos), visibleHeight)
+
+        for i := startIndex; i &lt; endIndex &amp;&amp; i &lt; len(todos); i++ </span><span class="cov0" title="0">{
+                isSelected := i == cursor
+                todoLine := v.itemView.RenderCompactItem(todos[i], isSelected, width)
+                todoLines = append(todoLines, todoLine)
+        }</span>
+
+        <span class="cov0" title="0">return strings.Join(todoLines, "\n")</span>
+}
+
+// RenderWithPagination renders the list with pagination indicators
+func (v *ListView) RenderWithPagination(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        todos := stateModel.Todos()
+
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return v.renderEmptyState(width, height)
+        }</span>
+
+        <span class="cov0" title="0">cursor := stateModel.Cursor()
+        visibleHeight := height - 4 // Account for pagination indicators
+
+        // Calculate pagination
+        startIndex, endIndex := v.CalculateVisibleRange(cursor, len(todos), visibleHeight)
+
+        // Render todos
+        var todoLines []string
+        for i := startIndex; i &lt; endIndex &amp;&amp; i &lt; len(todos); i++ </span><span class="cov0" title="0">{
+                isSelected := i == cursor
+                todoLine := v.itemView.RenderItemWithSelection(todos[i], isSelected, width-4)
+                todoLines = append(todoLines, todoLine)
+        }</span>
+
+        <span class="cov0" title="0">content := strings.Join(todoLines, "\n")
+
+        // Add pagination indicators
+        if startIndex &gt; 0 </span><span class="cov0" title="0">{
+                content = v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")).Render("↑ More items above") + "\n" + content
+        }</span>
+
+        <span class="cov0" title="0">if endIndex &lt; len(todos) </span><span class="cov0" title="0">{
+                content = content + "\n" + v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")).Render("↓ More items below")
+        }</span>
+
+        <span class="cov0" title="0">return v.contentStyle.Width(width).Height(height).Render(content)</span>
+}
+
+// renderEmptyState renders the empty state when no todos exist
+func (v *ListView) renderEmptyState(width, height int) string <span class="cov0" title="0">{
+        emptyMessage := "No todos yet. Press 'a' to add your first todo!"
+
+        return v.contentStyle.
+                Width(width).
+                Height(height).
+                AlignHorizontal(v.lipgloss.Center()).
+                AlignVertical(v.lipgloss.Center()).
+                Render(v.emptyStyle.Render(emptyMessage))
+}</span>
+
+// renderTodoList renders the main todo list
+func (v *ListView) renderTodoList(stateModel *model.StateModel, width, height int) string <span class="cov0" title="0">{
+        todos := stateModel.Todos()
+        cursor := stateModel.Cursor()
+
+        // Calculate visible range for scrolling
+        visibleHeight := height - 2 // Account for padding
+        startIndex, endIndex := v.CalculateVisibleRange(cursor, len(todos), visibleHeight)
+
+        var todoLines []string
+        for i := startIndex; i &lt; endIndex &amp;&amp; i &lt; len(todos); i++ </span><span class="cov0" title="0">{
+                isSelected := i == cursor
+                todoLine := v.itemView.RenderItemWithSelection(todos[i], isSelected, width-4)
+                todoLines = append(todoLines, todoLine)
+        }</span>
+
+        <span class="cov0" title="0">content := strings.Join(todoLines, "\n")
+
+        return v.contentStyle.Width(width).Height(height).Render(content)</span>
+}
+
+// CalculateVisibleRange calculates which todos should be visible based on cursor position
+func (v *ListView) CalculateVisibleRange(cursor, totalItems, visibleHeight int) (int, int) <span class="cov0" title="0">{
+        if totalItems &lt;= visibleHeight </span><span class="cov0" title="0">{
+                return 0, totalItems
+        }</span>
+
+        // Keep cursor in the middle of the visible area when possible
+        <span class="cov0" title="0">halfHeight := visibleHeight / 2
+
+        startIndex := cursor - halfHeight
+        if startIndex &lt; 0 </span><span class="cov0" title="0">{
+                startIndex = 0
+        }</span>
+
+        <span class="cov0" title="0">endIndex := startIndex + visibleHeight
+        if endIndex &gt; totalItems </span><span class="cov0" title="0">{
+                endIndex = totalItems
+                startIndex = endIndex - visibleHeight
+                if startIndex &lt; 0 </span><span class="cov0" title="0">{
+                        startIndex = 0
+                }</span>
+        }
+
+        <span class="cov0" title="0">return startIndex, endIndex</span>
+}
+
+// RenderScrollIndicator renders scroll indicators when content is scrolled
+func (v *ListView) RenderScrollIndicator(stateModel *model.StateModel, width int) string <span class="cov0" title="0">{
+        todos := stateModel.Todos()
+        cursor := stateModel.Cursor()
+
+        if len(todos) == 0 </span><span class="cov0" title="0">{
+                return ""
+        }</span>
+
+        // Calculate scroll position
+        <span class="cov0" title="0">scrollPercent := float64(cursor) / float64(len(todos)-1)
+        if len(todos) == 1 </span><span class="cov0" title="0">{
+                scrollPercent = 0
+        }</span>
+
+        // Create scroll bar
+        <span class="cov0" title="0">barWidth := width - 4
+        if barWidth &lt; 10 </span><span class="cov0" title="0">{
+                barWidth = 10
+        }</span>
+
+        <span class="cov0" title="0">position := int(scrollPercent * float64(barWidth-1))
+
+        scrollBar := strings.Repeat("─", barWidth)
+        if position &gt;= 0 &amp;&amp; position &lt; len(scrollBar) </span><span class="cov0" title="0">{
+                scrollBar = scrollBar[:position] + "●" + scrollBar[position+1:]
+        }</span>
+
+        <span class="cov0" title="0">return v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")).Render(scrollBar)</span>
+}
+
+// GetVisibleItemCount returns the number of items that can be displayed in the given height
+func (v *ListView) GetVisibleItemCount(height int) int <span class="cov0" title="0">{
+        return height - 2 // Account for padding
+}</span>
+
+// GetTotalHeight returns the total height needed to display all items
+func (v *ListView) GetTotalHeight(stateModel *model.StateModel) int <span class="cov0" title="0">{
+        todos := stateModel.Todos()
+        totalHeight := 0
+
+        for _, todo := range todos </span><span class="cov0" title="0">{
+                totalHeight += v.itemView.GetItemHeight(todo)
+        }</span>
+
+        <span class="cov0" title="0">return totalHeight + 2</span> // Account for padding
+}
+
+// IsScrollable returns whether the list needs scrolling
+func (v *ListView) IsScrollable(stateModel *model.StateModel, height int) bool <span class="cov0" title="0">{
+        return v.GetTotalHeight(stateModel) &gt; height
+}</span>
+
+// SetContentStyle allows customization of the content style
+func (v *ListView) SetContentStyle(style proxy.Style) <span class="cov0" title="0">{
+        v.contentStyle = style
+}</span>
+
+// SetEmptyStyle allows customization of the empty state style
+func (v *ListView) SetEmptyStyle(style proxy.Style) <span class="cov0" title="0">{
+        v.emptyStyle = style
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
