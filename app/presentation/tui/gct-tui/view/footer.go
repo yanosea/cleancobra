@@ -1,37 +1,37 @@
 package view
 
 import (
-	"github.com/charmbracelet/lipgloss"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // FooterView handles the application footer rendering
 type FooterView struct {
-	lipgloss    proxy.Lipgloss
-	footerStyle proxy.Style
-	helpStyle   proxy.Style
+	footerStyleProxy proxy.Style
+	helpStyleProxy   proxy.Style
+	lipglossProxy    proxy.Lipgloss
 }
 
 // NewFooterView creates a new FooterView with the given lipgloss proxy
-func NewFooterView(lg proxy.Lipgloss) *FooterView {
+func NewFooterView(lipgrossProxy proxy.Lipgloss) *FooterView {
 	return &FooterView{
-		lipgloss:    lg,
-		footerStyle: lg.NewStyle().Foreground(lipgloss.Color("8")).Padding(0, 1),
-		helpStyle:   lg.NewStyle().Foreground(lipgloss.Color("8")).Italic(true),
+		lipglossProxy:    lipgrossProxy,
+		footerStyleProxy: lipgrossProxy.NewStyle().Foreground(lipgrossProxy.Color("8")).Padding(0, 1),
+		helpStyleProxy:   lipgrossProxy.NewStyle().Foreground(lipgrossProxy.Color("8")).Italic(true),
 	}
 }
 
 // Render renders the application footer with help text
 func (v *FooterView) Render(stateModel *model.StateModel, width int) string {
 	helpText := v.getHelpText(stateModel.Mode())
-	return v.footerStyle.Width(width).Render(helpText)
+	return v.footerStyleProxy.Width(width).Render(helpText)
 }
 
 // RenderCompact renders a compact footer for smaller terminals
 func (v *FooterView) RenderCompact(stateModel *model.StateModel, width int) string {
 	helpText := v.getCompactHelpText(stateModel.Mode())
-	return v.footerStyle.Width(width).Render(helpText)
+	return v.footerStyleProxy.Width(width).Render(helpText)
 }
 
 // RenderWithScrollIndicator renders footer with scroll indicator
@@ -39,13 +39,13 @@ func (v *FooterView) RenderWithScrollIndicator(stateModel *model.StateModel, wid
 	helpText := v.getHelpText(stateModel.Mode())
 
 	// Combine help text with scroll indicator
-	content := v.lipgloss.JoinVertical(
-		v.lipgloss.Left(),
+	content := v.lipglossProxy.JoinVertical(
+		v.lipglossProxy.Left(),
 		scrollIndicator,
 		helpText,
 	)
 
-	return v.footerStyle.Width(width).Render(content)
+	return v.footerStyleProxy.Width(width).Render(content)
 }
 
 // getHelpText returns appropriate help text based on current mode
@@ -109,10 +109,10 @@ func (v *FooterView) RenderModeSpecificHelp(stateModel *model.StateModel, width 
 		if i > 0 {
 			content += "\n"
 		}
-		content += v.helpStyle.Render(line)
+		content += v.helpStyleProxy.Render(line)
 	}
 
-	return v.footerStyle.Width(width).Render(content)
+	return v.footerStyleProxy.Width(width).Render(content)
 }
 
 // GetHeight returns the height needed for the footer
@@ -132,10 +132,10 @@ func (v *FooterView) GetExpandedHeight(mode model.Mode) int {
 
 // SetStyle allows customization of the footer style
 func (v *FooterView) SetStyle(style proxy.Style) {
-	v.footerStyle = style
+	v.footerStyleProxy = style
 }
 
 // SetHelpStyle allows customization of the help text style
 func (v *FooterView) SetHelpStyle(style proxy.Style) {
-	v.helpStyle = style
+	v.helpStyleProxy = style
 }

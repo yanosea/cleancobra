@@ -1,47 +1,49 @@
 package view
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/charmbracelet/lipgloss"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // LayoutView handles the main application layout rendering
 type LayoutView struct {
-	lipgloss   proxy.Lipgloss
-	headerView *HeaderView
-	footerView *FooterView
-	listView   *ListView
-	itemView   *ItemView
-
-	// Layout styles
-	contentStyle proxy.Style
-	inputStyle   proxy.Style
-	errorStyle   proxy.Style
-	confirmStyle proxy.Style
-	helpStyle    proxy.Style
+	confirmStyleProxy proxy.Style
+	contentStyleProxy proxy.Style
+	errorStyleProxy   proxy.Style
+	fmtProxy          proxy.Fmt
+	helpStyleProxy    proxy.Style
+	inputStyleProxy   proxy.Style
+	lipglossProxy     proxy.Lipgloss
+	stringsProxy      proxy.Strings
+	footerView        *FooterView
+	headerView        *HeaderView
+	itemView          *ItemView
+	listView          *ListView
 }
 
 // NewLayoutView creates a new LayoutView with the given dependencies
-func NewLayoutView(lg proxy.Lipgloss, itemView *ItemView) *LayoutView {
-	headerView := NewHeaderView(lg)
-	footerView := NewFooterView(lg)
-	listView := NewListView(lg, itemView)
-
+func NewLayoutView(
+	fmtProxy proxy.Fmt,
+	lipglossProxy proxy.Lipgloss,
+	stringsProxy proxy.Strings,
+	itemView *ItemView,
+) *LayoutView {
+	headerView := NewHeaderView(fmtProxy, lipglossProxy, stringsProxy)
+	footerView := NewFooterView(lipglossProxy)
+	listView := NewListView(lipglossProxy, stringsProxy, itemView)
 	return &LayoutView{
-		lipgloss:     lg,
-		headerView:   headerView,
-		footerView:   footerView,
-		listView:     listView,
-		itemView:     itemView,
-		contentStyle: lg.NewStyle().Padding(1, 2),
-		inputStyle:   lg.NewStyle().Border(lipgloss.RoundedBorder(), true).Padding(0, 1),
-		errorStyle:   lg.NewStyle().Foreground(lipgloss.Color("1")).Bold(true).Padding(0, 1),
-		confirmStyle: lg.NewStyle().Foreground(lipgloss.Color("3")).Bold(true).Padding(0, 1),
-		helpStyle:    lg.NewStyle().Foreground(lipgloss.Color("8")).Italic(true),
+		confirmStyleProxy: lipglossProxy.NewStyle().Foreground(lipglossProxy.Color("3")).Bold(true).Padding(0, 1),
+		contentStyleProxy: lipglossProxy.NewStyle().Padding(1, 2),
+		errorStyleProxy:   lipglossProxy.NewStyle().Foreground(lipglossProxy.Color("1")).Bold(true).Padding(0, 1),
+		fmtProxy:          fmtProxy,
+		helpStyleProxy:    lipglossProxy.NewStyle().Foreground(lipglossProxy.Color("8")).Italic(true),
+		inputStyleProxy:   lipglossProxy.NewStyle().Border(lipglossProxy.RoundedBorder(), true).Padding(0, 1),
+		lipglossProxy:     lipglossProxy,
+		footerView:        footerView,
+		headerView:        headerView,
+		itemView:          itemView,
+		listView:          listView,
 	}
 }
 
@@ -56,8 +58,8 @@ func (v *LayoutView) Render(stateModel *model.StateModel) string {
 	footer := v.footerView.Render(stateModel, width)
 
 	// Combine components vertically
-	return v.lipgloss.JoinVertical(
-		v.lipgloss.Left(),
+	return v.lipglossProxy.JoinVertical(
+		v.lipglossProxy.Left(),
 		header,
 		content,
 		footer,
@@ -85,7 +87,7 @@ func (v *LayoutView) renderNormalMode(stateModel *model.StateModel, width, heigh
 
 	// Add error message if present
 	if errorMsg := stateModel.ErrorMessage(); errorMsg != "" {
-		content += "\n\n" + v.errorStyle.Render("Error: "+errorMsg)
+		content += "\n\n" + v.errorStyleProxy.Render("Error: "+errorMsg)
 	}
 
 	return content
@@ -96,19 +98,19 @@ func (v *LayoutView) renderInputMode(stateModel *model.StateModel, width, height
 	prompt := "Add new todo:"
 	inputField := stateModel.Input().View()
 
-	content := v.lipgloss.JoinVertical(
-		v.lipgloss.Left(),
+	content := v.lipglossProxy.JoinVertical(
+		v.lipglossProxy.Left(),
 		prompt,
 		"",
-		v.inputStyle.Width(width-6).Render(inputField),
+		v.inputStyleProxy.Width(width-6).Render(inputField),
 		"",
-		v.helpStyle.Render("Press Enter to add, Esc to cancel"),
+		v.helpStyleProxy.Render("Press Enter to add, Esc to cancel"),
 	)
 
-	return v.contentStyle.
+	return v.contentStyleProxy.
 		Width(width).
 		Height(height).
-		AlignVertical(v.lipgloss.Center()).
+		AlignVertical(v.lipglossProxy.Center()).
 		Render(content)
 }
 
@@ -121,24 +123,24 @@ func (v *LayoutView) renderEditMode(stateModel *model.StateModel, width, height 
 	currentTodo := ""
 	if cursor := stateModel.Cursor(); cursor >= 0 && cursor < len(stateModel.Todos()) {
 		if todo := stateModel.Todos()[cursor].Todo(); todo != nil {
-			currentTodo = fmt.Sprintf("Current: %s", todo.Description)
+			currentTodo = v.fmtProxy.Sprintf("Current: %s", todo.Description)
 		}
 	}
 
-	content := v.lipgloss.JoinVertical(
-		v.lipgloss.Left(),
+	content := v.lipglossProxy.JoinVertical(
+		v.lipglossProxy.Left(),
 		prompt,
-		v.helpStyle.Render(currentTodo),
+		v.helpStyleProxy.Render(currentTodo),
 		"",
-		v.inputStyle.Width(width-6).Render(inputField),
+		v.inputStyleProxy.Width(width-6).Render(inputField),
 		"",
-		v.helpStyle.Render("Press Enter to save, Esc to cancel"),
+		v.helpStyleProxy.Render("Press Enter to save, Esc to cancel"),
 	)
 
-	return v.contentStyle.
+	return v.contentStyleProxy.
 		Width(width).
 		Height(height).
-		AlignVertical(v.lipgloss.Center()).
+		AlignVertical(v.lipglossProxy.Center()).
 		Render(content)
 }
 
@@ -146,18 +148,18 @@ func (v *LayoutView) renderEditMode(stateModel *model.StateModel, width, height 
 func (v *LayoutView) renderConfirmationMode(stateModel *model.StateModel, width, height int) string {
 	message := stateModel.ConfirmationMessage()
 
-	content := v.lipgloss.JoinVertical(
-		v.lipgloss.Center(),
-		v.confirmStyle.Render(message),
+	content := v.lipglossProxy.JoinVertical(
+		v.lipglossProxy.Center(),
+		v.confirmStyleProxy.Render(message),
 		"",
-		v.helpStyle.Render("Press 'y' to confirm, 'n' or Esc to cancel"),
+		v.helpStyleProxy.Render("Press 'y' to confirm, 'n' or Esc to cancel"),
 	)
 
-	return v.contentStyle.
+	return v.contentStyleProxy.
 		Width(width).
 		Height(height).
-		AlignHorizontal(v.lipgloss.Center()).
-		AlignVertical(v.lipgloss.Center()).
+		AlignHorizontal(v.lipglossProxy.Center()).
+		AlignVertical(v.lipglossProxy.Center()).
 		Render(content)
 }
 
@@ -185,8 +187,8 @@ func (v *LayoutView) RenderCompact(stateModel *model.StateModel) string {
 	// Use new component structure for compact footer
 	footer := v.footerView.RenderCompact(stateModel, width)
 
-	return v.lipgloss.JoinVertical(
-		v.lipgloss.Left(),
+	return v.lipglossProxy.JoinVertical(
+		v.lipglossProxy.Left(),
 		header,
 		content,
 		footer,
@@ -221,16 +223,14 @@ func (v *LayoutView) RenderScrollIndicator(stateModel *model.StateModel, width i
 
 	// Create scroll bar
 	barWidth := width - 4
-	if barWidth < 10 {
-		barWidth = 10
-	}
+	barWidth = max(10, barWidth)
 
 	position := int(scrollPercent * float64(barWidth-1))
 
-	scrollBar := strings.Repeat("─", barWidth)
+	scrollBar := v.stringsProxy.Repeat("─", barWidth)
 	if position >= 0 && position < len(scrollBar) {
 		scrollBar = scrollBar[:position] + "●" + scrollBar[position+1:]
 	}
 
-	return v.helpStyle.Render(scrollBar)
+	return v.helpStyleProxy.Render(scrollBar)
 }

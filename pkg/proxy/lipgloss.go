@@ -8,6 +8,7 @@ import (
 
 // Lipgloss provides a proxy interface for lipgloss package functionality
 type Lipgloss interface {
+	Color(name string) lipgloss.TerminalColor
 	NewStyle() Style
 	JoinVertical(pos lipgloss.Position, strs ...string) string
 	JoinHorizontal(pos lipgloss.Position, strs ...string) string
@@ -16,6 +17,7 @@ type Lipgloss interface {
 	Left() lipgloss.Position
 	Center() lipgloss.Position
 	Right() lipgloss.Position
+	RoundedBorder() lipgloss.Border
 	Top() lipgloss.Position
 	Bottom() lipgloss.Position
 }
@@ -57,6 +59,10 @@ func NewLipgloss() Lipgloss {
 	return &LipglossImpl{}
 }
 
+func (l *LipglossImpl) Color(name string) lipgloss.TerminalColor {
+	return lipgloss.Color(name)
+}
+
 func (l *LipglossImpl) NewStyle() Style {
 	return &StyleImpl{style: lipgloss.NewStyle()}
 }
@@ -87,6 +93,10 @@ func (l *LipglossImpl) Center() lipgloss.Position {
 
 func (l *LipglossImpl) Right() lipgloss.Position {
 	return lipgloss.Right
+}
+
+func (l *LipglossImpl) RoundedBorder() lipgloss.Border {
+	return lipgloss.RoundedBorder()
 }
 
 func (l *LipglossImpl) Top() lipgloss.Position {

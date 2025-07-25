@@ -1,30 +1,28 @@
 package view
 
 import (
-	"github.com/charmbracelet/lipgloss"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // ItemView handles rendering of individual todo items
 type ItemView struct {
-	lipgloss proxy.Lipgloss
-
-	// Styles for different item states
-	normalStyle    proxy.Style
-	selectedStyle  proxy.Style
-	completedStyle proxy.Style
-	editingStyle   proxy.Style
+	completedStyleProxy proxy.Style
+	editingStyleProxy   proxy.Style
+	lipglossProxy       proxy.Lipgloss
+	normalStyleProxy    proxy.Style
+	selectedStyleProxy  proxy.Style
 }
 
 // NewItemView creates a new ItemView with the given lipgloss proxy
-func NewItemView(lg proxy.Lipgloss) *ItemView {
+func NewItemView(lipgrossProxy proxy.Lipgloss) *ItemView {
 	return &ItemView{
-		lipgloss:       lg,
-		normalStyle:    lg.NewStyle().Padding(0, 1),
-		selectedStyle:  lg.NewStyle().Padding(0, 1).Background(lipgloss.Color("240")),
-		completedStyle: lg.NewStyle().Padding(0, 1).Foreground(lipgloss.Color("240")),
-		editingStyle:   lg.NewStyle().Padding(0, 1).Border(lipgloss.RoundedBorder(), true),
+		lipglossProxy:       lipgrossProxy,
+		normalStyleProxy:    lipgrossProxy.NewStyle().Padding(0, 1),
+		selectedStyleProxy:  lipgrossProxy.NewStyle().Padding(0, 1).Background(lipgrossProxy.Color("240")),
+		completedStyleProxy: lipgrossProxy.NewStyle().Padding(0, 1).Foreground(lipgrossProxy.Color("240")),
+		editingStyleProxy:   lipgrossProxy.NewStyle().Padding(0, 1).Border(lipgrossProxy.RoundedBorder(), true),
 	}
 }
 
@@ -120,12 +118,12 @@ func (v *ItemView) RenderCompactItem(item *model.ItemModel, isSelected bool, wid
 	content := cursor + status + " " + description
 
 	// Apply minimal styling for compact view
-	style := v.lipgloss.NewStyle()
+	style := v.lipglossProxy.NewStyle()
 	if isSelected {
 		style = style.Bold(true)
 	}
 	if todo.Done {
-		style = style.Foreground(lipgloss.Color("240")) // Gray color
+		style = style.Foreground(v.lipglossProxy.Color("240")) // Gray color
 	}
 
 	return style.Render(content)
@@ -134,35 +132,35 @@ func (v *ItemView) RenderCompactItem(item *model.ItemModel, isSelected bool, wid
 // getItemStyle returns the appropriate style for an item based on its state
 func (v *ItemView) getItemStyle(item *model.ItemModel) proxy.Style {
 	if item.IsEditing() {
-		return v.editingStyle
+		return v.editingStyleProxy
 	}
 
 	if item.Todo().Done {
-		return v.completedStyle
+		return v.completedStyleProxy
 	}
 
 	if item.IsSelected() {
-		return v.selectedStyle
+		return v.selectedStyleProxy
 	}
 
-	return v.normalStyle
+	return v.normalStyleProxy
 }
 
 // getItemStyleWithSelection returns the appropriate style with selection highlighting
 func (v *ItemView) getItemStyleWithSelection(item *model.ItemModel, isSelected bool) proxy.Style {
-	baseStyle := v.lipgloss.NewStyle().Padding(0, 1)
+	baseStyle := v.lipglossProxy.NewStyle().Padding(0, 1)
 
 	if item.IsEditing() {
-		baseStyle = baseStyle.Border(lipgloss.RoundedBorder(), true)
+		baseStyle = baseStyle.Border(v.lipglossProxy.RoundedBorder(), true)
 	}
 
 	if isSelected {
-		baseStyle = baseStyle.Background(lipgloss.Color("240")).
-			Foreground(lipgloss.Color("15")) // Highlight selected item
+		baseStyle = baseStyle.Background(v.lipglossProxy.Color("240")).
+			Foreground(v.lipglossProxy.Color("15")) // Highlight selected item
 	}
 
 	if item.Todo().Done {
-		baseStyle = baseStyle.Foreground(lipgloss.Color("240")).
+		baseStyle = baseStyle.Foreground(v.lipglossProxy.Color("240")).
 			Strikethrough(true) // Gray and strikethrough for completed
 	}
 
@@ -195,10 +193,10 @@ func (v *ItemView) CreateStatusIndicator(done bool, selected bool) string {
 
 	if done {
 		indicator = "✓"
-		style = v.lipgloss.NewStyle().Foreground(lipgloss.Color("2")) // Green
+		style = v.lipglossProxy.NewStyle().Foreground(v.lipglossProxy.Color("2")) // Green
 	} else {
 		indicator = " "
-		style = v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")) // Gray
+		style = v.lipglossProxy.NewStyle().Foreground(v.lipglossProxy.Color("8")) // Gray
 	}
 
 	if selected {
@@ -211,8 +209,8 @@ func (v *ItemView) CreateStatusIndicator(done bool, selected bool) string {
 // CreateSelectionIndicator creates a selection cursor indicator
 func (v *ItemView) CreateSelectionIndicator(selected bool) string {
 	if selected {
-		return v.lipgloss.NewStyle().
-			Foreground(lipgloss.Color("12")).
+		return v.lipglossProxy.NewStyle().
+			Foreground(v.lipglossProxy.Color("12")).
 			Bold(true).
 			Render("▶")
 	}

@@ -2,6 +2,7 @@ package program
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+
 	"github.com/yanosea/gct/app/container"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
 )

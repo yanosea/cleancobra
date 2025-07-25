@@ -1,28 +1,28 @@
 package view
 
 import (
-	"strings"
-
-	"github.com/charmbracelet/lipgloss"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // ListView handles the todo list rendering
 type ListView struct {
-	lipgloss     proxy.Lipgloss
-	itemView     *ItemView
-	contentStyle proxy.Style
-	emptyStyle   proxy.Style
+	contentStyle  proxy.Style
+	emptyStyle    proxy.Style
+	lipglossProxy proxy.Lipgloss
+	stringsProxy  proxy.Strings
+	itemView      *ItemView
 }
 
 // NewListView creates a new ListView with the given dependencies
-func NewListView(lg proxy.Lipgloss, itemView *ItemView) *ListView {
+func NewListView(lipglossProxy proxy.Lipgloss, stringsProxy proxy.Strings, itemView *ItemView) *ListView {
 	return &ListView{
-		lipgloss:     lg,
-		itemView:     itemView,
-		contentStyle: lg.NewStyle().Padding(1, 2),
-		emptyStyle:   lg.NewStyle().Foreground(lipgloss.Color("8")).Italic(true),
+		contentStyle:  lipglossProxy.NewStyle().Padding(1, 2),
+		emptyStyle:    lipglossProxy.NewStyle().Foreground(lipglossProxy.Color("8")).Italic(true),
+		lipglossProxy: lipglossProxy,
+		stringsProxy:  stringsProxy,
+		itemView:      itemView,
 	}
 }
 
@@ -57,7 +57,7 @@ func (v *ListView) RenderCompact(stateModel *model.StateModel, width, height int
 		todoLines = append(todoLines, todoLine)
 	}
 
-	return strings.Join(todoLines, "\n")
+	return v.stringsProxy.Join(todoLines, "\n")
 }
 
 // RenderWithPagination renders the list with pagination indicators
@@ -82,15 +82,15 @@ func (v *ListView) RenderWithPagination(stateModel *model.StateModel, width, hei
 		todoLines = append(todoLines, todoLine)
 	}
 
-	content := strings.Join(todoLines, "\n")
+	content := v.stringsProxy.Join(todoLines, "\n")
 
 	// Add pagination indicators
 	if startIndex > 0 {
-		content = v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")).Render("↑ More items above") + "\n" + content
+		content = v.lipglossProxy.NewStyle().Foreground(v.lipglossProxy.Color("8")).Render("↑ More items above") + "\n" + content
 	}
 
 	if endIndex < len(todos) {
-		content = content + "\n" + v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")).Render("↓ More items below")
+		content = content + "\n" + v.lipglossProxy.NewStyle().Foreground(v.lipglossProxy.Color("8")).Render("↓ More items below")
 	}
 
 	return v.contentStyle.Width(width).Height(height).Render(content)
@@ -103,8 +103,8 @@ func (v *ListView) renderEmptyState(width, height int) string {
 	return v.contentStyle.
 		Width(width).
 		Height(height).
-		AlignHorizontal(v.lipgloss.Center()).
-		AlignVertical(v.lipgloss.Center()).
+		AlignHorizontal(v.lipglossProxy.Center()).
+		AlignVertical(v.lipglossProxy.Center()).
 		Render(v.emptyStyle.Render(emptyMessage))
 }
 
@@ -124,7 +124,7 @@ func (v *ListView) renderTodoList(stateModel *model.StateModel, width, height in
 		todoLines = append(todoLines, todoLine)
 	}
 
-	content := strings.Join(todoLines, "\n")
+	content := v.stringsProxy.Join(todoLines, "\n")
 
 	return v.contentStyle.Width(width).Height(height).Render(content)
 }
@@ -139,9 +139,7 @@ func (v *ListView) CalculateVisibleRange(cursor, totalItems, visibleHeight int) 
 	halfHeight := visibleHeight / 2
 
 	startIndex := cursor - halfHeight
-	if startIndex < 0 {
-		startIndex = 0
-	}
+	startIndex = max(0, startIndex)
 
 	endIndex := startIndex + visibleHeight
 	if endIndex > totalItems {
@@ -178,12 +176,12 @@ func (v *ListView) RenderScrollIndicator(stateModel *model.StateModel, width int
 
 	position := int(scrollPercent * float64(barWidth-1))
 
-	scrollBar := strings.Repeat("─", barWidth)
+	scrollBar := v.stringsProxy.Repeat("─", barWidth)
 	if position >= 0 && position < len(scrollBar) {
 		scrollBar = scrollBar[:position] + "●" + scrollBar[position+1:]
 	}
 
-	return v.lipgloss.NewStyle().Foreground(lipgloss.Color("8")).Render(scrollBar)
+	return v.lipglossProxy.NewStyle().Foreground(v.lipglossProxy.Color("8")).Render(scrollBar)
 }
 
 // GetVisibleItemCount returns the number of items that can be displayed in the given height

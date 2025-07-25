@@ -16,6 +16,7 @@ type Strings interface {
 	HasSuffix(s, suffix string) bool
 	ToLower(s string) string
 	ToUpper(s string) string
+	Repeat(s string, count int) string
 	Replace(s, old, new string, n int) string
 	ReplaceAll(s, old, new string) string
 }
@@ -58,6 +59,10 @@ func (s *StringsImpl) ToLower(str string) string {
 
 func (s *StringsImpl) ToUpper(str string) string {
 	return strings.ToUpper(str)
+}
+
+func (s *StringsImpl) Repeat(str string, count int) string {
+	return strings.Repeat(str, count)
 }
 
 func (s *StringsImpl) Replace(str, old, new string, n int) string {

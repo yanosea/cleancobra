@@ -2,7 +2,9 @@ package model
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+
 	"github.com/yanosea/gct/app/application"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 

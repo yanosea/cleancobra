@@ -2,6 +2,7 @@ package model
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+
 	"github.com/yanosea/gct/app/domain"
 )
 

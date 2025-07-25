@@ -1,25 +1,30 @@
 package view
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/charmbracelet/lipgloss"
 	"github.com/yanosea/gct/app/presentation/tui/gct-tui/model"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // HeaderView handles the application header rendering
 type HeaderView struct {
-	lipgloss    proxy.Lipgloss
-	headerStyle proxy.Style
+	fmtProxy         proxy.Fmt
+	headerStyleProxy proxy.Style
+	lipglossProxy    proxy.Lipgloss
+	stringsProxy     proxy.Strings
 }
 
 // NewHeaderView creates a new HeaderView with the given lipgloss proxy
-func NewHeaderView(lg proxy.Lipgloss) *HeaderView {
+func NewHeaderView(
+	fmtProxy proxy.Fmt,
+	lipgrossProxy proxy.Lipgloss,
+	stringsProxy proxy.Strings,
+) *HeaderView {
 	return &HeaderView{
-		lipgloss:    lg,
-		headerStyle: lg.NewStyle().Bold(true).Foreground(lipgloss.Color("12")).Padding(0, 1),
+		fmtProxy:         fmtProxy,
+		headerStyleProxy: lipgrossProxy.NewStyle().Bold(true).Foreground(lipgrossProxy.Color("12")).Padding(0, 1),
+		lipglossProxy:    lipgrossProxy,
+		stringsProxy:     stringsProxy,
 	}
 }
 
@@ -29,21 +34,19 @@ func (v *HeaderView) Render(stateModel *model.StateModel, width int) string {
 	todoCount := len(stateModel.Todos())
 	completedCount := v.GetCompletedCount(stateModel.Todos())
 
-	status := fmt.Sprintf("(%d/%d todos)", completedCount, todoCount)
+	status := v.fmtProxy.Sprintf("(%d/%d todos)", completedCount, todoCount)
 
 	// Create header with title and status
 	paddingLength := width - len(title) - len(status) - 4
-	if paddingLength < 0 {
-		paddingLength = 0
-	}
-	headerContent := v.lipgloss.JoinHorizontal(
-		v.lipgloss.Left(),
+	paddingLength = max(0, paddingLength)
+	headerContent := v.lipglossProxy.JoinHorizontal(
+		v.lipglossProxy.Left(),
 		title,
-		strings.Repeat(" ", paddingLength), // Padding
+		v.stringsProxy.Repeat(" ", paddingLength), // Padding
 		status,
 	)
 
-	return v.headerStyle.Width(width).Render(headerContent)
+	return v.headerStyleProxy.Width(width).Render(headerContent)
 }
 
 // RenderCompact renders a compact header for smaller terminals
@@ -52,21 +55,19 @@ func (v *HeaderView) RenderCompact(stateModel *model.StateModel, width int) stri
 	completedCount := v.GetCompletedCount(stateModel.Todos())
 
 	title := "GCT"
-	status := fmt.Sprintf("(%d/%d)", completedCount, todoCount)
+	status := v.fmtProxy.Sprintf("(%d/%d)", completedCount, todoCount)
 
 	// Create compact header
 	paddingLength := width - len(title) - len(status) - 4
-	if paddingLength < 0 {
-		paddingLength = 0
-	}
-	headerContent := v.lipgloss.JoinHorizontal(
-		v.lipgloss.Left(),
+	paddingLength = max(0, paddingLength)
+	headerContent := v.lipglossProxy.JoinHorizontal(
+		v.lipglossProxy.Left(),
 		title,
-		strings.Repeat(" ", paddingLength),
+		v.stringsProxy.Repeat(" ", paddingLength),
 		status,
 	)
 
-	return v.headerStyle.Width(width).Render(headerContent)
+	return v.headerStyleProxy.Width(width).Render(headerContent)
 }
 
 // RenderWithMode renders header with current mode indication
@@ -77,21 +78,19 @@ func (v *HeaderView) RenderWithMode(stateModel *model.StateModel, width int) str
 
 	// Add mode indicator
 	modeIndicator := v.getModeIndicator(stateModel.Mode())
-	status := fmt.Sprintf("%s (%d/%d)", modeIndicator, completedCount, todoCount)
+	status := v.fmtProxy.Sprintf("%s (%d/%d)", modeIndicator, completedCount, todoCount)
 
 	// Create header with mode and status
 	paddingLength := width - len(title) - len(status) - 4
-	if paddingLength < 0 {
-		paddingLength = 0
-	}
-	headerContent := v.lipgloss.JoinHorizontal(
-		v.lipgloss.Left(),
+	paddingLength = max(0, paddingLength)
+	headerContent := v.lipglossProxy.JoinHorizontal(
+		v.lipglossProxy.Left(),
 		title,
-		strings.Repeat(" ", paddingLength),
+		v.stringsProxy.Repeat(" ", paddingLength),
 		status,
 	)
 
-	return v.headerStyle.Width(width).Render(headerContent)
+	return v.headerStyleProxy.Width(width).Render(headerContent)
 }
 
 // GetCompletedCount returns the number of completed todos
@@ -126,5 +125,5 @@ func (v *HeaderView) GetHeight() int {
 
 // SetStyle allows customization of the header style
 func (v *HeaderView) SetStyle(style proxy.Style) {
-	v.headerStyle = style
+	v.headerStyleProxy = style
 }
