@@ -68,6 +68,20 @@ func (mr *MockLipglossMockRecorder) Center() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Center", reflect.TypeOf((*MockLipgloss)(nil).Center))
 }
 
+// Color mocks base method.
+func (m *MockLipgloss) Color(name string) lipgloss.TerminalColor {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Color", name)
+	ret0, _ := ret[0].(lipgloss.TerminalColor)
+	return ret0
+}
+
+// Color indicates an expected call of Color.
+func (mr *MockLipglossMockRecorder) Color(name any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Color", reflect.TypeOf((*MockLipgloss)(nil).Color), name)
+}
+
 // Height mocks base method.
 func (m *MockLipgloss) Height(str string) int {
 	m.ctrl.T.Helper()
@@ -160,6 +174,20 @@ func (m *MockLipgloss) Right() lipgloss.Position {
 func (mr *MockLipglossMockRecorder) Right() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Right", reflect.TypeOf((*MockLipgloss)(nil).Right))
+}
+
+// RoundedBorder mocks base method.
+func (m *MockLipgloss) RoundedBorder() lipgloss.Border {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RoundedBorder")
+	ret0, _ := ret[0].(lipgloss.Border)
+	return ret0
+}
+
+// RoundedBorder indicates an expected call of RoundedBorder.
+func (mr *MockLipglossMockRecorder) RoundedBorder() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoundedBorder", reflect.TypeOf((*MockLipgloss)(nil).RoundedBorder))
 }
 
 // Top mocks base method.

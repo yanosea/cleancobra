@@ -95,6 +95,20 @@ func (mr *MockStringsMockRecorder) Join(elems, sep any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Join", reflect.TypeOf((*MockStrings)(nil).Join), elems, sep)
 }
 
+// Repeat mocks base method.
+func (m *MockStrings) Repeat(s string, count int) string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Repeat", s, count)
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// Repeat indicates an expected call of Repeat.
+func (mr *MockStringsMockRecorder) Repeat(s, count any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Repeat", reflect.TypeOf((*MockStrings)(nil).Repeat), s, count)
+}
+
 // Replace mocks base method.
 func (m *MockStrings) Replace(s, old, new string, n int) string {
 	m.ctrl.T.Helper()
