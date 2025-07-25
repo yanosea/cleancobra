@@ -6,14 +6,14 @@ import (
 
 // Domain proxies for dependency injection
 var (
-	// dtp is a proxy for the time package for dependency injection
-	dtp proxy.Time
-	// dsp is a proxy for the strings package for dependency injection
-	dsp proxy.Strings
 	// dfp is a proxy for the fmt package for dependency injection
 	dfp proxy.Fmt
 	// djp is a proxy for the json package for dependency injection
 	djp proxy.JSON
+	// dsp is a proxy for the strings package for dependency injection
+	dsp proxy.Strings
+	// dtp is a proxy for the time package for dependency injection
+	dtp proxy.Time
 )
 
 // Todo represents a todo item in the domain
@@ -26,11 +26,16 @@ type Todo struct {
 }
 
 // InitializeDomain sets the proxy for the domain
-func InitializeDomain(timeProxy proxy.Time, stringsProxy proxy.Strings, fmtProxy proxy.Fmt, jsonProxy proxy.JSON) {
-	dtp = timeProxy
-	dsp = stringsProxy
+func InitializeDomain(
+	fmtProxy proxy.Fmt,
+	jsonProxy proxy.JSON,
+	stringsProxy proxy.Strings,
+	timeProxy proxy.Time,
+) {
 	dfp = fmtProxy
 	djp = jsonProxy
+	dsp = stringsProxy
+	dtp = timeProxy
 }
 
 // NewTodo creates a new Todo with the given description

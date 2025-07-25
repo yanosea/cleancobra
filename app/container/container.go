@@ -5,6 +5,7 @@ import (
 	"github.com/yanosea/gct/app/config"
 	"github.com/yanosea/gct/app/domain"
 	"github.com/yanosea/gct/app/infrastructure"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
@@ -18,21 +19,22 @@ type Container struct {
 
 // Proxies organizes all proxy dependencies
 type Proxies struct {
-	OS        proxy.OS
-	Filepath  proxy.Filepath
-	JSON      proxy.JSON
-	Time      proxy.Time
-	IO        proxy.IO
-	Fmt       proxy.Fmt
-	Strings   proxy.Strings
-	Strconv   proxy.Strconv
-	Cobra     proxy.Cobra
-	Bubbletea proxy.Bubbletea
 	Bubbles   proxy.Bubbles
-	Lipgloss  proxy.Lipgloss
+	Bubbletea proxy.Bubbletea
+	Cobra     proxy.Cobra
 	Color     proxy.Color
 	Envconfig proxy.Envconfig
 	Errors    proxy.Errors
+	Filepath  proxy.Filepath
+	Fmt       proxy.Fmt
+	IO        proxy.IO
+	JSON      proxy.JSON
+	Lipgloss  proxy.Lipgloss
+	OS        proxy.OS
+	Sort      proxy.Sort
+	Strconv   proxy.Strconv
+	Strings   proxy.Strings
+	Time      proxy.Time
 }
 
 // UseCases organizes all use case dependencies
@@ -43,61 +45,63 @@ type UseCases struct {
 	ToggleTodo *application.ToggleTodoUseCase
 }
 
-// No need for proxy provider anymore
-
 // NewContainer creates a new Container with all dependencies properly initialized
 func NewContainer() (*Container, error) {
 	// Initialize proxies first
 	proxies := &Proxies{
-		OS:        proxy.NewOS(),
-		Filepath:  proxy.NewFilepath(),
-		JSON:      proxy.NewJSON(),
-		Time:      proxy.NewTime(),
-		IO:        proxy.NewIO(),
-		Fmt:       proxy.NewFmt(),
-		Strings:   proxy.NewStrings(),
-		Strconv:   proxy.NewStrconv(),
-		Cobra:     proxy.NewCobra(),
-		Bubbletea: proxy.NewBubbletea(),
 		Bubbles:   proxy.NewBubbles(),
-		Lipgloss:  proxy.NewLipgloss(),
+		Bubbletea: proxy.NewBubbletea(),
+		Cobra:     proxy.NewCobra(),
 		Color:     proxy.NewColor(),
 		Envconfig: proxy.NewEnvconfig(),
 		Errors:    proxy.NewErrors(),
+		Filepath:  proxy.NewFilepath(),
+		Fmt:       proxy.NewFmt(),
+		IO:        proxy.NewIO(),
+		JSON:      proxy.NewJSON(),
+		Lipgloss:  proxy.NewLipgloss(),
+		OS:        proxy.NewOS(),
+		Sort:      proxy.NewSort(),
+		Strconv:   proxy.NewStrconv(),
+		Strings:   proxy.NewStrings(),
+		Time:      proxy.NewTime(),
 	}
 
-	// Initialize domain
+	// initialize domain
 	domain.InitializeDomain(
-		proxies.Time,
-		proxies.Strings,
 		proxies.Fmt,
 		proxies.JSON,
+		proxies.Strings,
+		proxies.Time,
 	)
 
-	// Initialize domain error
+	// initialize domain error
 	domain.InitializeDomainErrors(
 		proxies.Errors,
 		proxies.Fmt,
 	)
 
-	// Load configuration
-	cfg, err := config.Load(
-		proxies.OS,
-		proxies.Filepath,
+	// load configuration
+	configurator := config.NewConfigurator(
 		proxies.Envconfig,
+		proxies.Filepath,
+		proxies.OS,
 	)
+	cfg, err := configurator.Load()
 	if err != nil {
 		return nil, err
 	}
 
-	// Initialize repository with required proxies
+	// initialize repository with required proxies
 	repository := infrastructure.NewJSONRepository(
 		cfg.DataFile,
-		proxies.OS,
+		proxies.Filepath,
 		proxies.JSON,
+		proxies.OS,
+		proxies.Sort,
 	)
 
-	// Initialize use cases with repository dependency
+	// initialize use cases with repository dependency
 	useCases := &UseCases{
 		AddTodo:    application.NewAddTodoUseCase(repository),
 		DeleteTodo: application.NewDeleteTodoUseCase(repository),

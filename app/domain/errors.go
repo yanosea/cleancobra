@@ -25,6 +25,8 @@ const (
 	ErrorTypeJSON
 	// ErrorTypeConfiguration indicates a configuration error
 	ErrorTypeConfiguration
+	// ErrorTypeNoSubCommand indicates no subcommand was specified
+	ErrorTypeNoSubCommand
 )
 
 // Domain error proxies for dependency injection
@@ -43,6 +45,8 @@ var (
 	ErrEmptyDescription = NewDomainError(ErrorTypeInvalidInput, "description cannot be empty", nil)
 	// ErrInvalidID indicates an invalid ID was provided
 	ErrInvalidID = NewDomainError(ErrorTypeInvalidInput, "invalid todo ID", nil)
+	// ErrNoSubCommand indicates no subcommand was specified
+	ErrNoSubCommand = NewDomainError(ErrorTypeNoSubCommand, "no subcommand specified", nil)
 )
 
 // InitializeDomainErrors sets the proxy for the domain errors
@@ -64,6 +68,8 @@ func (et ErrorType) String() string {
 		return "JSON"
 	case ErrorTypeConfiguration:
 		return "Configuration"
+	case ErrorTypeNoSubCommand:
+		return "NoSubCommand"
 	default:
 		return "Unknown"
 	}
@@ -137,4 +143,9 @@ func IsJSONError(err error) bool {
 // IsConfigurationError checks if an error is a configuration error
 func IsConfigurationError(err error) bool {
 	return GetErrorType(err) == ErrorTypeConfiguration
+}
+
+// IsNoSubCommandError checks if an error is a no subcommand error
+func IsNoSubCommandError(err error) bool {
+	return GetErrorType(err) == ErrorTypeNoSubCommand
 }

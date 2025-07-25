@@ -1,8 +1,6 @@
 package application
 
 import (
-	"time"
-
 	"github.com/yanosea/gct/app/domain"
 )
 
@@ -20,25 +18,19 @@ func NewAddTodoUseCase(repository domain.TodoRepository) *AddTodoUseCase {
 
 // Run executes the add todo use case
 func (uc *AddTodoUseCase) Run(description string) (*domain.Todo, error) {
-	// Validate input
+	// validate input
 	if err := validateDescription(description); err != nil {
 		return nil, err
 	}
 
-	// Create new todo with current timestamp
-	now := time.Now()
-	todo := domain.Todo{
-		ID:          0, // Will be assigned by repository
-		Description: description,
-		Done:        false,
-		CreatedAt:   now,
-		UpdatedAt:   now,
+	// create new todo with current timestamp
+	todo, err := domain.NewTodo(0, description)
+	if err != nil {
+		return nil, err
 	}
 
-	// Note: Skip validation for new todos (ID=0) as ID will be assigned by repository
-
-	// Save to repository
-	savedTodos, err := uc.repository.Save(todo)
+	// save to repository
+	savedTodos, err := uc.repository.Save(*todo)
 	if err != nil {
 		return nil, err
 	}

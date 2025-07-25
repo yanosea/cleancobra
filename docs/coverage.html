@@ -152,8 +152,6 @@
 		<pre class="file" id="file0" style="display: none">package application
 
 import (
-        "time"
-
         "github.com/yanosea/gct/app/domain"
 )
 
@@ -171,25 +169,19 @@ func NewAddTodoUseCase(repository domain.TodoRepository) *AddTodoUseCase <span c
 
 // Run executes the add todo use case
 func (uc *AddTodoUseCase) Run(description string) (*domain.Todo, error) <span class="cov0" title="0">{
-        // Validate input
+        // validate input
         if err := validateDescription(description); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        // Create new todo with current timestamp
-        <span class="cov0" title="0">now := time.Now()
-        todo := domain.Todo{
-                ID:          0, // Will be assigned by repository
-                Description: description,
-                Done:        false,
-                CreatedAt:   now,
-                UpdatedAt:   now,
-        }
+        // create new todo with current timestamp
+        <span class="cov0" title="0">todo, err := domain.NewTodo(0, description)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
 
-        // Note: Skip validation for new todos (ID=0) as ID will be assigned by repository
-
-        // Save to repository
-        savedTodos, err := uc.repository.Save(todo)
+        // save to repository
+        <span class="cov0" title="0">savedTodos, err := uc.repository.Save(*todo)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -243,7 +235,7 @@ func NewDeleteTodoUseCase(repository domain.TodoRepository) *DeleteTodoUseCase <
 
 // Run executes the delete todo use case
 func (uc *DeleteTodoUseCase) Run(id int) error <span class="cov0" title="0">{
-        // Validate input
+        // validate input
         if id &lt;= 0 </span><span class="cov0" title="0">{
                 return domain.NewDomainError(
                         domain.ErrorTypeInvalidInput,
@@ -252,7 +244,7 @@ func (uc *DeleteTodoUseCase) Run(id int) error <span class="cov0" title="0">{
                 )
         }</span>
 
-        // Delete the todo by ID
+        // delete the todo by ID
         <span class="cov0" title="0">err := uc.repository.DeleteById(id)
         if err != nil </span><span class="cov0" title="0">{
                 return err
@@ -282,13 +274,13 @@ func NewListTodoUseCase(repository domain.TodoRepository) *ListTodoUseCase <span
 
 // Run executes the list todos use case
 func (uc *ListTodoUseCase) Run() ([]domain.Todo, error) <span class="cov0" title="0">{
-        // Retrieve all todos from repository
+        // retrieve all todos from repository
         todos, err := uc.repository.FindAll()
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        // Return todos (empty slice if no todos exist)
+        // return todos (empty slice if no todos exist)
         <span class="cov0" title="0">return todos, nil</span>
 }
 </pre>
@@ -313,7 +305,7 @@ func NewToggleTodoUseCase(repository domain.TodoRepository) *ToggleTodoUseCase <
 
 // Run executes the toggle todo use case
 func (uc *ToggleTodoUseCase) Run(id int) (*domain.Todo, error) <span class="cov0" title="0">{
-        // Validate input
+        // validate input
         if id &lt;= 0 </span><span class="cov0" title="0">{
                 return nil, domain.NewDomainError(
                         domain.ErrorTypeInvalidInput,
@@ -322,13 +314,13 @@ func (uc *ToggleTodoUseCase) Run(id int) (*domain.Todo, error) <span class="cov0
                 )
         }</span>
 
-        // Get all todos to find the one to toggle
+        // get all todos to find the one to toggle
         <span class="cov0" title="0">todos, err := uc.repository.FindAll()
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        // Find the todo with the specified ID
+        // find the todo with the specified ID
         <span class="cov0" title="0">var todoToToggle *domain.Todo
         for i, todo := range todos </span><span class="cov0" title="0">{
                 if todo.ID == id </span><span class="cov0" title="0">{
@@ -341,10 +333,10 @@ func (uc *ToggleTodoUseCase) Run(id int) (*domain.Todo, error) <span class="cov0
                 return nil, domain.ErrTodoNotFound
         }</span>
 
-        // Toggle the completion status
+        // toggle the completion status
         <span class="cov0" title="0">todoToToggle.Toggle()
 
-        // Save the updated todo
+        // save the updated todo
         savedTodos, err := uc.repository.Save(*todoToToggle)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
@@ -369,18 +361,38 @@ import (
         "github.com/yanosea/gct/pkg/proxy"
 )
 
+// Configurator provides access to the configuration
+type Configurator struct {
+        OS        proxy.OS
+        Filepath  proxy.Filepath
+        Envconfig proxy.Envconfig
+}
+
+// NewConfigurator creates a new Configurator
+func NewConfigurator(
+        osProxy proxy.OS,
+        filepathProxy proxy.Filepath,
+        envconfigProxy proxy.Envconfig,
+) *Configurator <span class="cov0" title="0">{
+        return &amp;Configurator{
+                OS:        osProxy,
+                Filepath:  filepathProxy,
+                Envconfig: envconfigProxy,
+        }
+}</span>
+
 // Config represents the application configuration
 type Config struct {
         // DataFile is the path to the JSON file where todos are stored
         DataFile string `envconfig:"GCT_DATA_FILE"`
 }
 
-// Load loads the configuration with injected dependencies for testing
-func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.Envconfig) (*Config, error) <span class="cov0" title="0">{
+// Load loads the configuration
+func (c *Configurator) Load() (*Config, error) <span class="cov0" title="0">{
         var cfg Config
 
-        // Load configuration from environment variables
-        if err := envconfigProxy.Process("", &amp;cfg); err != nil </span><span class="cov0" title="0">{
+        // load configuration from environment variables
+        if err := c.Envconfig.Process("", &amp;cfg); err != nil </span><span class="cov0" title="0">{
                 return nil, domain.NewDomainError(
                         domain.ErrorTypeConfiguration,
                         "failed to load configuration from environment",
@@ -388,9 +400,9 @@ func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.E
                 )
         }</span>
 
-        // Apply default data file path if not set
+        // apply default data file path if not set
         <span class="cov0" title="0">if cfg.DataFile == "" </span><span class="cov0" title="0">{
-                defaultPath, err := getDefaultDataFilePath(osProxy, filepathProxy)
+                defaultPath, err := getDefaultDataFilePath(c.OS, c.Filepath)
                 if err != nil </span><span class="cov0" title="0">{
                         return nil, domain.NewDomainError(
                                 domain.ErrorTypeConfiguration,
@@ -401,8 +413,8 @@ func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.E
                 <span class="cov0" title="0">cfg.DataFile = defaultPath</span>
         }
 
-        // Validate configuration
-        <span class="cov0" title="0">if err := cfg.ValidateWithDeps(osProxy, filepathProxy); err != nil </span><span class="cov0" title="0">{
+        // validate configuration
+        <span class="cov0" title="0">if err := cfg.Validate(c.OS, c.Filepath); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
@@ -410,17 +422,8 @@ func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.E
 }
 
 // Validate validates the configuration values
-// This method is deprecated. Use ValidateWithDeps instead.
-func (c *Config) Validate() error <span class="cov0" title="0">{
-        return domain.NewDomainError(
-                domain.ErrorTypeConfiguration,
-                "Validate() is deprecated, use ValidateWithDeps() with injected proxy dependencies",
-                nil,
-        )
-}</span>
-
-// ValidateWithDeps validates the configuration values with injected dependencies
-func (c *Config) ValidateWithDeps(osProxy proxy.OS, filepathProxy proxy.Filepath) error <span class="cov0" title="0">{
+func (c *Config) Validate(osProxy proxy.OS, filepathProxy proxy.Filepath) error <span class="cov0" title="0">{
+        // check if the data file path is set
         if c.DataFile == "" </span><span class="cov0" title="0">{
                 return domain.NewDomainError(
                         domain.ErrorTypeInvalidInput,
@@ -429,9 +432,9 @@ func (c *Config) ValidateWithDeps(osProxy proxy.OS, filepathProxy proxy.Filepath
                 )
         }</span>
 
-        // Check if the directory exists or can be created
+        // check if the directory exists or can be created
         <span class="cov0" title="0">dir := filepathProxy.Dir(c.DataFile)
-        if err := ensureDirectoryExistsWithDeps(dir, osProxy); err != nil </span><span class="cov0" title="0">{
+        if err := ensureDirectoryExists(dir, osProxy); err != nil </span><span class="cov0" title="0">{
                 return domain.NewDomainError(
                         domain.ErrorTypeFileSystem,
                         "failed to ensure data directory exists",
@@ -445,12 +448,12 @@ func (c *Config) ValidateWithDeps(osProxy proxy.OS, filepathProxy proxy.Filepath
 // getDefaultDataFilePath returns the default path for the data file
 // Following XDG Base Directory Specification with fallback to home directory
 func getDefaultDataFilePath(osProxy proxy.OS, filepathProxy proxy.Filepath) (string, error) <span class="cov0" title="0">{
-        // Try XDG_DATA_HOME first
+        // try XDG_DATA_HOME first
         if xdgDataHome := osProxy.Getenv("XDG_DATA_HOME"); xdgDataHome != "" </span><span class="cov0" title="0">{
                 return filepathProxy.Join(xdgDataHome, "gct", "todos.json"), nil
         }</span>
 
-        // Fallback to ~/.local/share/gct/todos.json
+        // fallback to ~/.local/share/gct/todos.json
         <span class="cov0" title="0">homeDir, err := osProxy.UserHomeDir()
         if err != nil </span><span class="cov0" title="0">{
                 return "", err
@@ -459,14 +462,14 @@ func getDefaultDataFilePath(osProxy proxy.OS, filepathProxy proxy.Filepath) (str
         <span class="cov0" title="0">return filepathProxy.Join(homeDir, ".local", "share", "gct", "todos.json"), nil</span>
 }
 
-// ensureDirectoryExistsWithDeps creates the directory if it doesn't exist using injected dependencies
-func ensureDirectoryExistsWithDeps(dir string, osProxy proxy.OS) error <span class="cov0" title="0">{
-        if _, err := osProxy.Stat(dir); osProxy.IsNotExist(err) </span><span class="cov0" title="0">{
-                if err := osProxy.MkdirAll(dir, 0755); err != nil </span><span class="cov0" title="0">{
-                        return err
+// ensureDirectoryExists creates the directory if it doesn't exist
+func ensureDirectoryExists(dir string, osProxy proxy.OS) error <span class="cov0" title="0">{
+        if _, statErr := osProxy.Stat(dir); osProxy.IsNotExist(statErr) </span><span class="cov0" title="0">{
+                if mkdirErr := osProxy.MkdirAll(dir, 0755); mkdirErr != nil </span><span class="cov0" title="0">{
+                        return mkdirErr
                 }</span>
-        } else<span class="cov0" title="0"> if err != nil </span><span class="cov0" title="0">{
-                return err
+        } else<span class="cov0" title="0"> if statErr != nil </span><span class="cov0" title="0">{
+                return statErr
         }</span>
 
         <span class="cov0" title="0">return nil</span>
@@ -480,6 +483,7 @@ import (
         "github.com/yanosea/gct/app/config"
         "github.com/yanosea/gct/app/domain"
         "github.com/yanosea/gct/app/infrastructure"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
@@ -508,6 +512,7 @@ type Proxies struct {
         Color     proxy.Color
         Envconfig proxy.Envconfig
         Errors    proxy.Errors
+        Sort      proxy.Sort
 }
 
 // UseCases organizes all use case dependencies
@@ -539,9 +544,10 @@ func NewContainer() (*Container, error) <span class="cov0" title="0">{
                 Color:     proxy.NewColor(),
                 Envconfig: proxy.NewEnvconfig(),
                 Errors:    proxy.NewErrors(),
+                Sort:      proxy.NewSort(),
         }
 
-        // Initialize domain
+        // initialize domain
         domain.InitializeDomain(
                 proxies.Time,
                 proxies.Strings,
@@ -549,18 +555,19 @@ func NewContainer() (*Container, error) <span class="cov0" title="0">{
                 proxies.JSON,
         )
 
-        // Initialize domain error
+        // initialize domain error
         domain.InitializeDomainErrors(
                 proxies.Errors,
                 proxies.Fmt,
         )
 
-        // Load configuration
-        cfg, err := config.Load(
+        // load configuration
+        configurator := config.NewConfigurator(
                 proxies.OS,
                 proxies.Filepath,
                 proxies.Envconfig,
         )
+        cfg, err := configurator.Load()
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
@@ -568,8 +575,10 @@ func NewContainer() (*Container, error) <span class="cov0" title="0">{
         // Initialize repository with required proxies
         <span class="cov0" title="0">repository := infrastructure.NewJSONRepository(
                 cfg.DataFile,
+                proxies.Filepath,
                 proxies.OS,
                 proxies.JSON,
+                proxies.Sort,
         )
 
         // Initialize use cases with repository dependency
@@ -916,27 +925,28 @@ func (t *Todo) UnmarshalJSON(data []byte) error <span class="cov8" title="1">{
 		<pre class="file" id="file8" style="display: none">package infrastructure
 
 import (
-        "os"
-        "path/filepath"
-        "sort"
-
         "github.com/yanosea/gct/app/domain"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
 // JSONRepository implements TodoRepository interface using JSON file storage
 type JSONRepository struct {
-        filePath  string
-        osProxy   proxy.OS
-        jsonProxy proxy.JSON
+        filePath      string
+        filepathProxy proxy.Filepath
+        osProxy       proxy.OS
+        jsonProxy     proxy.JSON
+        sortProxy     proxy.Sort
 }
 
 // NewJSONRepository creates a new JSONRepository instance
-func NewJSONRepository(filePath string, osProxy proxy.OS, jsonProxy proxy.JSON) *JSONRepository <span class="cov0" title="0">{
+func NewJSONRepository(filePath string, filepathProxy proxy.Filepath, osProxy proxy.OS, jsonProxy proxy.JSON, sortProxy proxy.Sort) *JSONRepository <span class="cov0" title="0">{
         return &amp;JSONRepository{
-                filePath:  filePath,
-                osProxy:   osProxy,
-                jsonProxy: jsonProxy,
+                filePath:      filePath,
+                filepathProxy: filepathProxy,
+                osProxy:       osProxy,
+                jsonProxy:     jsonProxy,
+                sortProxy:     sortProxy,
         }
 }</span>
 
@@ -955,7 +965,7 @@ func (r *JSONRepository) FindAll() ([]domain.Todo, error) <span class="cov0" tit
         }</span>
 
         // Read file content
-        <span class="cov0" title="0">file, err := r.osProxy.OpenFile(r.filePath, os.O_RDONLY, 0644)
+        <span class="cov0" title="0">file, err := r.osProxy.OpenFile(r.filePath, proxy.ORdOnly, 0644)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, domain.NewDomainError(
                         domain.ErrorTypeFileSystem,
@@ -976,7 +986,7 @@ func (r *JSONRepository) FindAll() ([]domain.Todo, error) <span class="cov0" tit
         }</span>
 
         // Sort todos by ID for consistent ordering
-        <span class="cov0" title="0">sort.Slice(todos, func(i, j int) bool </span><span class="cov0" title="0">{
+        <span class="cov0" title="0">r.sortProxy.Slice(todos, func(i, j int) bool </span><span class="cov0" title="0">{
                 return todos[i].ID &lt; todos[j].ID
         }</span>)
 
@@ -1029,7 +1039,7 @@ func (r *JSONRepository) Save(todos ...domain.Todo) ([]domain.Todo, error) <span
         }</span>
 
         // Sort by ID for consistent ordering
-        <span class="cov0" title="0">sort.Slice(allTodos, func(i, j int) bool </span><span class="cov0" title="0">{
+        <span class="cov0" title="0">r.sortProxy.Slice(allTodos, func(i, j int) bool </span><span class="cov0" title="0">{
                 return allTodos[i].ID &lt; allTodos[j].ID
         }</span>)
 
@@ -1092,7 +1102,7 @@ func (r *JSONRepository) getNextID(todos []domain.Todo) int <span class="cov0" t
 // writeToFile writes todos to the JSON file
 func (r *JSONRepository) writeToFile(todos []domain.Todo) error <span class="cov0" title="0">{
         // Ensure directory exists
-        fileDir := filepath.Dir(r.filePath)
+        fileDir := r.filepathProxy.Dir(r.filePath)
         if err := r.osProxy.MkdirAll(fileDir, 0755); err != nil </span><span class="cov0" title="0">{
                 return domain.NewDomainError(
                         domain.ErrorTypeFileSystem,
@@ -1102,7 +1112,7 @@ func (r *JSONRepository) writeToFile(todos []domain.Todo) error <span class="cov
         }</span>
 
         // Create or truncate file
-        <span class="cov0" title="0">file, err := r.osProxy.OpenFile(r.filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+        <span class="cov0" title="0">file, err := r.osProxy.OpenFile(r.filePath, proxy.OCreate|proxy.OWrOnly|proxy.OTrunc, 0644)
         if err != nil </span><span class="cov0" title="0">{
                 return domain.NewDomainError(
                         domain.ErrorTypeFileSystem,
@@ -1131,10 +1141,9 @@ func (r *JSONRepository) writeToFile(todos []domain.Todo) error <span class="cov
 
 import (
         "github.com/yanosea/gct/app/container"
-        "github.com/yanosea/gct/app/presentation/cli/gct/commands/gct"
-        "github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion"
         "github.com/yanosea/gct/app/presentation/cli/gct/formatter"
         "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
@@ -1164,45 +1173,9 @@ func InitializeCommand() (proxy.Command, error) <span class="cov0" title="0">{
 
         // Initialize root command
         rootCmd := NewRootCommand(
-                c.GetProxies().Cobra,
-                c.GetUseCases().ListTodo,
+                c,
                 todoPresenter,
         )
-
-        // Add subcommands
-        rootCmd.AddCommand(gct.NewAddCommand(
-                c.GetProxies().Cobra,
-                c.GetUseCases().AddTodo,
-                todoPresenter,
-        ))
-
-        rootCmd.AddCommand(gct.NewListCommand(
-                c.GetProxies().Cobra,
-                c.GetUseCases().ListTodo,
-                todoPresenter,
-        ))
-
-        rootCmd.AddCommand(gct.NewToggleCommand(
-                c.GetProxies().Cobra,
-                c.GetProxies().Strconv,
-                c.GetUseCases().ToggleTodo,
-                todoPresenter,
-        ))
-
-        rootCmd.AddCommand(gct.NewDeleteCommand(
-                c.GetProxies().Cobra,
-                c.GetProxies().Strconv,
-                c.GetUseCases().DeleteTodo,
-                todoPresenter,
-        ))
-
-        // Add completion command with subcommands
-        completionCmd := completion.NewCompletionCommand(c.GetProxies().Cobra)
-        completionCmd.AddCommand(completion.NewBashCompletionCommand(c.GetProxies().Cobra, rootCmd))
-        completionCmd.AddCommand(completion.NewZshCompletionCommand(c.GetProxies().Cobra, rootCmd))
-        completionCmd.AddCommand(completion.NewFishCompletionCommand(c.GetProxies().Cobra, rootCmd))
-        completionCmd.AddCommand(completion.NewPowershellCompletionCommand(c.GetProxies().Cobra, rootCmd))
-        rootCmd.AddCommand(completionCmd)
 
         return rootCmd, nil</span>
 }
@@ -1212,41 +1185,39 @@ func InitializeCommand() (proxy.Command, error) <span class="cov0" title="0">{
 
 import (
         "github.com/spf13/cobra"
+
         "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/container"
         "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
 // NewAddCommand creates the add command for the gct CLI application
 func NewAddCommand(
-        cobraProxy proxy.Cobra,
-        addUseCase *application.AddTodoUseCase,
+        container *container.Container,
         presenter *presenter.TodoPresenter,
 ) proxy.Command <span class="cov0" title="0">{
-        cmd := cobraProxy.NewCommand()
-        cmd.SetUse("add &lt;description&gt;")
-        cmd.SetShort("Add a new todo")
-        cmd.SetLong(`Add a new todo with the specified description.
-
-The description is required and cannot be empty.
-
-Examples:
-  gct add "Buy groceries"
-  gct add "Complete project documentation"`)
-        cmd.SetArgs(cobraProxy.ExactArgs(1))
+        cmd := container.GetProxies().Cobra.NewCommand()
+        cmd.SetUse(addUse)
+        cmd.SetShort(addShort)
+        cmd.SetLong(addLong)
+        cmd.SetArgs(container.GetProxies().Cobra.ExactArgs(1))
         cmd.SetSilenceErrors(true)
         cmd.SetSilenceUsage(true)
-
-        // Set the run function
-        cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
-                return RunAdd(addUseCase, presenter, args[0])
+        cmd.SetRunE(func(_ *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                return RunAdd(container.GetUseCases().AddTodo, presenter, args[0])
         }</span>)
 
         <span class="cov0" title="0">return cmd</span>
 }
 
 // RunAdd executes the add todo functionality
-func RunAdd(addUseCase *application.AddTodoUseCase, presenter *presenter.TodoPresenter, description string) error <span class="cov0" title="0">{
+func RunAdd(
+        addUseCase *application.AddTodoUseCase,
+        presenter *presenter.TodoPresenter,
+        description string,
+) error <span class="cov0" title="0">{
         todo, err := addUseCase.Run(description)
         if err != nil </span><span class="cov0" title="0">{
                 presenter.ShowError(err)
@@ -1256,6 +1227,18 @@ func RunAdd(addUseCase *application.AddTodoUseCase, presenter *presenter.TodoPre
         <span class="cov0" title="0">presenter.ShowAddSuccess(todo)
         return nil</span>
 }
+
+const (
+        addUse   string = "add"
+        addShort string = "✅➕ Add a new todo"
+        addLong  string = `✅➕ Add a new todo with the specified description.
+
+The description is required and cannot be empty.
+
+Examples:
+  gct add "Buy groceries"
+  gct add "Complete project documentation"`
+)
 </pre>
 		
 		<pre class="file" id="file11" style="display: none">package completion
@@ -1271,22 +1254,9 @@ import (
 // NewBashCompletionCommand creates the bash completion subcommand
 func NewBashCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
         cmd := cobraProxy.NewCommand()
-        cmd.SetUse("bash")
-        cmd.SetShort("Generate bash completion script")
-        cmd.SetLong(`Generate bash completion script for gct.
-
-To load completions:
-
-Bash:
-  $ source &lt;(gct completion bash)
-
-  # To load completions for each session, execute once:
-  # Linux:
-  $ gct completion bash &gt; /etc/bash_completion.d/gct
-  # macOS:
-  $ gct completion bash &gt; /usr/local/etc/bash_completion.d/gct
-
-You will need to start a new shell for this setup to take effect.`)
+        cmd.SetUse(bashCompletionUse)
+        cmd.SetShort(bashCompletionShort)
+        cmd.SetLong(bashCompletionLong)
         cmd.SetArgs(cobraProxy.NoArgs())
         cmd.SetSilenceErrors(true)
         cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
@@ -1299,6 +1269,25 @@ You will need to start a new shell for this setup to take effect.`)
 func runBashCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
         return rootCmd.GenBashCompletion(os.Stdout)
 }</span>
+
+const (
+        bashCompletionUse   string = "bash"
+        bashCompletionShort string = "🔧🐚 Generate bash completion script"
+        bashCompletionLong  string = `🔧🐚 Generate bash completion script for gct.
+
+To load completions:
+
+Bash:
+  $ source &lt;(gct completion bash)
+
+  # To load completions for each session, execute once:
+  # Linux:
+  $ gct completion bash &gt; /etc/bash_completion.d/gct
+  # macOS:
+  $ gct completion bash &gt; /usr/local/etc/bash_completion.d/gct
+
+You will need to start a new shell for this setup to take effect.`
+)
 </pre>
 		
 		<pre class="file" id="file12" style="display: none">package completion
@@ -1308,15 +1297,44 @@ import (
 
         "github.com/spf13/cobra"
 
+        "github.com/yanosea/gct/app/container"
+        "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
 // NewCompletionCommand creates the completion parent command
-func NewCompletionCommand(cobraProxy proxy.Cobra) proxy.Command <span class="cov0" title="0">{
-        cmd := cobraProxy.NewCommand()
-        cmd.SetUse("completion")
-        cmd.SetShort("Generate shell completion scripts")
-        cmd.SetLong(`Generate shell completion scripts for gct.
+func NewCompletionCommand(
+        rootCmd proxy.Command,
+        container *container.Container,
+        presenter *presenter.TodoPresenter,
+) proxy.Command <span class="cov0" title="0">{
+        cmd := container.GetProxies().Cobra.NewCommand()
+        cmd.SetUse(completionUse)
+        cmd.SetShort(completionShort)
+        cmd.SetLong(completionLong)
+        cmd.SetArgs(container.GetProxies().Cobra.ExactArgs(1))
+        cmd.SetSilenceErrors(true)
+        cmd.AddCommand(NewBashCompletionCommand(container.GetProxies().Cobra, rootCmd))
+        cmd.AddCommand(NewZshCompletionCommand(container.GetProxies().Cobra, rootCmd))
+        cmd.AddCommand(NewFishCompletionCommand(container.GetProxies().Cobra, rootCmd))
+        cmd.AddCommand(NewPowershellCompletionCommand(container.GetProxies().Cobra, rootCmd))
+
+        rootCmd.SetRunE(func(_ *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                return runCompletion()
+        }</span>)
+
+        <span class="cov0" title="0">return cmd</span>
+}
+
+func runCompletion() error <span class="cov0" title="0">{
+        return fmt.Errorf("completion command requires a subcommand: bash, zsh, fish, or powershell")
+}</span>
+
+const (
+        completionUse   string = "completion"
+        completionShort string = "🔧 Generate shell completion scripts"
+        completionLong  string = `🔧 Generate shell completion scripts for gct.
 
 The completion command allows you to generate shell completion scripts for bash, zsh, fish, and powershell.
 
@@ -1353,19 +1371,8 @@ PowerShell:
   # To load completions for every new session, run:
   PS&gt; gct completion powershell &gt; gct.ps1
   # and source this file from your PowerShell profile.
-`)
-        cmd.SetArgs(cobraProxy.ExactArgs(1))
-        cmd.SetSilenceErrors(true)
-        cmd.SetRunE(func(_ *cobra.Command, args []string) error </span><span class="cov0" title="0">{
-                return runCompletion(args[0])
-        }</span>)
-
-        <span class="cov0" title="0">return cmd</span>
-}
-
-func runCompletion(shell string) error <span class="cov0" title="0">{
-        return fmt.Errorf("completion command requires a subcommand: bash, zsh, fish, or powershell")
-}</span>
+`
+)
 </pre>
 		
 		<pre class="file" id="file13" style="display: none">package completion
@@ -1381,17 +1388,9 @@ import (
 // NewFishCompletionCommand creates the fish completion subcommand
 func NewFishCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
         cmd := cobraProxy.NewCommand()
-        cmd.SetUse("fish")
-        cmd.SetShort("Generate fish completion script")
-        cmd.SetLong(`Generate fish completion script for gct.
-
-To load completions:
-
-Fish:
-  $ gct completion fish | source
-
-  # To load completions for each session, execute once:
-  $ gct completion fish &gt; ~/.config/fish/completions/gct.fish`)
+        cmd.SetUse(fishCompletionUse)
+        cmd.SetShort(fishCompletionShort)
+        cmd.SetLong(fishCompletionLong)
         cmd.SetArgs(cobraProxy.NoArgs())
         cmd.SetSilenceErrors(true)
         cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
@@ -1404,6 +1403,20 @@ Fish:
 func runFishCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
         return rootCmd.GenFishCompletion(os.Stdout, true)
 }</span>
+
+const (
+        fishCompletionUse   string = "fish"
+        fishCompletionShort string = "🔧🐟 Generate fish completion script"
+        fishCompletionLong  string = `🔧🐟 Generate fish completion script for gct.
+
+To load completions:
+
+Fish:
+  $ gct completion fish | source
+
+  # To load completions for each session, execute once:
+  $ gct completion fish &gt; ~/.config/fish/completions/gct.fish`
+)
 </pre>
 		
 		<pre class="file" id="file14" style="display: none">package completion
@@ -1419,18 +1432,9 @@ import (
 // NewPowershellCompletionCommand creates the powershell completion subcommand
 func NewPowershellCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
         cmd := cobraProxy.NewCommand()
-        cmd.SetUse("powershell")
-        cmd.SetShort("Generate powershell completion script")
-        cmd.SetLong(`Generate powershell completion script for gct.
-
-To load completions:
-
-PowerShell:
-  PS&gt; gct completion powershell | Out-String | Invoke-Expression
-
-  # To load completions for every new session, run:
-  PS&gt; gct completion powershell &gt; gct.ps1
-  # and source this file from your PowerShell profile.`)
+        cmd.SetUse(powershellCompletionUse)
+        cmd.SetShort(powershellCompletionShort)
+        cmd.SetLong(powershellCompletionLong)
         cmd.SetArgs(cobraProxy.NoArgs())
         cmd.SetSilenceErrors(true)
         cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
@@ -1443,6 +1447,21 @@ PowerShell:
 func runPowershellCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
         return rootCmd.GenPowerShellCompletion(os.Stdout)
 }</span>
+
+const (
+        powershellCompletionUse   string = "powershell"
+        powershellCompletionShort string = "🔧🪟 Generate powershell completion script"
+        powershellCompletionLong  string = `🔧🪟 Generate powershell completion script for gct.
+
+To load completions:
+
+PowerShell:
+  PS&gt; gct completion powershell | Out-String | Invoke-Expression
+
+  # To load completions for every new session, run:
+  PS&gt; gct completion powershell &gt; gct.ps1
+  # and source this file from your PowerShell profile.`
+)
 </pre>
 		
 		<pre class="file" id="file15" style="display: none">package completion
@@ -1458,21 +1477,9 @@ import (
 // NewZshCompletionCommand creates the zsh completion subcommand
 func NewZshCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command <span class="cov0" title="0">{
         cmd := cobraProxy.NewCommand()
-        cmd.SetUse("zsh")
-        cmd.SetShort("Generate zsh completion script")
-        cmd.SetLong(`Generate zsh completion script for gct.
-
-To load completions:
-
-Zsh:
-  # If shell completion is not already enabled in your environment,
-  # you will need to enable it.  You can execute the following once:
-  $ echo "autoload -U compinit; compinit" &gt;&gt; ~/.zshrc
-
-  # To load completions for each session, execute once:
-  $ gct completion zsh &gt; "${fpath[1]}/_gct"
-
-  # You will need to start a new shell for this setup to take effect.`)
+        cmd.SetUse(zshCompletionUse)
+        cmd.SetShort(zshCompletionShort)
+        cmd.SetLong(zshCompletionLong)
         cmd.SetArgs(cobraProxy.NoArgs())
         cmd.SetSilenceErrors(true)
         cmd.SetRunE(func(_ *cobra.Command, _ []string) error </span><span class="cov0" title="0">{
@@ -1485,63 +1492,77 @@ Zsh:
 func runZshCompletion(rootCmd proxy.Command) error <span class="cov0" title="0">{
         return rootCmd.GenZshCompletion(os.Stdout)
 }</span>
+
+const (
+        zshCompletionUse   string = "zsh"
+        zshCompletionShort string = "🔧🧙 Generate zsh completion script"
+        zshCompletionLong  string = `🔧🧙Generate zsh completion script for gct.
+
+To load completions:
+
+Zsh:
+  # If shell completion is not already enabled in your environment,
+  # you will need to enable it.  You can execute the following once:
+  $ echo "autoload -U compinit; compinit" &gt;&gt; ~/.zshrc
+
+  # To load completions for each session, execute once:
+  $ gct completion zsh &gt; "${fpath[1]}/_gct"
+
+  # You will need to start a new shell for this setup to take effect.`
+)
 </pre>
 		
 		<pre class="file" id="file16" style="display: none">package gct
 
 import (
         "github.com/spf13/cobra"
+
         "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/container"
         "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
 // NewDeleteCommand creates the delete command for the gct CLI application
 func NewDeleteCommand(
-        cobraProxy proxy.Cobra,
-        strconvProxy proxy.Strconv,
-        deleteUseCase *application.DeleteTodoUseCase,
+        container *container.Container,
         presenter *presenter.TodoPresenter,
 ) proxy.Command <span class="cov0" title="0">{
-        cmd := cobraProxy.NewCommand()
-        cmd.SetUse("delete &lt;id&gt;")
-        cmd.SetShort("Delete a todo")
-        cmd.SetLong(`Delete a todo by its ID.
-
-The ID must be a positive integer that corresponds to an existing todo.
-Once deleted, the todo cannot be recovered.
-
-Examples:
-  gct delete 1
-  gct delete 5`)
-        cmd.SetArgs(cobraProxy.ExactArgs(1))
+        cmd := container.GetProxies().Cobra.NewCommand()
+        cmd.SetUse(deleteUse)
+        cmd.SetShort(deleteShort)
+        cmd.SetLong(deleteLong)
+        cmd.SetArgs(container.GetProxies().Cobra.ExactArgs(1))
         cmd.SetSilenceErrors(true)
         cmd.SetSilenceUsage(true)
-
-        // Set the run function
-        cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
-                return RunDelete(strconvProxy, deleteUseCase, presenter, args[0])
+        cmd.SetRunE(func(_ *cobra.Command, args []string) error </span><span class="cov0" title="0">{
+                return RunDelete(container.GetProxies().Strconv, container.GetUseCases().DeleteTodo, presenter, args[0])
         }</span>)
 
         <span class="cov0" title="0">return cmd</span>
 }
 
 // RunDelete executes the delete todo functionality
-func RunDelete(strconvProxy proxy.Strconv, deleteUseCase *application.DeleteTodoUseCase, presenter *presenter.TodoPresenter, idStr string) error <span class="cov0" title="0">{
-        // Parse the ID from string to int
+func RunDelete(
+        strconvProxy proxy.Strconv,
+        deleteUseCase *application.DeleteTodoUseCase,
+        presenter *presenter.TodoPresenter,
+        idStr string,
+) error <span class="cov0" title="0">{
+        // parse the ID from string to int
         id, err := strconvProxy.Atoi(idStr)
         if err != nil </span><span class="cov0" title="0">{
                 presenter.ShowValidationError("invalid todo ID: must be a number")
                 return err
         }</span>
-
-        // Validate that ID is positive
+        // validate that ID is positive
         <span class="cov0" title="0">if id &lt;= 0 </span><span class="cov0" title="0">{
                 presenter.ShowValidationError("invalid todo ID: must be positive")
                 return nil
         }</span>
 
-        // Execute the delete use case
+        // execute the delete use case
         <span class="cov0" title="0">err = deleteUseCase.Run(id)
         if err != nil </span><span class="cov0" title="0">{
                 presenter.ShowError(err)
@@ -1551,53 +1572,63 @@ func RunDelete(strconvProxy proxy.Strconv, deleteUseCase *application.DeleteTodo
         <span class="cov0" title="0">presenter.ShowDeleteSuccess(id)
         return nil</span>
 }
+
+const (
+        deleteUse   string = "delete"
+        deleteShort string = "✅🗑️ Delete a todo"
+        deleteLong  string = `✅🗑️ Delete a todo by its ID.
+
+The ID must be a positive integer that corresponds to an existing todo.
+Once deleted, the todo cannot be recovered.
+
+Examples:
+  gct delete 1
+  gct delete 5`
+)
 </pre>
 		
 		<pre class="file" id="file17" style="display: none">package gct
 
 import (
         "github.com/spf13/cobra"
+
         "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/container"
         "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
 // NewListCommand creates the list command for the gct CLI application
 func NewListCommand(
-        cobraProxy proxy.Cobra,
-        listUseCase *application.ListTodoUseCase,
+        container *container.Container,
         presenter *presenter.TodoPresenter,
 ) proxy.Command <span class="cov0" title="0">{
-        cmd := cobraProxy.NewCommand()
-        cmd.SetUse("list")
-        cmd.SetShort("List all todos")
-        cmd.SetLong(`List all todos with their current status.
-
-Supports multiple output formats:
-- table: Human-readable table format (default)
-- json: JSON format for programmatic use
-- plain: Simple plain text format`)
+        cmd := container.GetProxies().Cobra.NewCommand()
+        cmd.SetUse(listUse)
+        cmd.SetShort(listShort)
+        cmd.SetLong(listLong)
         cmd.SetSilenceErrors(true)
         cmd.SetSilenceUsage(true)
-
-        // Add format flag
-        formatFlag := cmd.Flags().StringP("format", "f", "table", "Output format (json, table, plain)")
-
-        // Set the run function
+        format := cmd.Flags().StringP(
+                "format",
+                "f",
+                "table",
+                "Output format (json, table, plain)",
+        )
         cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
-                // Get format from flag
-                format := "table"
-                if formatFlag != nil </span><span class="cov0" title="0">{
-                        format = *formatFlag
-                }</span>
-                <span class="cov0" title="0">return RunList(listUseCase, presenter, format)</span>
-        })
+                return RunList(container.GetUseCases().ListTodo, presenter, *format)
+        }</span>)
 
         <span class="cov0" title="0">return cmd</span>
 }
 
 // RunList executes the list todos functionality
-func RunList(listUseCase *application.ListTodoUseCase, presenter *presenter.TodoPresenter, format string) error <span class="cov0" title="0">{
+func RunList(
+        listUseCase *application.ListTodoUseCase,
+        presenter *presenter.TodoPresenter,
+        format string,
+) error <span class="cov0" title="0">{
         todos, err := listUseCase.Run()
         if err != nil </span><span class="cov0" title="0">{
                 presenter.ShowError(err)
@@ -1606,62 +1637,70 @@ func RunList(listUseCase *application.ListTodoUseCase, presenter *presenter.Todo
 
         <span class="cov0" title="0">return presenter.ShowListResults(todos, format)</span>
 }
+
+const (
+        listUse   string = "list"
+        listShort string = "✅📜 List all todos"
+        listLong  string = `✅📜 List all todos with their current status.
+
+Supports multiple output formats:
+  - table: Human-readable table format (default)
+  - json: JSON format for programmatic use
+  - plain: Simple plain text format`
+)
 </pre>
 		
 		<pre class="file" id="file18" style="display: none">package gct
 
 import (
         "github.com/spf13/cobra"
+
         "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/container"
         "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
 // NewToggleCommand creates the toggle command for the gct CLI application
 func NewToggleCommand(
-        cobraProxy proxy.Cobra,
-        strconvProxy proxy.Strconv,
-        toggleUseCase *application.ToggleTodoUseCase,
+        container *container.Container,
         presenter *presenter.TodoPresenter,
 ) proxy.Command <span class="cov0" title="0">{
-        cmd := cobraProxy.NewCommand()
-        cmd.SetUse("toggle &lt;id&gt;")
-        cmd.SetShort("Toggle the completion status of a todo")
-        cmd.SetLong(`Toggle the completion status of a todo by its ID.
-
-The ID must be a positive integer that corresponds to an existing todo.
-
-Examples:
-  gct toggle 1
-  gct toggle 5`)
-        cmd.SetArgs(cobraProxy.ExactArgs(1))
+        cmd := container.GetProxies().Cobra.NewCommand()
+        cmd.SetUse(toggleUse)
+        cmd.SetShort(toggleShort)
+        cmd.SetLong(toggleLong)
+        cmd.SetArgs(container.GetProxies().Cobra.ExactArgs(1))
         cmd.SetSilenceErrors(true)
         cmd.SetSilenceUsage(true)
-
-        // Set the run function
         cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
-                return RunToggle(strconvProxy, toggleUseCase, presenter, args[0])
+                return RunToggle(container.GetProxies().Strconv, container.GetUseCases().ToggleTodo, presenter, args[0])
         }</span>)
 
         <span class="cov0" title="0">return cmd</span>
 }
 
 // RunToggle executes the toggle todo functionality
-func RunToggle(strconvProxy proxy.Strconv, toggleUseCase *application.ToggleTodoUseCase, presenter *presenter.TodoPresenter, idStr string) error <span class="cov0" title="0">{
-        // Parse the ID from string to int
+func RunToggle(
+        strconvProxy proxy.Strconv,
+        toggleUseCase *application.ToggleTodoUseCase,
+        presenter *presenter.TodoPresenter,
+        idStr string,
+) error <span class="cov0" title="0">{
+        // parse the ID from string to int
         id, err := strconvProxy.Atoi(idStr)
         if err != nil </span><span class="cov0" title="0">{
                 presenter.ShowValidationError("invalid todo ID: must be a number")
                 return err
         }</span>
-
-        // Validate that ID is positive
+        // validate that ID is positive
         <span class="cov0" title="0">if id &lt;= 0 </span><span class="cov0" title="0">{
                 presenter.ShowValidationError("invalid todo ID: must be positive")
                 return nil
         }</span>
 
-        // Execute the toggle use case
+        // execute the toggle use case
         <span class="cov0" title="0">todo, err := toggleUseCase.Run(id)
         if err != nil </span><span class="cov0" title="0">{
                 presenter.ShowError(err)
@@ -1671,46 +1710,75 @@ func RunToggle(strconvProxy proxy.Strconv, toggleUseCase *application.ToggleTodo
         <span class="cov0" title="0">presenter.ShowToggleSuccess(todo)
         return nil</span>
 }
+
+const (
+        toggleUse   string = "toggle"
+        toggleShort string = "✅♻️ Toggle the completion status of a todo"
+        toggleLong  string = `✅♻️ Toggle the completion status of a todo by its ID.
+
+The ID must be a positive integer that corresponds to an existing todo.
+
+Examples:
+  gct toggle 1
+  gct toggle 5`
+)
 </pre>
 		
 		<pre class="file" id="file19" style="display: none">package commands
 
 import (
         "github.com/spf13/cobra"
+
         "github.com/yanosea/gct/app/application"
+        "github.com/yanosea/gct/app/container"
         "github.com/yanosea/gct/app/presentation/cli/gct/commands/gct"
+        "github.com/yanosea/gct/app/presentation/cli/gct/commands/gct/completion"
         "github.com/yanosea/gct/app/presentation/cli/gct/presenter"
+
         "github.com/yanosea/gct/pkg/proxy"
 )
 
 // NewRootCommand creates the root command for the gct CLI application
 func NewRootCommand(
-        cobraProxy proxy.Cobra,
-        listUseCase *application.ListTodoUseCase,
+        container *container.Container,
         presenter *presenter.TodoPresenter,
 ) proxy.Command <span class="cov0" title="0">{
-        cmd := cobraProxy.NewCommand()
-        cmd.SetUse("gct")
-        cmd.SetShort("A clean architecture todo application")
-        cmd.SetLong(`gct is a todo application built with clean architecture principles.
-It provides both CLI and TUI interfaces for managing your todos.
-
-When run without any subcommands, it will list all todos.`)
+        cmd := container.GetProxies().Cobra.NewCommand()
+        cmd.SetUse(rootUse)
+        cmd.SetShort(rootShort)
+        cmd.SetLong(rootLong)
         cmd.SetSilenceErrors(true)
         cmd.SetSilenceUsage(true)
-
-        // Add global flags
-        formatFlag := cmd.PersistentFlags().StringP("format", "f", "table", "Output format (json, table, plain)")
-
-        // Set the default run function to execute list command
+        cmd.AddCommand(gct.NewAddCommand(
+                container,
+                presenter,
+        ))
+        cmd.AddCommand(gct.NewListCommand(
+                container,
+                presenter,
+        ))
+        cmd.AddCommand(gct.NewToggleCommand(
+                container,
+                presenter,
+        ))
+        cmd.AddCommand(gct.NewDeleteCommand(
+                container,
+                presenter,
+        ))
+        cmd.AddCommand(completion.NewCompletionCommand(
+                cmd,
+                container,
+                presenter,
+        ))
+        format := cmd.PersistentFlags().StringP(
+                "format",
+                "f",
+                "table",
+                "Output format (json, table, plain)",
+        )
         cmd.SetRunE(func(cobraCmd *cobra.Command, args []string) error </span><span class="cov0" title="0">{
-                // Get format from flag
-                format := "table"
-                if formatFlag != nil </span><span class="cov0" title="0">{
-                        format = *formatFlag
-                }</span>
-                <span class="cov0" title="0">return runRoot(listUseCase, presenter, format)</span>
-        })
+                return runRoot(container.GetUseCases().ListTodo, presenter, *format)
+        }</span>)
 
         <span class="cov0" title="0">return cmd</span>
 }
@@ -1720,6 +1788,15 @@ func runRoot(listUseCase *application.ListTodoUseCase, presenter *presenter.Todo
         // Call the actual list command implementation from gct/list.go
         return gct.RunList(listUseCase, presenter, format)
 }</span>
+
+const (
+        rootUse   string = "gct"
+        rootShort string = "✅ A clean architecture todo application"
+        rootLong  string = `✅ gct is a todo application built with clean architecture principles.
+It provides both CLI and TUI interfaces for managing your todos.
+
+When run without any subcommands, it will list all todos.`
+)
 </pre>
 		
 		<pre class="file" id="file20" style="display: none">package formatter

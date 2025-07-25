@@ -18,7 +18,7 @@ func NewDeleteTodoUseCase(repository domain.TodoRepository) *DeleteTodoUseCase {
 
 // Run executes the delete todo use case
 func (uc *DeleteTodoUseCase) Run(id int) error {
-	// Validate input
+	// validate input
 	if id <= 0 {
 		return domain.NewDomainError(
 			domain.ErrorTypeInvalidInput,
@@ -27,7 +27,7 @@ func (uc *DeleteTodoUseCase) Run(id int) error {
 		)
 	}
 
-	// Delete the todo by ID
+	// delete the todo by ID
 	err := uc.repository.DeleteById(id)
 	if err != nil {
 		return err

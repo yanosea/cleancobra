@@ -18,7 +18,7 @@ func NewToggleTodoUseCase(repository domain.TodoRepository) *ToggleTodoUseCase {
 
 // Run executes the toggle todo use case
 func (uc *ToggleTodoUseCase) Run(id int) (*domain.Todo, error) {
-	// Validate input
+	// validate input
 	if id <= 0 {
 		return nil, domain.NewDomainError(
 			domain.ErrorTypeInvalidInput,
@@ -27,13 +27,13 @@ func (uc *ToggleTodoUseCase) Run(id int) (*domain.Todo, error) {
 		)
 	}
 
-	// Get all todos to find the one to toggle
+	// get all todos to find the one to toggle
 	todos, err := uc.repository.FindAll()
 	if err != nil {
 		return nil, err
 	}
 
-	// Find the todo with the specified ID
+	// find the todo with the specified ID
 	var todoToToggle *domain.Todo
 	for i, todo := range todos {
 		if todo.ID == id {
@@ -46,10 +46,10 @@ func (uc *ToggleTodoUseCase) Run(id int) (*domain.Todo, error) {
 		return nil, domain.ErrTodoNotFound
 	}
 
-	// Toggle the completion status
+	// toggle the completion status
 	todoToToggle.Toggle()
 
-	// Save the updated todo
+	// save the updated todo
 	savedTodos, err := uc.repository.Save(*todoToToggle)
 	if err != nil {
 		return nil, err

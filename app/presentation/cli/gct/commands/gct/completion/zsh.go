@@ -1,8 +1,6 @@
 package completion
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/yanosea/gct/pkg/proxy"
@@ -11,9 +9,26 @@ import (
 // NewZshCompletionCommand creates the zsh completion subcommand
 func NewZshCompletionCommand(cobraProxy proxy.Cobra, rootCmd proxy.Command) proxy.Command {
 	cmd := cobraProxy.NewCommand()
-	cmd.SetUse("zsh")
-	cmd.SetShort("Generate zsh completion script")
-	cmd.SetLong(`Generate zsh completion script for gct.
+	cmd.SetUse(zshCompletionUse)
+	cmd.SetShort(zshCompletionShort)
+	cmd.SetLong(zshCompletionLong)
+	cmd.SetArgs(cobraProxy.NoArgs())
+	cmd.SetSilenceErrors(true)
+	cmd.SetRunE(func(_ *cobra.Command, _ []string) error {
+		return runZshCompletion(rootCmd)
+	})
+
+	return cmd
+}
+
+func runZshCompletion(rootCmd proxy.Command) error {
+	return rootCmd.GenZshCompletion(proxy.Stdout)
+}
+
+const (
+	zshCompletionUse   string = "zsh"
+	zshCompletionShort string = "🔧🧙 Generate zsh completion script"
+	zshCompletionLong  string = `🔧🧙 Generate zsh completion script for gct.
 
 To load completions:
 
@@ -25,16 +40,5 @@ Zsh:
   # To load completions for each session, execute once:
   $ gct completion zsh > "${fpath[1]}/_gct"
 
-  # You will need to start a new shell for this setup to take effect.`)
-	cmd.SetArgs(cobraProxy.NoArgs())
-	cmd.SetSilenceErrors(true)
-	cmd.SetRunE(func(_ *cobra.Command, _ []string) error {
-		return runZshCompletion(rootCmd)
-	})
-
-	return cmd
-}
-
-func runZshCompletion(rootCmd proxy.Command) error {
-	return rootCmd.GenZshCompletion(os.Stdout)
-}
+  # You will need to start a new shell for this setup to take effect.`
+)

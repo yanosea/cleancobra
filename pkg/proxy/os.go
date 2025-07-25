@@ -7,6 +7,20 @@ import (
 	"os"
 )
 
+// Common os constants
+const (
+	OCreate = os.O_CREATE
+	ORdOnly = os.O_RDONLY
+	OTrunc  = os.O_TRUNC
+	OWrOnly = os.O_WRONLY
+)
+
+// Stdout and Stderr are provided for convenience
+var (
+	Stdout = os.Stdout
+	Stderr = os.Stderr
+)
+
 // OS provides a proxy interface for os package functions
 type OS interface {
 	Getenv(key string) string

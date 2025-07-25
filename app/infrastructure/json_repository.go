@@ -1,35 +1,42 @@
 package infrastructure
 
 import (
-	"os"
-	"path/filepath"
-	"sort"
-
 	"github.com/yanosea/gct/app/domain"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // JSONRepository implements TodoRepository interface using JSON file storage
 type JSONRepository struct {
-	filePath  string
-	osProxy   proxy.OS
-	jsonProxy proxy.JSON
+	filePath      string
+	filepathProxy proxy.Filepath
+	jsonProxy     proxy.JSON
+	osProxy       proxy.OS
+	sortProxy     proxy.Sort
 }
 
 // NewJSONRepository creates a new JSONRepository instance
-func NewJSONRepository(filePath string, osProxy proxy.OS, jsonProxy proxy.JSON) *JSONRepository {
+func NewJSONRepository(
+	filePath string,
+	filepathProxy proxy.Filepath,
+	jsonProxy proxy.JSON,
+	osProxy proxy.OS,
+	sortProxy proxy.Sort,
+) *JSONRepository {
 	return &JSONRepository{
-		filePath:  filePath,
-		osProxy:   osProxy,
-		jsonProxy: jsonProxy,
+		filePath:      filePath,
+		filepathProxy: filepathProxy,
+		jsonProxy:     jsonProxy,
+		osProxy:       osProxy,
+		sortProxy:     sortProxy,
 	}
 }
 
 // FindAll retrieves all todos from the JSON file
 func (r *JSONRepository) FindAll() ([]domain.Todo, error) {
-	// Check if file exists
+	// check if file exists
 	if _, err := r.osProxy.Stat(r.filePath); r.osProxy.IsNotExist(err) {
-		// File doesn't exist, return empty slice
+		// file doesn't exist, return empty slice
 		return []domain.Todo{}, nil
 	} else if err != nil {
 		return nil, domain.NewDomainError(
@@ -39,8 +46,8 @@ func (r *JSONRepository) FindAll() ([]domain.Todo, error) {
 		)
 	}
 
-	// Read file content
-	file, err := r.osProxy.OpenFile(r.filePath, os.O_RDONLY, 0644)
+	// read file content
+	file, err := r.osProxy.OpenFile(r.filePath, proxy.ORdOnly, 0644)
 	if err != nil {
 		return nil, domain.NewDomainError(
 			domain.ErrorTypeFileSystem,
@@ -50,7 +57,7 @@ func (r *JSONRepository) FindAll() ([]domain.Todo, error) {
 	}
 	defer file.Close()
 
-	// Decode JSON
+	// decode JSON
 	var todos []domain.Todo
 	if err := r.jsonProxy.NewDecoder(file).Decode(&todos); err != nil {
 		return nil, domain.NewDomainError(
@@ -60,8 +67,8 @@ func (r *JSONRepository) FindAll() ([]domain.Todo, error) {
 		)
 	}
 
-	// Sort todos by ID for consistent ordering
-	sort.Slice(todos, func(i, j int) bool {
+	// sort todos by ID for consistent ordering
+	r.sortProxy.Slice(todos, func(i, j int) bool {
 		return todos[i].ID < todos[j].ID
 	})
 
@@ -74,51 +81,51 @@ func (r *JSONRepository) Save(todos ...domain.Todo) ([]domain.Todo, error) {
 		return []domain.Todo{}, nil
 	}
 
-	// Load existing todos
+	// load existing todos
 	existingTodos, err := r.FindAll()
 	if err != nil {
 		return nil, err
 	}
 
-	// Create a map for quick lookup of existing todos
+	// create a map for quick lookup of existing todos
 	todoMap := make(map[int]domain.Todo)
 	for _, todo := range existingTodos {
 		todoMap[todo.ID] = todo
 	}
 
-	// Find the next available ID
+	// find the next available ID
 	nextID := r.getNextID(existingTodos)
 
 	var savedTodos []domain.Todo
 	for _, todo := range todos {
 		if todo.ID == 0 {
-			// New todo - assign ID
+			// new todo - assign ID
 			todo.ID = nextID
 			nextID++
 		} else {
-			// Update existing todo - check if it exists
+			// update existing todo - check if it exists
 			if _, exists := todoMap[todo.ID]; !exists {
 				return nil, domain.ErrTodoNotFound
 			}
 		}
 
-		// Add or update in the map
+		// add or update in the map
 		todoMap[todo.ID] = todo
 		savedTodos = append(savedTodos, todo)
 	}
 
-	// Convert map back to slice
+	// convert map back to slice
 	allTodos := make([]domain.Todo, 0, len(todoMap))
 	for _, todo := range todoMap {
 		allTodos = append(allTodos, todo)
 	}
 
-	// Sort by ID for consistent ordering
-	sort.Slice(allTodos, func(i, j int) bool {
+	// sort by ID for consistent ordering
+	r.sortProxy.Slice(allTodos, func(i, j int) bool {
 		return allTodos[i].ID < allTodos[j].ID
 	})
 
-	// Write to file
+	// write to file
 	if err := r.writeToFile(allTodos); err != nil {
 		return nil, err
 	}
@@ -128,19 +135,19 @@ func (r *JSONRepository) Save(todos ...domain.Todo) ([]domain.Todo, error) {
 
 // DeleteById removes a todo with the specified ID from the JSON file
 func (r *JSONRepository) DeleteById(id int) error {
-	// Load existing todos
+	// load existing todos
 	existingTodos, err := r.FindAll()
 	if err != nil {
 		return err
 	}
 
-	// Find and remove the todo
+	// find and remove the todo
 	var updatedTodos []domain.Todo
 	found := false
 	for _, todo := range existingTodos {
 		if todo.ID == id {
 			found = true
-			continue // Skip this todo (delete it)
+			continue // skip this todo (delete it)
 		}
 		updatedTodos = append(updatedTodos, todo)
 	}
@@ -149,12 +156,12 @@ func (r *JSONRepository) DeleteById(id int) error {
 		return domain.ErrTodoNotFound
 	}
 
-	// Resequence IDs to maintain consecutive numbering
+	// resequence IDs to maintain consecutive numbering
 	for i := range updatedTodos {
 		updatedTodos[i].ID = i + 1
 	}
 
-	// Write updated todos back to file
+	// write updated todos back to file
 	return r.writeToFile(updatedTodos)
 }
 
@@ -176,8 +183,8 @@ func (r *JSONRepository) getNextID(todos []domain.Todo) int {
 
 // writeToFile writes todos to the JSON file
 func (r *JSONRepository) writeToFile(todos []domain.Todo) error {
-	// Ensure directory exists
-	fileDir := filepath.Dir(r.filePath)
+	// ensure directory exists
+	fileDir := r.filepathProxy.Dir(r.filePath)
 	if err := r.osProxy.MkdirAll(fileDir, 0755); err != nil {
 		return domain.NewDomainError(
 			domain.ErrorTypeFileSystem,
@@ -186,8 +193,8 @@ func (r *JSONRepository) writeToFile(todos []domain.Todo) error {
 		)
 	}
 
-	// Create or truncate file
-	file, err := r.osProxy.OpenFile(r.filePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	// create or truncate file
+	file, err := r.osProxy.OpenFile(r.filePath, proxy.OCreate|proxy.OWrOnly|proxy.OTrunc, 0644)
 	if err != nil {
 		return domain.NewDomainError(
 			domain.ErrorTypeFileSystem,
@@ -197,7 +204,7 @@ func (r *JSONRepository) writeToFile(todos []domain.Todo) error {
 	}
 	defer file.Close()
 
-	// Encode JSON with indentation for readability
+	// encode JSON with indentation for readability
 	encoder := r.jsonProxy.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 	if err := encoder.Encode(todos); err != nil {

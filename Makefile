@@ -27,6 +27,7 @@ update.mocks:
 	mockgen -source=./pkg/proxy/json.go -destination=./pkg/proxy/json_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/lipgloss.go -destination=./pkg/proxy/lipgloss_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/os.go -destination=./pkg/proxy/os_mock.go -package=proxy
+	mockgen -source=./pkg/proxy/sort.go -destination=./pkg/proxy/sort_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/strconv.go -destination=./pkg/proxy/strconv_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/strings.go -destination=./pkg/proxy/strings_mock.go -package=proxy
 	mockgen -source=./pkg/proxy/time.go -destination=./pkg/proxy/time_mock.go -package=proxy

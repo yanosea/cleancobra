@@ -1,19 +1,29 @@
 package formatter
 
 import (
-	"fmt"
-	"strconv"
-	"strings"
-
 	"github.com/yanosea/gct/app/domain"
+
+	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // PlainFormatter formats todos as simple plain text output
-type PlainFormatter struct{}
+type PlainFormatter struct {
+	fmtProxy     proxy.Fmt
+	strconvProxy proxy.Strconv
+	stringsProxy proxy.Strings
+}
 
 // NewPlainFormatter creates a new PlainFormatter instance
-func NewPlainFormatter() *PlainFormatter {
-	return &PlainFormatter{}
+func NewPlainFormatter(
+	fmtProxy proxy.Fmt,
+	strconvProxy proxy.Strconv,
+	stringsProxy proxy.Strings,
+) *PlainFormatter {
+	return &PlainFormatter{
+		fmtProxy:     fmtProxy,
+		strconvProxy: strconvProxy,
+		stringsProxy: stringsProxy,
+	}
 }
 
 // Format formats a slice of todos as plain text string
@@ -22,20 +32,15 @@ func (f *PlainFormatter) Format(todos []domain.Todo) (string, error) {
 		return "No todos found.", nil
 	}
 
-	var result strings.Builder
+	var lines []string
 
 	for _, todo := range todos {
 		line := f.formatTodoLine(todo)
-		result.WriteString(line)
-		result.WriteString("\n")
+		lines = append(lines, line)
 	}
 
-	return strings.TrimSpace(result.String()), nil
-}
-
-// FormatSingle formats a single todo as plain text string
-func (f *PlainFormatter) FormatSingle(todo domain.Todo) (string, error) {
-	return f.formatTodoLine(todo), nil
+	result := f.stringsProxy.Join(lines, "\n")
+	return f.stringsProxy.TrimSpace(result), nil
 }
 
 // formatTodoLine formats a single todo as a plain text line
@@ -47,9 +52,9 @@ func (f *PlainFormatter) formatTodoLine(todo domain.Todo) string {
 	}
 
 	// Format: [x] 1: Buy groceries
-	return fmt.Sprintf("%s %s: %s",
+	return f.fmtProxy.Sprintf("%s %s: %s",
 		status,
-		strconv.Itoa(todo.ID),
+		f.strconvProxy.Itoa(todo.ID),
 		todo.Description,
 	)
 }

@@ -16,6 +16,7 @@ type Cobra interface {
 
 // Command provides a proxy interface for cobra.Command
 type Command interface {
+	RunE(cmd *cobra.Command, args []string) error
 	SetUse(use string)
 	SetShort(short string)
 	SetLong(long string)
@@ -82,6 +83,10 @@ func (c *CobraImpl) NoArgs() cobra.PositionalArgs {
 
 func (c *CobraImpl) ArbitraryArgs() cobra.PositionalArgs {
 	return cobra.ArbitraryArgs
+}
+
+func (cmd *CommandImpl) RunE(c *cobra.Command, args []string) error {
+	return cmd.cmd.RunE(c, args)
 }
 
 func (cmd *CommandImpl) SetUse(use string) {

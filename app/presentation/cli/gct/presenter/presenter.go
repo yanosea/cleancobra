@@ -1,42 +1,43 @@
 package presenter
 
 import (
-	"errors"
-
 	"github.com/yanosea/gct/app/domain"
 	"github.com/yanosea/gct/app/presentation/cli/gct/formatter"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // Formatter interface defines the contract for todo formatters
 type Formatter interface {
 	Format(todos []domain.Todo) (string, error)
-	FormatSingle(todo domain.Todo) (string, error)
 }
 
 // TodoPresenter handles presentation logic for todo operations
 type TodoPresenter struct {
-	jsonFormatter  *formatter.JSONFormatter
-	tableFormatter *formatter.TableFormatter
-	plainFormatter *formatter.PlainFormatter
+	errorsProxy    proxy.Errors
 	fmtProxy       proxy.Fmt
 	osProxy        proxy.OS
+	jsonFormatter  *formatter.JSONFormatter
+	plainFormatter *formatter.PlainFormatter
+	tableFormatter *formatter.TableFormatter
 }
 
 // NewTodoPresenter creates a new TodoPresenter instance
 func NewTodoPresenter(
-	jsonFormatter *formatter.JSONFormatter,
-	tableFormatter *formatter.TableFormatter,
-	plainFormatter *formatter.PlainFormatter,
+	errorsProxy proxy.Errors,
 	fmtProxy proxy.Fmt,
 	osProxy proxy.OS,
+	jsonFormatter *formatter.JSONFormatter,
+	plainFormatter *formatter.PlainFormatter,
+	tableFormatter *formatter.TableFormatter,
 ) *TodoPresenter {
 	return &TodoPresenter{
-		jsonFormatter:  jsonFormatter,
-		tableFormatter: tableFormatter,
-		plainFormatter: plainFormatter,
+		errorsProxy:    errorsProxy,
 		fmtProxy:       fmtProxy,
 		osProxy:        osProxy,
+		jsonFormatter:  jsonFormatter,
+		plainFormatter: plainFormatter,
+		tableFormatter: tableFormatter,
 	}
 }
 
@@ -90,7 +91,7 @@ func (p *TodoPresenter) ShowError(err error) {
 	}
 
 	var domainErr *domain.DomainError
-	if errors.As(err, &domainErr) {
+	if p.errorsProxy.As(err, &domainErr) {
 		switch domainErr.Type {
 		case domain.ErrorTypeNotFound:
 			p.fmtProxy.Printf("Error: %s\n", domainErr.Message)
@@ -102,17 +103,14 @@ func (p *TodoPresenter) ShowError(err error) {
 			p.fmtProxy.Printf("JSON error: %s\n", domainErr.Message)
 		case domain.ErrorTypeConfiguration:
 			p.fmtProxy.Printf("Configuration error: %s\n", domainErr.Message)
+		case domain.ErrorTypeNoSubCommand:
+			p.fmtProxy.Printf("No subcommand specified\n", domainErr.Message)
 		default:
 			p.fmtProxy.Printf("Unknown error: %s\n", domainErr.Message)
 		}
 	} else {
 		p.fmtProxy.Printf("Error: %s\n", err.Error())
 	}
-}
-
-// ShowUsageError displays usage error with helpful message
-func (p *TodoPresenter) ShowUsageError(message string) {
-	p.fmtProxy.Printf("Usage error: %s\n", message)
 }
 
 // ShowValidationError displays validation error message

@@ -5,18 +5,38 @@ import (
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
+// Configurator provides access to the configuration
+type Configurator struct {
+	Envconfig proxy.Envconfig
+	Filepath  proxy.Filepath
+	OS        proxy.OS
+}
+
+// NewConfigurator creates a new Configurator
+func NewConfigurator(
+	envconfigProxy proxy.Envconfig,
+	filepathProxy proxy.Filepath,
+	osProxy proxy.OS,
+) *Configurator {
+	return &Configurator{
+		Envconfig: envconfigProxy,
+		Filepath:  filepathProxy,
+		OS:        osProxy,
+	}
+}
+
 // Config represents the application configuration
 type Config struct {
 	// DataFile is the path to the JSON file where todos are stored
 	DataFile string `envconfig:"GCT_DATA_FILE"`
 }
 
-// Load loads the configuration with injected dependencies for testing
-func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.Envconfig) (*Config, error) {
+// Load loads the configuration
+func (c *Configurator) Load() (*Config, error) {
 	var cfg Config
 
-	// Load configuration from environment variables
-	if err := envconfigProxy.Process("", &cfg); err != nil {
+	// load configuration from environment variables
+	if err := c.Envconfig.Process("", &cfg); err != nil {
 		return nil, domain.NewDomainError(
 			domain.ErrorTypeConfiguration,
 			"failed to load configuration from environment",
@@ -24,9 +44,9 @@ func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.E
 		)
 	}
 
-	// Apply default data file path if not set
+	// apply default data file path if not set
 	if cfg.DataFile == "" {
-		defaultPath, err := getDefaultDataFilePath(osProxy, filepathProxy)
+		defaultPath, err := getDefaultDataFilePath(c.OS, c.Filepath)
 		if err != nil {
 			return nil, domain.NewDomainError(
 				domain.ErrorTypeConfiguration,
@@ -37,8 +57,8 @@ func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.E
 		cfg.DataFile = defaultPath
 	}
 
-	// Validate configuration
-	if err := cfg.ValidateWithDeps(osProxy, filepathProxy); err != nil {
+	// validate configuration
+	if err := cfg.Validate(c.OS, c.Filepath); err != nil {
 		return nil, err
 	}
 
@@ -46,17 +66,8 @@ func Load(osProxy proxy.OS, filepathProxy proxy.Filepath, envconfigProxy proxy.E
 }
 
 // Validate validates the configuration values
-// This method is deprecated. Use ValidateWithDeps instead.
-func (c *Config) Validate() error {
-	return domain.NewDomainError(
-		domain.ErrorTypeConfiguration,
-		"Validate() is deprecated, use ValidateWithDeps() with injected proxy dependencies",
-		nil,
-	)
-}
-
-// ValidateWithDeps validates the configuration values with injected dependencies
-func (c *Config) ValidateWithDeps(osProxy proxy.OS, filepathProxy proxy.Filepath) error {
+func (c *Config) Validate(osProxy proxy.OS, filepathProxy proxy.Filepath) error {
+	// check if the data file path is set
 	if c.DataFile == "" {
 		return domain.NewDomainError(
 			domain.ErrorTypeInvalidInput,
@@ -65,9 +76,9 @@ func (c *Config) ValidateWithDeps(osProxy proxy.OS, filepathProxy proxy.Filepath
 		)
 	}
 
-	// Check if the directory exists or can be created
+	// check if the directory exists or can be created
 	dir := filepathProxy.Dir(c.DataFile)
-	if err := ensureDirectoryExistsWithDeps(dir, osProxy); err != nil {
+	if err := ensureDirectoryExists(dir, osProxy); err != nil {
 		return domain.NewDomainError(
 			domain.ErrorTypeFileSystem,
 			"failed to ensure data directory exists",
@@ -81,12 +92,12 @@ func (c *Config) ValidateWithDeps(osProxy proxy.OS, filepathProxy proxy.Filepath
 // getDefaultDataFilePath returns the default path for the data file
 // Following XDG Base Directory Specification with fallback to home directory
 func getDefaultDataFilePath(osProxy proxy.OS, filepathProxy proxy.Filepath) (string, error) {
-	// Try XDG_DATA_HOME first
+	// try XDG_DATA_HOME first
 	if xdgDataHome := osProxy.Getenv("XDG_DATA_HOME"); xdgDataHome != "" {
 		return filepathProxy.Join(xdgDataHome, "gct", "todos.json"), nil
 	}
 
-	// Fallback to ~/.local/share/gct/todos.json
+	// fallback to ~/.local/share/gct/todos.json
 	homeDir, err := osProxy.UserHomeDir()
 	if err != nil {
 		return "", err
@@ -95,14 +106,14 @@ func getDefaultDataFilePath(osProxy proxy.OS, filepathProxy proxy.Filepath) (str
 	return filepathProxy.Join(homeDir, ".local", "share", "gct", "todos.json"), nil
 }
 
-// ensureDirectoryExistsWithDeps creates the directory if it doesn't exist using injected dependencies
-func ensureDirectoryExistsWithDeps(dir string, osProxy proxy.OS) error {
-	if _, err := osProxy.Stat(dir); osProxy.IsNotExist(err) {
-		if err := osProxy.MkdirAll(dir, 0755); err != nil {
-			return err
+// ensureDirectoryExists creates the directory if it doesn't exist
+func ensureDirectoryExists(dir string, osProxy proxy.OS) error {
+	if _, statErr := osProxy.Stat(dir); osProxy.IsNotExist(statErr) {
+		if mkdirErr := osProxy.MkdirAll(dir, 0755); mkdirErr != nil {
+			return mkdirErr
 		}
-	} else if err != nil {
-		return err
+	} else if statErr != nil {
+		return statErr
 	}
 
 	return nil

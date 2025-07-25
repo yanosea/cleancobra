@@ -2,6 +2,7 @@ package formatter
 
 import (
 	"github.com/yanosea/gct/app/domain"
+
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
@@ -24,20 +25,6 @@ func (f *JSONFormatter) Format(todos []domain.Todo) (string, error) {
 		return "", domain.NewDomainError(
 			domain.ErrorTypeJSON,
 			"failed to marshal todos to JSON",
-			err,
-		)
-	}
-
-	return string(data), nil
-}
-
-// FormatSingle formats a single todo as JSON string
-func (f *JSONFormatter) FormatSingle(todo domain.Todo) (string, error) {
-	data, err := f.jsonProxy.Marshal(todo)
-	if err != nil {
-		return "", domain.NewDomainError(
-			domain.ErrorTypeJSON,
-			"failed to marshal todo to JSON",
 			err,
 		)
 	}

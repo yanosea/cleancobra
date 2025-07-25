@@ -1,19 +1,48 @@
 package completion
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+
+	"github.com/yanosea/gct/app/container"
+	"github.com/yanosea/gct/app/domain"
+	"github.com/yanosea/gct/app/presentation/cli/gct/presenter"
 
 	"github.com/yanosea/gct/pkg/proxy"
 )
 
 // NewCompletionCommand creates the completion parent command
-func NewCompletionCommand(cobraProxy proxy.Cobra) proxy.Command {
-	cmd := cobraProxy.NewCommand()
-	cmd.SetUse("completion")
-	cmd.SetShort("Generate shell completion scripts")
-	cmd.SetLong(`Generate shell completion scripts for gct.
+func NewCompletionCommand(
+	rootCmd proxy.Command,
+	container *container.Container,
+	presenter *presenter.TodoPresenter,
+) proxy.Command {
+	cmd := container.GetProxies().Cobra.NewCommand()
+	cmd.SetUse(completionUse)
+	cmd.SetShort(completionShort)
+	cmd.SetLong(completionLong)
+	cmd.SetArgs(container.GetProxies().Cobra.ExactArgs(1))
+	cmd.SetSilenceErrors(true)
+	cmd.AddCommand(NewBashCompletionCommand(container.GetProxies().Cobra, rootCmd))
+	cmd.AddCommand(NewZshCompletionCommand(container.GetProxies().Cobra, rootCmd))
+	cmd.AddCommand(NewFishCompletionCommand(container.GetProxies().Cobra, rootCmd))
+	cmd.AddCommand(NewPowershellCompletionCommand(container.GetProxies().Cobra, rootCmd))
+	rootCmd.SetRunE(func(_ *cobra.Command, args []string) error {
+		return runCompletion(presenter)
+	})
+
+	return cmd
+}
+
+func runCompletion(presenter *presenter.TodoPresenter) error {
+	presenter.ShowError(domain.ErrNoSubCommand)
+
+	return nil
+}
+
+const (
+	completionUse   string = "completion"
+	completionShort string = "🔧 Generate shell completion scripts"
+	completionLong  string = `🔧 Generate shell completion scripts for gct.
 
 The completion command allows you to generate shell completion scripts for bash, zsh, fish, and powershell.
 
@@ -50,16 +79,5 @@ PowerShell:
   # To load completions for every new session, run:
   PS> gct completion powershell > gct.ps1
   # and source this file from your PowerShell profile.
-`)
-	cmd.SetArgs(cobraProxy.ExactArgs(1))
-	cmd.SetSilenceErrors(true)
-	cmd.SetRunE(func(_ *cobra.Command, args []string) error {
-		return runCompletion(args[0])
-	})
-
-	return cmd
-}
-
-func runCompletion(shell string) error {
-	return fmt.Errorf("completion command requires a subcommand: bash, zsh, fish, or powershell")
-}
+`
+)
